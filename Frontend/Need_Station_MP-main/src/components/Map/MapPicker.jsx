@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from "react";
 import GoogleMapWrapper from "../../components/Map/GoogleMapWrapper";
 import { GoogleMap, LoadScript, Marker, Autocomplete } from "@react-google-maps/api";
-<LoadScript googleMapsApiKey="AIzaSyBwNUkrw0WOChZUk6PVTMB-4F5eV0frh1o" libraries={["places"]}></LoadScript>
+<LoadScript googleMapsApiKey=" " libraries={["places"]}></LoadScript>
 const containerStyle = {
   width: "100%",
   height: "300px",
@@ -45,7 +45,7 @@ const MapPicker = ({ onLocationSelect }) => {
   };
 
   return (
-    <LoadScript googleMapsApiKey="AIzaSyBwNUkrw0WOChZUk6PVTMB-4F5eV0frh1o" libraries={["places"]}>
+    <LoadScript googleMapsApiKey=" " libraries={["places"]}>
       <Autocomplete onLoad={onLoad} onPlaceChanged={onPlaceChanged}>
         <input
           type="text"
