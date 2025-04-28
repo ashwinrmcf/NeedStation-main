@@ -1,0 +1,13 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+/* ```[_{{{CITATION{{{_1{[Fix] Unknown at rule @tailwindcss(unknownAtRules) warning](https://bobbyhadz.com/blog/unknown-at-rule-tailwindcss-warning-solved)
+ */
+
+ 
+
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background: #00071A;
+} 

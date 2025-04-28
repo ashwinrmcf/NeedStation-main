@@ -1,0 +1,122 @@
+
+.container2 {
+    text-align: center;
+    max-width: 1800vw;
+    padding: 50px;
+    position: relative;
+    /* bottom: 30vh; */
+
+}
+
+.container2 h1 {
+    font-size: 3.5rem;
+    /* bottom: 13vh; */
+    position: relative;
+    font-weight: 550;
+    letter-spacing: -0.41rem;
+    color: #ffffff;
+}
+.letter {
+    display: inline-block; /* Allows for individual animations */
+    opacity: 0; /* Start invisible */
+    transform: translateY(-20px); /* Initial position */
+    animation: appear 0.5s forwards; /* Animation for the letters */
+    margin-left: 6px;
+  }
+  
+  .nextWord {
+    margin-left: 1.5vw;
+  }
+  
+  @keyframes appear {
+    to {
+      opacity: 1; /* End state */
+      transform: translateY(0); /* End position */
+    }
+  }
+  
+
+.boks{
+    position: fixed;
+}
+
+/* h1{
+    font-size: 4em;
+    margin-bottom: 40px;
+} */
+
+.services {
+    /* bottom: 7vh; */
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 4vw;
+    row-gap: 7vh;
+   /* opacity: 0;  */
+    transform: translateY(250px); /* Start with a downward offset */
+    transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+    margin-top: -33vh;
+    margin-bottom: 30vh;
+}
+
+.service-card {
+    background-color: #1f1f1f;
+    border-radius: 8px;
+    overflow: hidden;
+    width: 300px;
+    height: 360px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+button.img2 {
+    width: 300px;
+    height: 240px;
+    background-size: cover;
+    background-position: center;
+    border-radius: 8px 8px 0 0;
+    border: none;
+    outline: none;
+    cursor: pointer;
+}
+button.img2 img{
+    display: block;
+    border: 8px 8px 0 0;
+}
+
+button.btn-text{
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #ffffff; /* Ensure text color is readable */
+    margin: 0;
+    text-align: center;
+    width: 100%;
+    display: inline-block;
+    transition: color 0.3s ease;
+    font-family: 'poppins','sans-serif';
+}
+button.btn-text:hover {
+    color: #00bfff; /* Change color on hover */
+}
+button.img2:hover {
+    transform: scale(1.05); /* Slight zoom effect */
+    filter: brightness(1.2); /* Brighten the image */
+}
+.service-card h2 {
+    font-size: 1.2em;
+    margin: 10px 0;
+}
+
+.service-card p {
+    font-size: 0.9em;
+    color: #bbbbbb;
+}
+.services.visible{
+    position: relative;
+    opacity: 1; /* Become visible */
+    transform: translateY(0px); /* Move to original position */
+}

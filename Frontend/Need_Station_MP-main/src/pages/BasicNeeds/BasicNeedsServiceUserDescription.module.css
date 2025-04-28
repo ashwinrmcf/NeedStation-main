@@ -1,0 +1,210 @@
+.header {
+  width: 80vw;
+  height: 74px;
+  margin: 48px auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 16px;
+  padding: 0 20px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(42px);
+}
+
+
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+  color: #ffffff;
+  margin-right: 2vw;
+}
+
+.progress-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.circle {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #5CE1E6;
+  box-shadow: 0 0 10px #5CE1E6;
+}
+
+.step span {
+  font-size: 12px;
+  margin-top: 5px;
+  color: #ffffff;
+}
+
+.line {
+  width: 15vw;
+  height: 2px;
+  background: #5CE1E6;
+  margin: 0 5px;
+}
+
+.line1{
+  width: 5vw;
+  height: 2px;
+  background: #5CE1E6;
+  margin: 0 5px;
+}
+
+.describe-task{
+  color: #ffffff;
+}
+
+.step.active .circle {
+  background: #5CE1E6;
+  box-shadow: 0 0 15px #5CE1E6;
+}
+
+
+.task-section{
+  width: 70vw;
+  margin: 0 auto;
+  color: #ffffff;
+}
+
+.task-box {
+  width: 70vw;
+height: 329px;
+top: 201px;
+left: 97px;
+ gap: 0px;
+  border-radius: 25px 0px 0px 0px;
+ opacity: 0px;
+
+  background: rgb(175 115 115 / 10%);
+  border-radius: 25px 0px 0px 0px;
+  border-radius: 20px;
+  margin: 30px auto;
+  padding: 20px;
+}
+
+.task-box h2 {
+  margin-top: 0;
+}
+
+textarea {
+  width: 1224px;
+  height: 100px;
+  border-radius: 15px;
+  background: #08021d;
+  color: white;
+  padding: 10px;
+  font-size: 16px;
+  outline: none;
+  width: 1166px;
+top: 1136px;
+left: 141px;
+right:141px ;
+gap: 0px;
+border-radius: 20px;
+border: 1px ;
+opacity: 0px;
+margin: 30px auto;
+border: 1px solid #26D0CE;
+
+}
+.task1{
+  border: 1px solid #26D0CE;
+  border-radius: 15px;
+  margin: auto;
+  padding: 20px;
+}
+
+form label {
+  display: block;
+  margin: 10px;
+}
+.form{
+  font-size: 25px;
+  color: #ffffff;
+}
+
+.button-container {
+  text-align: center;
+  margin: 30px 0;
+}
+
+.button {
+  width: 241px;
+  height: 70px;
+  border: none;
+  border-radius: 20px;
+  background: linear-gradient(
+      157.81deg,
+      #DEF9FA -43.27%,
+      #BEF3F5 -21.24%,
+      #9DEDF0 12.19%,
+      #7DE7EB 29.82%,
+      #5CE1E6 51.94%,
+      #33BBCF 90.29%
+  );
+  color: #151515;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+}
+.poppins-thin {
+  font-family: "Poppins", sans-serif;
+  font-weight: 100;
+  font-style: normal;
+}
+
+.taskbox.form{
+font-size: 1.5rem;
+}
+
+.task-box h1{
+  font-size: 2rem;
+  margin: 0.5vh 0;
+}
+
+.box {
+  background: rgb(175 115 115 / 10%);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+  width: 70vw;
+}
+
+.box h1{
+  font-size: 2rem;
+}
+
+select, input[type="radio"] {
+  background: rgba(4, 3, 39, 0.2);
+  border: 1px solid #56d6ba;
+  color: rgb(244, 242, 248);
+  padding: 8px;
+  border-radius: 5px;
+  font-size: 1.5rem;
+  width: 100%;
+  margin: 5px 0;
+  outline: none;
+}
+#task-location{
+  background:  #00071A;
+}
+.box textarea::placeholder {
+  font-size: 25px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.locationOption{
+  background-color: #00071A;
+}

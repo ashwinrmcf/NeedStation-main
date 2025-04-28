@@ -1,0 +1,161 @@
+.header {
+  width: 86.364vw;
+  min-height: 10.306vh;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.337vw;
+  margin: 6.685vh auto;
+  border-radius: 16px; /* Rounded corners */
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 100%); /* Top-to-bottom gradient */
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(2.625rem);
+  position: relative;
+  z-index: 10;
+}
+
+/* Styles for smaller screens (mobile) */
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    padding: 3vh 1.337vw;
+    /* Stack elements vertically */
+  }
+
+  .navLinks {
+    /* flex-direction: column; */
+    /* Stack navigation links vertically */
+    margin-top: 10px;
+  }
+
+  .navLinks Link {
+    margin-bottom: 10px;
+    cursor: pointer;
+    /* Add spacing between links */
+  }
+
+  .authButtons {
+    /* flex-direction: column; */
+    /* Stack buttons vertically */
+    margin-top: 20px;
+    margin-bottom: 10px;
+    gap: 1vw;
+  }
+
+  .authButtons button {
+    margin-bottom: 5px;
+    /* Add spacing between buttons */
+  }
+}
+
+.logo {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #FFFFFF;
+}
+
+.logo span {
+  color: #00E0B8; /* Teal color for "Station" */
+}
+
+.navLinks a {
+  margin: 0 1vw;
+  color: #FFFFFF;
+  text-decoration: none;
+  font-size: 1.125rem;
+  font-weight: 400;
+  opacity: 0.8; /* Slight transparency */
+}
+
+.dropdownToggle {
+  margin: 0 1vw;
+  color: #FFFFFF;
+  text-decoration: none;
+  font-size: 1.125rem;
+  font-weight: 400;
+  opacity: 0.8; /* Slight transparency */
+}
+
+.authButtons {
+  display: flex;
+  align-items: center;
+}
+
+.authButtons .login {
+  font-size: 1.125rem;
+  font-weight: 400;
+  color: #FFFFFF;
+  border: 2px solid #FFFFFF;
+  background-color: transparent;
+  padding: 1.1vh 1vw;
+  margin-left: 0.668vw;
+  border-radius: 12px;
+  cursor: pointer;
+  opacity: 0.8;
+}
+
+.authButtons .signup {
+  font-size: 1.125rem;
+  font-weight: 400;
+  color: #FFFFFF;
+  background-color: #00E0B8; /* Teal background for "Sign in" */
+  border: none;
+  padding: 1.114vh 1.07vw;
+  margin-left: 0.668vw;
+  border-radius: 12px;
+  cursor: pointer;
+  opacity: 0.8;
+}
+
+.authButtons .becomeTasker {
+  font-size: 1.125rem;
+  font-weight: 400;
+  color: #00E0B8; /* Teal text for "Become a tasker" */
+  background-color: rgba(255, 255, 255, 0.2); /* Light transparent white background */
+  border: 1px solid #00E0B8;
+  padding: 1.114vh 1.07vw;
+  margin-left: 0.668vw;
+  border-radius: 12px;
+  cursor: pointer;
+  opacity: 0.8;
+}
+
+@media (min-width: 768px) and (max-width: 992px) {
+  .nav-links a {
+    margin: 0 10px;
+    /* Reduce spacing between links */
+  }
+}
+
+
+.logout{
+  font-size: 1.125rem;
+  font-weight: 400;
+  color: #FFFFFF;
+  border: 2px solid #FFFFFF;
+  background-color: transparent;
+  padding: 1.1vh 1vw;
+  margin-left: 0.668vw;
+  border-radius: 12px;
+  cursor: pointer;
+  opacity: 0.8;
+}
+
+.greeting {
+  margin-right: 1rem;
+  font-size: 1rem;
+  color: #FFFFFF;
+}
+
+.logout {
+  background-color: #ff4d4d;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.logout:hover {
+  background-color: #e04343;
+}

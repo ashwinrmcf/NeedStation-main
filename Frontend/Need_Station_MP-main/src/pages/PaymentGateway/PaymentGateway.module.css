@@ -1,0 +1,95 @@
+.payment-container{
+  background: radial-gradient(circle at top, rgb(86, 86, 109), #1c2541, rgba(17, 16, 29, 1));
+  max-width: 35vw;
+  margin: 0 auto;
+  background-color: #1c2541;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  color: #FFFFFF;
+}
+.par{
+  font-size: 1.1rem;
+  position: relative;
+  right: 6vw;
+}
+.par2{
+  font-size: 1.1rem;
+  position: relative;
+  right: 2.9vw;
+}
+
+.header {
+  padding: 15px;
+  text-align: left;
+  color: #FFFFFF;
+  height: 20vh;
+}
+
+.header h1{
+  font-size: 2rem;
+}
+
+.back-btn{
+  font-size: 1.5rem;
+}
+
+.par1{
+  font-size: 1.5rem;
+}
+.card{
+  width: 3.2vw;
+  height: 6vh;
+  position: relative;
+  /* bottom: 1vh; */
+  padding: 0px 5px;
+  border: 2px solid #888;
+  border-radius: 8%; 
+  /* margin-bottom: 2vh; */
+}
+/* .card1{
+  width: 3.2vw;
+  height: 15vh;
+  position: relative;
+  padding: 0px 5px;
+  bottom: 1vh;
+  border: 2px solid #888;
+  border-radius: 8%; 
+}
+.card2{
+  width: 3.2vw;
+  height: 15vh;
+  position: relative;
+  padding: 0px 5px;
+  bottom: 1vh;
+  border-radius: 8%;
+  border: 2px solid #888; 
+} */
+
+.payment-method {
+  padding: 1px 30px;
+  border: 2px solid #050510 ;
+  border-radius: 2%;
+  color: #FFFFFF;
+  height: 20vh;
+}
+
+.payment-method h2{
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin-bottom: 2vh;
+  margin-top: 1.5vh;
+}
+
+.method {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  padding: 10px 0;
+  /* color: #FFFFFF; */
+}
+
+.arrow {
+  font-size: 20px;
+  color: #888;
+}

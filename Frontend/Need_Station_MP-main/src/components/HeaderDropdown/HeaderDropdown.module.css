@@ -1,0 +1,52 @@
+/* Entire Dropdown Menu */
+.dropdownMenu {
+  position: absolute;
+   /* Below the header */
+  left: 0;
+  width: 100%; /* Full width of the header */
+  background: transparent; /* Light transparent background */
+  padding: 1rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  z-index: 5;
+  margin-left: 10vw;
+  margin-top: -4vh;
+  
+}
+
+/* Dropdown Rows */
+.dropdownRow {
+  margin-bottom: 2rem;
+}
+
+/* Headings for each service category */
+.dropdownHeading {
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  color: #00E0B8; /* Primary accent color */
+}
+
+/* Service Links (flexible grid layout) */
+.services {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.services a {
+  font-size: 1.125rem;
+  font-weight: 400;
+  color: #FFFFFF;
+  border: 2px solid #FFFFFF;
+  background-color: transparent;
+  padding: 1.1vh 1vw;
+  margin-left: 0.668vw;
+  border-radius: 12px;
+  cursor: pointer;
+  opacity: 0.8;
+}
+
+/* .services a:hover {
+  background: #00E0B8;
+  color: #fff;
+} */

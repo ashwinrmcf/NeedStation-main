@@ -1,0 +1,345 @@
+.header {
+  width: 80vw;
+  height: 74px;
+  margin: 48px auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 16px;
+  padding: 0 20px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(42px);
+  color: #FFFFFF;
+}
+
+
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+  color: #ffffff;
+  margin-right: 2vw;
+}
+
+.progress-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.circle {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #5CE1E6;
+  box-shadow: 0 0 10px #5CE1E6;
+}
+
+.step span {
+  font-size: 12px;
+  margin-top: 5px;
+  color: #ffffff;
+}
+
+.line {
+  width: 15vw;
+  height: 2px;
+  background: #5CE1E6;
+  margin: 0 5px;
+}
+
+.line1{
+  width: 5vw;
+  height: 2px;
+  background: #5CE1E6;
+  margin: 0 5px;
+}
+
+.step.active .circle {
+  background: #5CE1E6;
+  box-shadow: 0 0 15px #5CE1E6;
+}
+
+.helper-list{
+  font-size: small;
+}
+
+
+
+.rectangle {
+  width: 80vw; /* Use viewport width for responsiveness */
+  max-width: 100vw;
+  height: auto;
+  padding: 2vw;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-radius: 20px;
+  border: 3px solid #7DE7EB;
+  background: rgba(21, 17, 29, 0.3); /* Semi-transparent background */
+  gap: 1.5vw;
+  position: relative;
+  color: #FFFFFF;
+}
+
+.container2{
+  margin-left: 10vw;
+}
+
+/* Vertical Lines */
+.rectangle::before,
+.rectangle::after {
+  content: "";
+  position: absolute;
+  top: 5%;
+  bottom: 5%;
+  width: 1px;
+  background: #7DE7EB;
+}
+
+.rectangle::before {
+  left: 33%; /* Place the first vertical line */
+}
+
+.rectangle::after {
+  left: 66%; /* Place the second vertical line */
+}
+
+/* Date Section */
+.date-group {
+  width: 30%;
+  height: auto;
+
+  border-radius: 20px;
+  padding: 1.5vw;
+  display: flex;
+  flex-direction: column;
+  gap: 1vw;
+}
+
+.date-group h2 {
+  font-size: 1.5vw;
+  font-weight: 500;
+  line-height: 36px;
+  text-align: left;
+  text-decoration: underline;
+}
+
+.date-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1vw;
+}
+
+.date-options button {
+  width: 47%; /* Adjust button size dynamically */
+  padding: 0.8vw;
+  font-size: 1vw;
+  font-weight: 500;
+  border: 1px solid #7DE7EB;
+  border-radius: 20px;
+  background: transparent;
+  color: #FFFFFF;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.date-options button:hover {
+  background: #7DE7EB;
+  color: #15111D;
+}
+
+/* Time of the Day Section */
+.time-group {
+  width: 30%;
+  height: auto;
+  padding: 1.5vw;
+  display: flex;
+  flex-direction: column;
+  gap: 1vw;
+}
+
+.time-group h2 {
+  font-size: 1.5vw;
+  font-weight: 500;
+  text-align: left;
+  line-height: 36px;
+}
+
+.time-options label {
+  display: flex;
+  align-items: center;
+  gap: 0.8vw;
+  font-size: 1vw;
+}
+
+.time-options input[type="checkbox"] {
+  width: 1.2vw;
+  height: 1.2vw;
+  cursor: pointer;
+}
+
+/* Price Section */
+.price-group {
+  width: 30%;
+  height: auto;
+  padding: 1.5vw;
+  display: flex;
+  flex-direction: column;
+  gap: 1vw;
+}
+
+.price-group h2 {
+  font-size: 1.5vw;
+  font-weight: 500;
+  text-align: left;
+  line-height: 36px;
+}
+
+.price-group p {
+  font-size: 1vw;
+  line-height: 1.5;
+}
+/* Container Styling */
+.tasker-profile {
+  display: flex ;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 2vw;
+  width: 80vw;
+  max-width: 1200px;
+  background: rgba(21, 17, 29, 0.3);
+  border: 3px solid #7DE7EB;
+  border-radius: 20px;
+  color: #FFFFFF;
+  gap: 2vw;
+  margin-top: 2vh;
+}
+
+/* Profile Section Styling */
+.profile-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 30%;
+  text-align: center;
+}
+
+.profile-image {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: #C4C4C4; /* Placeholder for profile image */
+  margin-bottom: 1vw;
+}
+
+.profile-link {
+  font-size: 1.2vw;
+  font-weight: 500;
+  color: #7DE7EB;
+  margin-bottom: 1vw;
+  cursor: pointer;
+}
+
+.select-button {
+  padding: 0.8vw 1.5vw;
+  font-size: 1vw;
+  font-weight: 500;
+  background-color: #7DE7EB;
+  color: #15111D;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-bottom: 1vw;
+  transition: background 0.3s ease-in-out;
+}
+
+.select-button:hover {
+  background-color: #5FC2C7;
+}
+
+.note {
+  font-size: 0.9vw;
+  line-height: 1.5;
+  color: #B3B3B3;
+}
+
+/* Info Section Styling */
+.info-section {
+  width: 65%;
+  display: flex;
+  flex-direction: column;
+  gap: 1vw;
+}
+
+.info-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.tasker-name {
+  font-size: 1.8vw;
+  font-weight: 600;
+}
+
+.rate {
+  font-size: 1.8vw;
+  font-weight: 600;
+  color: #7DE7EB;
+}
+
+.reviews,
+.tasks {
+  font-size: 1vw;
+  color: #7DE7EB;
+}
+
+.help-section {
+  background: rgba(0, 0, 0, 0.2);
+  padding: 1.5vw;
+  border-radius: 10px;
+  border: 1px solid #7DE7EB;
+}
+
+.help-section h3 {
+  font-size: 1.2vw;
+  margin-bottom: 0.5vw;
+}
+
+.help-description {
+  font-size: 1vw;
+  line-height: 1.5;
+  color: #FFFFFF;
+}
+
+.read-more {
+  color: #7DE7EB;
+  cursor: pointer;
+}
+
+/* Profile Image Placeholder with Real Image */
+.profile-image {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  overflow: hidden; /* Ensures image stays inside the circle */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #C4C4C4; /* Backup background color */
+}
+
+.profile-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Ensures the image scales correctly */
+}
