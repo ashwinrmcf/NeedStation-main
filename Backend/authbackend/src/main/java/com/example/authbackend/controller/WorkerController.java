@@ -9,7 +9,9 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/workers")
-@CrossOrigin(origins = "http://localhost:3000") // Allow React to communicate with backend
+//@CrossOrigin(origins="http://localhost:5173")// Allow React to communicate with backend
+@CrossOrigin(origins = "*")
+
 public class WorkerController {
 
     @Autowired
@@ -17,10 +19,11 @@ public class WorkerController {
 
     @PostMapping("/register")
     public Worker registerWorker(@RequestBody Worker worker) {
+        System.out.println("Received worker: " + worker);
         return workerRepository.save(worker);
     }
 
-    @GetMapping("/all")
+   @GetMapping("/all")
     public List<Worker> getAllWorkers() {
         return workerRepository.findAll();
     }

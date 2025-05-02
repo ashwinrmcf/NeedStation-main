@@ -1,17 +1,17 @@
 package com.example.authbackend.dto;
 
 public class LocationDTO {
-    private String email;
+    private String username; // Changed to username
     private Double lat;
     private Double lng;
     private String address;
 
-    public String getEmail() {
-        return email;
+    public String getUsername() {
+        return username;  // Updated getter for username
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setUsername(String username) {
+        this.username = username;  // Updated setter for username
     }
 
     public Double getLat() {

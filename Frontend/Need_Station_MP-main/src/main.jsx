@@ -20,7 +20,7 @@ import BasicNeedsServiceUserDescription from "./pages/BasicNeeds/BasicNeedsServi
 import TestRouterContext from "./test/TestRouterContext.jsx";
 import PaymentGateway from "./pages/PaymentGateway/PaymentGateway.jsx";
 import AvailableHelpers from "./pages/BasicNeeds/AvailableHelpers.jsx";
-import HelperRegistration from "./pages/HelperRegistration/HelperRegistration.jsx";
+import HelperRegistration from "./pages/WorkerRegistration/WorkerRegistration.jsx";
 import FlatRentalHome from "./pages/FlatandMaidService/FlatRentalHome.jsx";
 import HelperLayout from "./components/layouts/HelperLayout.jsx";
 import OverviewPage from "./pages/HelperPages/OverviewPage.jsx";

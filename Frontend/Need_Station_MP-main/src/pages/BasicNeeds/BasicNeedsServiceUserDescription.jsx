@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";  // ✅ Added useNavigate
 import styles from "./BasicNeedsServiceUserDescription.module.css";
 import ScrollToTop from "../../hooks/ScrollToTop";
 import MapPicker from "../../components/Map/MapPicker.jsx";
@@ -8,6 +8,8 @@ const BasicNeedsServiceUserDescription = () => {
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitMessage, setSubmitMessage] = useState("");
+  
+  const navigate = useNavigate();  // ✅ Needed for navigate()
 
   const handleLocationSelect = (location) => {
     setSelectedLocation(location);
@@ -16,41 +18,47 @@ const BasicNeedsServiceUserDescription = () => {
 
   const submitLocationToDatabase = async () => {
     if (!selectedLocation) {
-      setSubmitMessage("Please select a location first");
+      setSubmitMessage("❗ Please select a location first");
+      return;
+    }
+
+    const username = localStorage.getItem("username");  // ✅ Correct way to get email
+
+    if (!username) {
+      setSubmitMessage("❗ User email not found. Please login again.");
       return;
     }
 
     setIsSubmitting(true);
-    
+
     try {
-      // Using the absolute URL pointing to your backend server on port 8080
       const response = await fetch('http://localhost:8080/api/user/update-location', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
+          username: username,                 // ✅ Correct email coming from localStorage
           address: selectedLocation.address,
-          latitude: selectedLocation.lat,
-          longitude: selectedLocation.lng
+          lat: selectedLocation.lat,
+          lng: selectedLocation.lng
         }),
       });
 
       if (response.ok) {
-        setSubmitMessage("Location successfully saved!");
+        setSubmitMessage("✅ Location successfully saved!"); // ✅ navigate only after success
       } else {
         const errorData = await response.json().catch(() => null);
         console.error("Server error:", errorData);
-        setSubmitMessage(`Failed to save location: ${errorData?.message || response.statusText}`);
+        setSubmitMessage(`❌ Failed to save location: ${errorData?.message || response.statusText}`);
       }
     } catch (error) {
       console.error("Error submitting location:", error);
-      setSubmitMessage("Error connecting to server. Please try again later.");
+      setSubmitMessage("❌ Error connecting to server. Please try again later.");
     } finally {
       setIsSubmitting(false);
     }
   };
-
   return (
     <>
       <ScrollToTop />

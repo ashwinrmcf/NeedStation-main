@@ -16,7 +16,12 @@ public class WorkerService {
     public Worker registerWorker(Worker worker) {
         System.out.println("Saving Worker: " + worker); // Debugging output
 
-        return workerRepository.save(worker);
+        try {
+            return workerRepository.save(worker);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public List<Worker> getAllWorkers() {

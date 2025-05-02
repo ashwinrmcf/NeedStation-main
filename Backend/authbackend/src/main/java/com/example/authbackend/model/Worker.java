@@ -1,7 +1,10 @@
 package com.example.authbackend.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "worker")
@@ -14,33 +17,37 @@ public class Worker {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)  // Ensure this is provided in request
+    @Column(nullable = false)
     private String fullName;
 
+    @JsonFormat(pattern = "yyyy-MM-dd")
     @Column(nullable = false)
-    private String dob;
+    private LocalDate dob;
 
     @Column(nullable = false)
     private String gender;
 
-    @Column(nullable = false, unique = true)  // Phone should be unique
+    @Column(nullable = false, unique = true)
     private String phone;
 
     private String familyPhone;
     private String address;
     private String currentAddress;
 
-    @Column(nullable = false, unique = true)  // Aadhaar should be unique
+    @Column(nullable = true)
     private String aadhaar;
 
     private String verification;
     private String category;
 
     @Column(nullable = false)
-    private int experience;
+    private String experience;  // ✅ Change from int → String (because frontend sends string)
+
+    private String bankAccount;  // ✅ New
+    private String ifsc;          // ✅ New
+    private String upi;           // ✅ New
 
     private String emergencyContact;
-    private String emergencyPhone;
 }
 
 

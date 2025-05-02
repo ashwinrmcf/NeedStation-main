@@ -2,6 +2,7 @@ package com.example.authbackend.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
@@ -18,12 +19,17 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf().disable()  // ✅ Disable CSRF for API calls
-                .cors().and()  // ✅ Enable CORS
+                .csrf().disable()
+                .cors().and()
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/register",
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        .requestMatchers(
+                                "/api/auth/register",
                                 "/api/auth/login",
-                                "/api/user/update-location").permitAll()  // ✅ Allow public access
+                                "/api/user/update-location",
+                                "/api/workers/register",
+                                "/api/workers/all"
+                        ).permitAll()
                         .anyRequest().authenticated()
                 );
 
@@ -35,9 +41,16 @@ public class SecurityConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.setAllowedOriginPatterns(List.of("http://localhost:5173"));
-        config.setAllowedHeaders(List.of("Authorization","Content-Type","Accept"));
-        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+
+        // ✅ Allow all origins (for development)
+//        config.addAllowedOriginPattern("*");
+        config.addAllowedOrigin("http://localhost:5173");
+        config.setAllowedHeaders(List.of(
+                "Authorization", "Content-Type", "Accept", "Origin", "X-Requested-With"
+        ));
+        config.setAllowedMethods(List.of(
+                "GET", "POST", "PUT", "DELETE", "OPTIONS"
+        ));
         source.registerCorsConfiguration("/**", config);
         return new CorsFilter(source);
     }
