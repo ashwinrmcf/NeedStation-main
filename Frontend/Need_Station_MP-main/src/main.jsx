@@ -28,6 +28,8 @@ import UpcomingTaskPage from "./pages/HelperPages/UpcomingTasksPage";
 import CompletedTaskPage from "./pages/HelperPages/CompletedTaskPage";
 import SettingsPage from "./pages/HelperPages/SettingsPage";
 import EarningPage from "./pages/HelperPages/EarningAndPaymentPage";
+import ContactUs from "./pages/ContactUs/ContactUs.jsx";
+
 
 const router = createBrowserRouter([
   {
@@ -46,6 +48,7 @@ const router = createBrowserRouter([
       { path: "/postnatal-care", element: <PostnatalCare /> },
       {path: "/helper-registration", element: <HelperRegistration/>},
       {path: "/flat-rental-home", element: <FlatRentalHome/>},
+      {path: "/contact-us", element: <ContactUs/>},
     ],
   },
   { path: "/login", element: <Login /> },
