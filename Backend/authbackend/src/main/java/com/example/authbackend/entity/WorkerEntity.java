@@ -1,89 +1,83 @@
-package com.example.authbackend.model;
+package com.example.authbackend.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
-@Entity
-@Table(name = "worker")
-public class Worker {
+// This class has been deprecated in favor of com.example.authbackend.model.Worker
+// Removing @Entity annotation to avoid duplicate entity name error
+public class WorkerEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    // Step 1: Basic Information
-    @Column(nullable = false)
-    private String fullName = "";
     
-    @Column(nullable = false)
-    private String gender = "";
-
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Column(nullable = false)
-    private LocalDate dob = LocalDate.now();
-
-    private String profileImageUrl = "";
-
-    @Column(unique = true, nullable = false)
-    private String phone = "";
-
-    private String email = "";
-    private String whatsappNumber = "";
+    // Step 1: Basic Information
+    private String fullName;
+    private String gender;
+    private LocalDate dob;
+    private String phone;
+    private String email;
+    private String whatsappNumber;
+    private String profilePictureUrl;
+    private Boolean otpVerified;
     
     // Step 2: Contact Information
-    private String permanentAddress = "";
-    private String currentAddress = "";
-    private String city = "";
-    private String pincode = "";
+    private String permanentAddress;
+    private String currentAddress;
+    private String city;
+    private String pincode;
     
     // Service areas (comma-separated)
-    private String serviceAreas = "";
-    
-    @Column(nullable = false)
-    private Boolean openToTravel = false;
+    private String serviceAreas;
+    private Boolean openToTravel;
     
     // Step 3: Professional Details
     // Stored as JSON strings for flexibility
     @Column(columnDefinition = "TEXT")
-    private String services = "{}"; // JSON of selected services
-    
-    private String experience = "";
-    private String workType = ""; // Part-time, Full-time, Weekends
+    private String services; // JSON of selected services
+    private String experience;
+    private String workType; // Part-time, Full-time, Weekends
 
     @Column(columnDefinition = "TEXT")
-    private String availability = "{}"; // JSON of availability days/times
+    private String availability; // JSON of availability days/times
     
     @Column(columnDefinition = "TEXT")
-    private String languages = "{}"; // JSON of languages
+    private String languages; // JSON of languages
     
     // Step 4: Verification
-    private String aadharNumber = "";
-    private String policeVerificationStatus = "PENDING";
-    private String idProofUrl = "";
-    private String selfieWithIdUrl = "";
+    private String aadharNumber;
+    private String policeVerificationStatus;
+    private String idProofUrl;
+    private String selfieWithIdUrl;
     
     @Column(columnDefinition = "TEXT")
-    private String certificateUrls = "{}"; // JSON array of certificate URLs
+    private String certificateUrls; // JSON array of certificate URLs
     
     // Step 5: Payment Information
-    private String paymentMode = ""; // UPI, Bank Transfer, Cash
-    private String upiId = "";
-    private String bankName = "";
-    private String accountNumber = "";
-    private String ifscCode = "";
-    private String panCard = "";
+    private String paymentMode; // UPI or Bank Transfer
+    private String upiId;
+    private String bankName;
+    private String accountNumber;
+    private String ifscCode;
+    private String panCard;
     
     // Emergency Contact
-    private String emergencyContactName = "";
-    private String emergencyContactNumber = "";
+    private String emergencyContactName;
+    private String emergencyContactNumber;
     
     // Registration status
-    @Column(nullable = false)
     private String registrationStatus = "INCOMPLETE"; // INCOMPLETE, PENDING_VERIFICATION, VERIFIED, REJECTED
-    @Column(nullable = false)
-    private LocalDate registrationDate = LocalDate.now();
+    private LocalDate registrationDate;
     private LocalDate verificationDate;
 
+    // Default constructor
+    public WorkerEntity() {
+        this.registrationDate = LocalDate.now();
+    }
+
+    // Getters and Setters
     public Long getId() {
         return id;
     }
@@ -116,14 +110,6 @@ public class Worker {
         this.dob = dob;
     }
 
-    public String getProfileImageUrl() {
-        return profileImageUrl;
-    }
-
-    public void setProfileImageUrl(String profileImageUrl) {
-        this.profileImageUrl = profileImageUrl;
-    }
-
     public String getPhone() {
         return phone;
     }
@@ -146,6 +132,22 @@ public class Worker {
 
     public void setWhatsappNumber(String whatsappNumber) {
         this.whatsappNumber = whatsappNumber;
+    }
+
+    public String getProfilePictureUrl() {
+        return profilePictureUrl;
+    }
+
+    public void setProfilePictureUrl(String profilePictureUrl) {
+        this.profilePictureUrl = profilePictureUrl;
+    }
+
+    public Boolean getOtpVerified() {
+        return otpVerified;
+    }
+
+    public void setOtpVerified(Boolean otpVerified) {
+        this.otpVerified = otpVerified;
     }
 
     public String getPermanentAddress() {
@@ -362,19 +364,5 @@ public class Worker {
 
     public void setVerificationDate(LocalDate verificationDate) {
         this.verificationDate = verificationDate;
-    }
-
-    public Worker() {
-    }
-
-    public Worker(Long id, String fullName, String gender, LocalDate dob, String profileImageUrl, String phone, String email, String whatsappNumber) {
-        this.id = id;
-        this.fullName = fullName;
-        this.gender = gender;
-        this.dob = dob;
-        this.profileImageUrl = profileImageUrl;
-        this.phone = phone;
-        this.email = email;
-        this.whatsappNumber = whatsappNumber;
     }
 }

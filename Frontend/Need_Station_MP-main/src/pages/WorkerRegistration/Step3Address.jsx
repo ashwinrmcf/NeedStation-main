@@ -1,7 +1,11 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 
-export default function ProfessionalDetailsPage({next,prev}) {
+export default function ProfessionalDetailsPage({ data, updateForm, next, prev, workerId }) {
+  if (!workerId) {
+    console.error("Worker ID is required for this step");
+  }
   // State for form data
   const [formData, setFormData] = useState({
     services: {
@@ -44,12 +48,19 @@ export default function ProfessionalDetailsPage({next,prev}) {
 
   // Handle checkbox changes
   const handleCheckboxChange = (category, item) => {
+    const updatedCategory = {
+      ...formData[category],
+      [item]: !formData[category][item]
+    };
+    
     setFormData({
       ...formData,
-      [category]: {
-        ...formData[category],
-        [item]: !formData[category][item]
-      }
+      [category]: updatedCategory
+    });
+    
+    // Also update parent form data
+    updateForm({
+      [category]: updatedCategory
     });
   };
 
@@ -58,6 +69,11 @@ export default function ProfessionalDetailsPage({next,prev}) {
     const { name, value } = e.target;
     setFormData({
       ...formData,
+      [name]: value
+    });
+    
+    // Also update parent form data
+    updateForm({
       [name]: value
     });
   };
@@ -69,6 +85,49 @@ export default function ProfessionalDetailsPage({next,prev}) {
       ...formData,
       [name]: value
     });
+    
+    // Also update parent form data
+    updateForm({
+      [name]: value
+    });
+  };
+  
+  // Handle form submission
+  const handleSubmit = async () => {
+    // Validate required fields
+    if (!formData.experience || !formData.workType) {
+      alert("Please select your experience level and work type");
+      return;
+    }
+    
+    try {
+      // Prepare data for backend
+      const workerData = {
+        // Convert objects to JSON strings for backend storage
+        services: JSON.stringify(formData.services),
+        experience: formData.experience,
+        workType: formData.workType,
+        availability: JSON.stringify(formData.availability),
+        languages: JSON.stringify(formData.languages)
+      };
+      
+      // API URL
+      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api';
+      
+      // Send data to backend
+      const response = await axios.post(
+        `${API_URL}/worker/register/step3?workerId=${workerId}`,
+        workerData
+      );
+      
+      console.log("Step 3 saved successfully:", response.data);
+      
+      // Proceed to next step
+      next();
+    } catch (error) {
+      console.error("Error saving professional details:", error);
+      alert(error.response?.data?.error || "Failed to save your information. Please try again.");
+    }
   };
 
   return (
@@ -121,23 +180,21 @@ export default function ProfessionalDetailsPage({next,prev}) {
         </div>
 
         {/* Years of Experience */}
-         {/* Years of Experience */}
-      <div className="mb-8 p-6 border border-gray-700 rounded-lg bg-gray-800/50">
-        <h2 className="text-xl font-semibold mb-4 text-teal-400">Years of Experience</h2>
-        <select
-  name="experience"
-  value={formData.experience}
-  onChange={handleInputChange}
-  className="w-full px-3 py-2 bg-gray-800 text-white text-base rounded-md border border-gray-700 focus:outline-none focus:ring-2 focus:ring-teal-500 cursor-pointer"
->
-  <option value="">Select experience</option>
-  <option value="0-1">Less than 1 year</option>
-  <option value="1-3">1–3 years</option>
-  <option value="3-5">3–5 years</option>
-  <option value="5-10">5–10 years</option>
-  <option value="10+">More than 10 years</option>
-</select>
-
+        <div className="mb-8 p-6 border border-gray-700 rounded-lg bg-gray-800/50">
+          <h2 className="text-xl font-semibold mb-4 text-teal-400">Years of Experience</h2>
+          <select
+            name="experience"
+            value={formData.experience}
+            onChange={handleInputChange}
+            className="w-full px-3 py-2 bg-gray-800 text-white text-base rounded-md border border-gray-700 focus:outline-none focus:ring-2 focus:ring-teal-500 cursor-pointer"
+          >
+            <option value="">Select experience</option>
+            <option value="0-1">Less than 1 year</option>
+            <option value="1-3">1–3 years</option>
+            <option value="3-5">3–5 years</option>
+            <option value="5-10">5–10 years</option>
+            <option value="10+">More than 10 years</option>
+          </select>
         </div>
 
         {/* Work Type Preference */}
@@ -173,7 +230,6 @@ export default function ProfessionalDetailsPage({next,prev}) {
         {/* Availability */}
         <div className="mb-8 p-6 border border-gray-700 rounded-lg bg-gray-800/50">
           <h2 className="text-xl font-semibold mb-4 text-teal-400">Availability</h2>
-          
           <div className="mb-6">
             <h3 className="font-medium mb-3 text-white">Days of the week</h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -280,7 +336,7 @@ export default function ProfessionalDetailsPage({next,prev}) {
             </svg>
             Back
           </button>
-          <button onClick={next}
+          <button onClick={handleSubmit}
             type="button"
             className="bg-teal-500 hover:bg-teal-400 text-white py-3 px-8 rounded-md font-medium transition-colors duration-200 flex items-center"
           >
