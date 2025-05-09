@@ -1,89 +1,56 @@
-package com.example.authbackend.model;
+package com.example.authbackend.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.persistence.*;
 import java.time.LocalDate;
 
-@Entity
-@Table(name = "worker")
-public class Worker {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+/**
+ * Master DTO that contains all the worker registration data
+ */
+public class WorkerRegistrationDTO {
     // Step 1: Basic Information
-    @Column(nullable = false)
-    private String fullName = "";
-    
-    @Column(nullable = false)
-    private String gender = "";
-
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Column(nullable = false)
-    private LocalDate dob = LocalDate.now();
-
-    private String profileImageUrl = "";
-
-    @Column(unique = true, nullable = false)
-    private String phone = "";
-
-    private String email = "";
-    private String whatsappNumber = "";
+    private Long id;
+    private String fullName;
+    private String gender;
+    private String dob;
+    private String phone;
+    private String email;
+    private String whatsappNumber;
     
     // Step 2: Contact Information
-    private String permanentAddress = "";
-    private String currentAddress = "";
-    private String city = "";
-    private String pincode = "";
-    
-    // Service areas (comma-separated)
-    private String serviceAreas = "";
-    
-    @Column(nullable = false)
-    private Boolean openToTravel = false;
+    private String permanentAddress;
+    private String currentAddress;
+    private String city;
+    private String pincode;
+    private String serviceAreas;
+    private Boolean openToTravel;
     
     // Step 3: Professional Details
-    // Stored as JSON strings for flexibility
-    @Column(columnDefinition = "TEXT")
-    private String services = "{}"; // JSON of selected services
-    
-    private String experience = "";
-    private String workType = ""; // Part-time, Full-time, Weekends
-
-    @Column(columnDefinition = "TEXT")
-    private String availability = "{}"; // JSON of availability days/times
-    
-    @Column(columnDefinition = "TEXT")
-    private String languages = "{}"; // JSON of languages
+    private String services;
+    private String experience;
+    private String workType;
+    private String availability;
+    private String languages;
     
     // Step 4: Verification
-    private String aadharNumber = "";
-    private String policeVerificationStatus = "PENDING";
-    private String idProofUrl = "";
-    private String selfieWithIdUrl = "";
-    
-    @Column(columnDefinition = "TEXT")
-    private String certificateUrls = "{}"; // JSON array of certificate URLs
+    private String aadharNumber;
+    private String policeVerificationStatus;
     
     // Step 5: Payment Information
-    private String paymentMode = ""; // UPI, Bank Transfer, Cash
-    private String upiId = "";
-    private String bankName = "";
-    private String accountNumber = "";
-    private String ifscCode = "";
-    private String panCard = "";
+    private String paymentMode;
+    private String upiId;
+    private String bankName;
+    private String accountNumber;
+    private String ifscCode;
+    private String panCard;
     
     // Emergency Contact
-    private String emergencyContactName = "";
-    private String emergencyContactNumber = "";
-    
-    // Registration status
-    @Column(nullable = false)
-    private String registrationStatus = "INCOMPLETE"; // INCOMPLETE, PENDING_VERIFICATION, VERIFIED, REJECTED
-    @Column(nullable = false)
-    private LocalDate registrationDate = LocalDate.now();
-    private LocalDate verificationDate;
+    private String emergencyContactName;
+    private String emergencyContactNumber;
 
+    // Default constructor
+    public WorkerRegistrationDTO() {
+    }
+
+    // Getters and Setters
     public Long getId() {
         return id;
     }
@@ -108,20 +75,12 @@ public class Worker {
         this.gender = gender;
     }
 
-    public LocalDate getDob() {
+    public String getDob() {
         return dob;
     }
 
-    public void setDob(LocalDate dob) {
+    public void setDob(String dob) {
         this.dob = dob;
-    }
-
-    public String getProfileImageUrl() {
-        return profileImageUrl;
-    }
-
-    public void setProfileImageUrl(String profileImageUrl) {
-        this.profileImageUrl = profileImageUrl;
     }
 
     public String getPhone() {
@@ -252,30 +211,6 @@ public class Worker {
         this.policeVerificationStatus = policeVerificationStatus;
     }
 
-    public String getIdProofUrl() {
-        return idProofUrl;
-    }
-
-    public void setIdProofUrl(String idProofUrl) {
-        this.idProofUrl = idProofUrl;
-    }
-
-    public String getSelfieWithIdUrl() {
-        return selfieWithIdUrl;
-    }
-
-    public void setSelfieWithIdUrl(String selfieWithIdUrl) {
-        this.selfieWithIdUrl = selfieWithIdUrl;
-    }
-
-    public String getCertificateUrls() {
-        return certificateUrls;
-    }
-
-    public void setCertificateUrls(String certificateUrls) {
-        this.certificateUrls = certificateUrls;
-    }
-
     public String getPaymentMode() {
         return paymentMode;
     }
@@ -338,43 +273,5 @@ public class Worker {
 
     public void setEmergencyContactNumber(String emergencyContactNumber) {
         this.emergencyContactNumber = emergencyContactNumber;
-    }
-
-    public String getRegistrationStatus() {
-        return registrationStatus;
-    }
-
-    public void setRegistrationStatus(String registrationStatus) {
-        this.registrationStatus = registrationStatus;
-    }
-
-    public LocalDate getRegistrationDate() {
-        return registrationDate;
-    }
-
-    public void setRegistrationDate(LocalDate registrationDate) {
-        this.registrationDate = registrationDate;
-    }
-
-    public LocalDate getVerificationDate() {
-        return verificationDate;
-    }
-
-    public void setVerificationDate(LocalDate verificationDate) {
-        this.verificationDate = verificationDate;
-    }
-
-    public Worker() {
-    }
-
-    public Worker(Long id, String fullName, String gender, LocalDate dob, String profileImageUrl, String phone, String email, String whatsappNumber) {
-        this.id = id;
-        this.fullName = fullName;
-        this.gender = gender;
-        this.dob = dob;
-        this.profileImageUrl = profileImageUrl;
-        this.phone = phone;
-        this.email = email;
-        this.whatsappNumber = whatsappNumber;
     }
 }

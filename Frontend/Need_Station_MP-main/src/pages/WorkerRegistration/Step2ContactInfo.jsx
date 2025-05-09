@@ -1,15 +1,24 @@
-
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { MapPin, CheckCircle, HelpCircle } from 'lucide-react';
+import axios from 'axios';
 
-export default function LocationDetailsForm({updateForm, next, prev }) {
+export default function LocationDetailsForm({ data, updateForm, next, prev, workerId }) {
+  // Initialize form with data from parent component or default values
   const [formData, setFormData] = useState({
-    address: '',
-    city: '',
-    pincode: '',
-    serviceAreas: [],
-    openToTravel: false
+    permanentAddress: data.permanentAddress || '',
+    currentAddress: data.currentAddress || '',
+    city: data.city || '',
+    pincode: data.pincode || '',
+    serviceAreas: data.serviceAreas ? data.serviceAreas.split(',') : [],
+    openToTravel: data.openToTravel || false
   });
+  
+  // Check for workerId in useEffect to avoid state updates during render
+  useEffect(() => {
+    if (!workerId) {
+      console.error("Worker ID is required for this step");
+    }
+  }, [workerId]);
 
   const [availableAreas] = useState([
     'Mumbai', 'Delhi', 'Bangalore', 'Chennai', 'Hyderabad', 
@@ -18,34 +27,78 @@ export default function LocationDetailsForm({updateForm, next, prev }) {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
+    const newValue = type === 'checkbox' ? checked : value;
+    
     setFormData(prev => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: newValue
     }));
+    
+    // Also update parent form data
+    updateForm({
+      [name]: newValue
+    });
   };
 
   const handleAreaSelect = (area) => {
     setFormData(prev => {
+      let updatedAreas;
+      
       if (prev.serviceAreas.includes(area)) {
-        return {
-          ...prev,
-          serviceAreas: prev.serviceAreas.filter(a => a !== area)
-        };
+        updatedAreas = prev.serviceAreas.filter(a => a !== area);
       } else {
-        return {
-          ...prev,
-          serviceAreas: [...prev.serviceAreas, area]
-        };
+        updatedAreas = [...prev.serviceAreas, area];
       }
+      
+      // Update parent form data
+      updateForm({
+        serviceAreas: updatedAreas.join(',')
+      });
+      
+      return {
+        ...prev,
+        serviceAreas: updatedAreas
+      };
     });
   };
 
-  const handleSubmit = () => {
-   // e.preventDefault();
-    updateForm({ [e.target.name]: e.target.value });
-     
-     // next();
-    // Here you would handle form submission logic
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    // Validate required fields
+    if (!formData.permanentAddress || !formData.city || !formData.pincode) {
+      alert("Please fill in all required fields");
+      return;
+    }
+    
+    try {
+      // Prepare data for backend
+      const workerData = {
+        permanentAddress: formData.permanentAddress,
+        currentAddress: formData.currentAddress,
+        city: formData.city,
+        pincode: formData.pincode,
+        serviceAreas: formData.serviceAreas.join(','),
+        openToTravel: formData.openToTravel
+      };
+      
+      // API URL
+      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api';
+      
+      // Send data to backend
+      const response = await axios.post(
+        `${API_URL}/worker/register/step2?workerId=${workerId}`,
+        workerData
+      );
+      
+      console.log("Step 2 saved successfully:", response.data);
+      
+      // Proceed to next step
+      next();
+    } catch (error) {
+      console.error("Error saving contact information:", error);
+      alert(error.response?.data?.error || "Failed to save your information. Please try again.");
+    }
   };
 
   return (
@@ -68,16 +121,31 @@ export default function LocationDetailsForm({updateForm, next, prev }) {
         </h3>
 
         <div className="space-y-6">
-          {/* Current Address */}
+          {/* Permanent Address */}
           <div>
-            <label htmlFor="address" className="block mb-2">Current Address</label>
+            <label htmlFor="permanentAddress" className="block mb-2">Permanent Address <span className="text-red-500">*</span></label>
             <input
               type="text"
-              id="address"
-              name="address"
-              value={formData.address}
+              id="permanentAddress"
+              name="permanentAddress"
+              value={formData.permanentAddress}
               onChange={handleChange}
-              placeholder="Enter your complete address"
+              placeholder="Enter your permanent address"
+              className="w-full p-3 bg-gray-800 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-400"
+              required
+            />
+          </div>
+          
+          {/* Current Address */}
+          <div>
+            <label htmlFor="currentAddress" className="block mb-2">Current Address (if different)</label>
+            <input
+              type="text"
+              id="currentAddress"
+              name="currentAddress"
+              value={formData.currentAddress}
+              onChange={handleChange}
+              placeholder="Enter your current address"
               className="w-full p-3 bg-gray-800 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-400"
             />
           </div>
@@ -85,7 +153,7 @@ export default function LocationDetailsForm({updateForm, next, prev }) {
           {/* City & Pincode */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label htmlFor="city" className="block mb-2">City</label>
+              <label htmlFor="city" className="block mb-2">City <span className="text-red-500">*</span></label>
               <input
                 type="text"
                 id="city"
@@ -94,10 +162,11 @@ export default function LocationDetailsForm({updateForm, next, prev }) {
                 onChange={handleChange}
                 placeholder="Enter city"
                 className="w-full p-3 bg-gray-800 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-400"
+                required
               />
             </div>
             <div>
-              <label htmlFor="pincode" className="block mb-2">Pincode</label>
+              <label htmlFor="pincode" className="block mb-2">Pincode <span className="text-red-500">*</span></label>
               <input
                 type="text"
                 id="pincode"
@@ -106,6 +175,7 @@ export default function LocationDetailsForm({updateForm, next, prev }) {
                 onChange={handleChange}
                 placeholder="Enter pincode"
                 className="w-full p-3 bg-gray-800 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-400"
+                required
               />
             </div>
           </div>
@@ -158,7 +228,7 @@ export default function LocationDetailsForm({updateForm, next, prev }) {
             >
               Back
             </button>
-            <button onClick={next}
+            <button onClick={handleSubmit}
               type="button"
               className="bg-teal-400 text-gray-900 rounded-md px-6 py-3 hover:bg-teal-500"
             >
