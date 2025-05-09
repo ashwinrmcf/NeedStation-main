@@ -1,32 +1,241 @@
 package com.example.authbackend.controller;
 
-import com.example.authbackend.model.Worker;
-import com.example.authbackend.repository.WorkerRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import com.example.authbackend.dto.WorkerDTO;
+import com.example.authbackend.dto.WorkerRegistrationDTO;
+import com.example.authbackend.model.Worker;
+import com.example.authbackend.service.WorkerService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
-@RequestMapping("/api/workers")
-//@CrossOrigin(origins="http://localhost:5173")// Allow React to communicate with backend
-@CrossOrigin(origins = "*")
-
+@RequestMapping("/api/worker")
+@CrossOrigin(origins = "*") // Allow all origins explicitly here
 public class WorkerController {
 
     @Autowired
-    private WorkerRepository workerRepository;
+    private com.fasterxml.jackson.databind.ObjectMapper objectMapper;
+
+    private final WorkerService workerService;
+
+    @Autowired
+    public WorkerController(WorkerService workerService) {
+        this.workerService = workerService;
+    }
+
+    // Step 1: Basic Information
+    @PostMapping(value = "/register/step1", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> registerStep1(
+            @RequestParam(value = "workerId", required = false) Long workerId,
+            @RequestPart(value = "data", required = true) String data,
+            @RequestPart(value = "profilePicture", required = false) MultipartFile profilePicture) {
+        try {
+            // Parse the JSON string directly
+            WorkerRegistrationDTO dto = objectMapper.readValue(data, WorkerRegistrationDTO.class);
+            System.out.println("Received Step 1 registration request - Worker ID: " + workerId);
+            System.out.println("DTO Data: fullName=" + dto.getFullName() + ", phone=" + dto.getPhone());
+            System.out.println("Profile Picture: " + (profilePicture != null ? "Provided (" + profilePicture.getSize() + " bytes)" : "Not provided"));
+            Worker worker = workerService.updateBasicInfo(workerId, dto, profilePicture);
+            Map<String, Object> response = new HashMap<>();
+            response.put("workerId", worker.getId());
+            response.put("message", "Basic information saved successfully");
+            System.out.println("Successfully saved worker basic info. Worker ID: " + worker.getId());
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            System.err.println("Error in registerStep1: " + e.getMessage());
+            e.printStackTrace();
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("error", e.getMessage());
+            errorResponse.put("errorType", e.getClass().getSimpleName());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(errorResponse);
+        }
+    }
+
+    // Step 2: Contact Information
+    @PostMapping("/register/step2")
+    public ResponseEntity<?> registerStep2(
+            @RequestParam("workerId") Long workerId,
+            @RequestBody WorkerRegistrationDTO dto) {
+        try {
+            System.out.println("Received Step 2 registration request - Worker ID: " + workerId);
+            System.out.println("Contact info: city=" + dto.getCity() + ", serviceAreas=" + dto.getServiceAreas());
+            
+            Worker worker = workerService.updateContactInfo(workerId, dto);
+            Map<String, Object> response = new HashMap<>();
+            response.put("workerId", worker.getId());
+            response.put("message", "Contact information saved successfully");
+            
+            System.out.println("Successfully saved worker contact info. Worker ID: " + worker.getId());
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            System.err.println("Error in registerStep2: " + e.getMessage());
+            e.printStackTrace();
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("error", e.getMessage());
+            errorResponse.put("errorType", e.getClass().getSimpleName());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(errorResponse);
+        }
+    }
+
+    // Step 3: Professional Details
+    @PostMapping("/register/step3")
+    public ResponseEntity<?> registerStep3(
+            @RequestParam("workerId") Long workerId,
+            @RequestBody WorkerRegistrationDTO dto) {
+        try {
+            System.out.println("Received Step 3 registration request - Worker ID: " + workerId);
+            System.out.println("Professional details: services=" + dto.getServices() + ", experience=" + dto.getExperience());
+            
+            Worker worker = workerService.updateProfessionalDetails(workerId, dto);
+            Map<String, Object> response = new HashMap<>();
+            response.put("workerId", worker.getId());
+            response.put("message", "Professional details saved successfully");
+            
+            System.out.println("Successfully saved worker professional details. Worker ID: " + worker.getId());
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            System.err.println("Error in registerStep3: " + e.getMessage());
+            e.printStackTrace();
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("error", e.getMessage());
+            errorResponse.put("errorType", e.getClass().getSimpleName());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(errorResponse);
+        }
+    }
+
+    // Step 4: Verification
+    @PostMapping(value = "/register/step4", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> registerStep4(
+            @RequestParam("workerId") Long workerId,
+            @RequestPart("data") WorkerRegistrationDTO dto,
+            @RequestPart(value = "idProof", required = false) MultipartFile idProof,
+            @RequestPart(value = "selfieWithId", required = false) MultipartFile selfieWithId,
+            @RequestPart(value = "certificates", required = false) MultipartFile[] certificates) {
+        try {
+            System.out.println("Received Step 4 registration request - Worker ID: " + workerId);
+            System.out.println("Verification details: aadharNumber=" + dto.getAadharNumber());
+            System.out.println("ID Proof provided: " + (idProof != null && !idProof.isEmpty()));
+            System.out.println("Selfie provided: " + (selfieWithId != null && !selfieWithId.isEmpty()));
+            
+            Worker worker = workerService.updateVerificationDetails(workerId, dto, idProof, selfieWithId, certificates);
+            Map<String, Object> response = new HashMap<>();
+            response.put("workerId", worker.getId());
+            response.put("message", "Verification details saved successfully");
+            
+            System.out.println("Successfully saved worker verification details. Worker ID: " + worker.getId());
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            System.err.println("Error in registerStep4: " + e.getMessage());
+            e.printStackTrace();
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("error", e.getMessage());
+            errorResponse.put("errorType", e.getClass().getSimpleName());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(errorResponse);
+        }
+    }
+
+    // Step 5: Payment Information
+    @PostMapping("/register/step5")
+    public ResponseEntity<?> registerStep5(
+            @RequestParam("workerId") Long workerId,
+            @RequestBody WorkerRegistrationDTO dto) {
+        try {
+            System.out.println("Received Step 5 registration request - Worker ID: " + workerId);
+            System.out.println("Payment info: paymentMode=" + dto.getPaymentMode() + ", upiId=" + dto.getUpiId());
+            
+            Worker worker = workerService.updatePaymentInfo(workerId, dto);
+            Map<String, Object> response = new HashMap<>();
+            response.put("workerId", worker.getId());
+            response.put("message", "Payment information saved successfully");
+            response.put("status", worker.getRegistrationStatus());
+            
+            System.out.println("Successfully saved worker payment info. Worker ID: " + worker.getId() + ", Status: " + worker.getRegistrationStatus());
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            System.err.println("Error in registerStep5: " + e.getMessage());
+            e.printStackTrace();
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("error", e.getMessage());
+            errorResponse.put("errorType", e.getClass().getSimpleName());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(errorResponse);
+        }
+    }
+
+    // Get all worker information for review page
+    @GetMapping("/details/{workerId}")
+    public ResponseEntity<?> getWorkerDetails(@PathVariable Long workerId) {
+        try {
+            System.out.println("Fetching details for worker ID: " + workerId);
+            return workerService.getWorkerById(workerId)
+                    .map(worker -> {
+                        System.out.println("Worker found: " + worker.getFullName() + ", Profile image: " + worker.getProfileImageUrl());
+                        return ResponseEntity.ok(worker);
+                    })
+                    .orElseGet(() -> {
+                        System.err.println("Worker not found with ID: " + workerId);
+                        return ResponseEntity.notFound().build();
+                    });
+        } catch (Exception e) {
+            System.err.println("Error fetching worker details: " + e.getMessage());
+            e.printStackTrace();
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("error", e.getMessage());
+            errorResponse.put("errorType", e.getClass().getSimpleName());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
+    }
+
+    // Final submission
+    @PostMapping("/register/submit")
+    public ResponseEntity<?> finalizeRegistration(@RequestParam("workerId") Long workerId) {
+        try {
+            System.out.println("Finalizing registration for worker ID: " + workerId);
+            Worker worker = workerService.finalizeRegistration(workerId);
+            Map<String, Object> response = new HashMap<>();
+            response.put("workerId", worker.getId());
+            response.put("message", "Worker registration completed successfully");
+            response.put("status", worker.getRegistrationStatus());
+            
+            System.out.println("Registration finalized successfully. Worker ID: " + worker.getId() + ", Status: " + worker.getRegistrationStatus());
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            System.err.println("Error finalizing registration: " + e.getMessage());
+            e.printStackTrace();
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("error", e.getMessage());
+            errorResponse.put("errorType", e.getClass().getSimpleName());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
+    }
 
     @PostMapping("/register")
-    public Worker registerWorker(@RequestBody Worker worker) {
-        System.out.println("Received worker: " + worker);
-        return workerRepository.save(worker);
-    }
-
-   @GetMapping("/all")
-    public List<Worker> getAllWorkers() {
-        return workerRepository.findAll();
+    public ResponseEntity<String> registerWorker(
+            @RequestPart("worker") WorkerDTO workerDTO,
+            @RequestPart("file") MultipartFile file) {
+        try {
+            String imageUrl = workerService.uploadImage(file); // Call service method to upload image
+            workerService.saveWorker(workerDTO, imageUrl);     // Save worker info in the database
+            return ResponseEntity.ok("Worker registered successfully!");
+        } catch (Exception e) {
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Registration failed: " + e.getMessage());
+        }
     }
 }
+
 
 

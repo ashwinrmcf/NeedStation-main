@@ -6,5 +6,7 @@
 
     @Repository
     public interface WorkerRepository extends JpaRepository<Worker, Long> {
+        boolean existsByPhone(String phone);
     }
+
 
