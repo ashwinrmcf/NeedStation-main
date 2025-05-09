@@ -8,6 +8,7 @@ import Home from "./pages/HomePage/Home.jsx";
 import BasicNeedsHome from "./pages/BasicNeeds/BasicNeedsHome.jsx";
 import Login from "./pages/LoginPage/Login.jsx";
 import Signup from "./pages/SignupPage/Signup.jsx";
+import MaidServicesHome from "./pages/MaidServices/MaidServicesHome.jsx";
 import Electrician from "./pages/BasicNeeds/Electrician.jsx";
 import Plumber from "./pages/BasicNeeds/Plumber.jsx";
 import WaterSupply from "./pages/BasicNeeds/WaterSupply.jsx";
@@ -21,13 +22,15 @@ import TestRouterContext from "./test/TestRouterContext.jsx";
 import PaymentGateway from "./pages/PaymentGateway/PaymentGateway.jsx";
 import AvailableHelpers from "./pages/BasicNeeds/AvailableHelpers.jsx";
 import HelperRegistration from "./pages/WorkerRegistration/WorkerRegistration.jsx";
-import FlatRentalHome from "./pages/FlatandMaidService/FlatRentalHome.jsx";
 import HelperLayout from "./components/layouts/HelperLayout.jsx";
 import OverviewPage from "./pages/HelperPages/OverviewPage.jsx";
 import UpcomingTaskPage from "./pages/HelperPages/UpcomingTasksPage";
 import CompletedTaskPage from "./pages/HelperPages/CompletedTaskPage";
 import SettingsPage from "./pages/HelperPages/SettingsPage";
 import EarningPage from "./pages/HelperPages/EarningAndPaymentPage";
+import ContactUs from "./pages/ContactUs/ContactUs.jsx";
+import AboutUs from "./pages/AboutUs/AboutUs.jsx";
+
 
 const router = createBrowserRouter([
   {
@@ -36,6 +39,7 @@ const router = createBrowserRouter([
     children: [
       { path: "/", element: <Home /> },
       { path: "/basic-needs-home", element: <BasicNeedsHome /> },
+      { path: "/maid-services", element: <MaidServicesHome/>},
       { path: "/electrician", element: <Electrician /> },
       { path: "/plumber", element: <Plumber /> },
       { path: "/water-supply", element: <WaterSupply /> },
@@ -45,13 +49,14 @@ const router = createBrowserRouter([
       { path: "/paralysis-care", element: <ParalysisCare /> },
       { path: "/postnatal-care", element: <PostnatalCare /> },
       {path: "/helper-registration", element: <HelperRegistration/>},
-      {path: "/flat-rental-home", element: <FlatRentalHome/>},
+      {path: "/contact-us", element: <ContactUs/>},
+      {path: "/about-us", element: <AboutUs/>},
     ],
   },
   { path: "/login", element: <Login /> },
   { path: "/signup", element: <Signup /> },
   {
-    path: "/basic-needs/user-details",
+    path: "/user-details",
     element: <BasicNeedsServiceUserDescription />,
   },
   { path: "/payment-gateway", element: <PaymentGateway /> },
