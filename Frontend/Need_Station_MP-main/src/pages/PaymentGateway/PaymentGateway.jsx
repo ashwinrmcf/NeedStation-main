@@ -49,7 +49,7 @@ const PaymentGateway = () => {
     <>
       <div className={styles["payment-container"]}>
         <header className={styles["header"]}>
-          <Link to="/basic-needs/user-details" className={styles["back-btn"]}><FaArrowLeftLong /></Link>
+          <Link to="/user-details" className={styles["back-btn"]}><FaArrowLeftLong /></Link>
           <h1>Select payment method</h1>
           <p className={styles["par1"]}>Amount to pay:</p>
         </header>

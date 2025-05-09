@@ -1,5 +1,3 @@
-
-
 const ElderCareServiceDetails = ({data}) => {
 
   if (!data) {

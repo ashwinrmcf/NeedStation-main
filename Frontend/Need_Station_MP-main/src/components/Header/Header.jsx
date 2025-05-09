@@ -18,14 +18,14 @@ const Header = () => {
   const location = useLocation(); 
   useEffect(() => {
     setDropdownOpen(false);
-  }, [location.pathname]); // Trigger this effect whenever the pathname changes
+  }, [location.pathname]);
 
 
   return (
     <>
       <div
         style={{
-          minHeight: isDropdownOpen ? "40vh" : "auto", // Dynamically set min-height
+          minHeight: isDropdownOpen ? "40vh" : "auto",
         }}
       >
         <header className={styles.header}>
@@ -36,11 +36,11 @@ const Header = () => {
           </Link>
           <nav className={styles.navLinks}>
             <Link to="/">Home</Link>
-            <Link to="#">About Us</Link>
+            <Link to="/about-us">About Us</Link>
             <button className={styles.dropdownToggle} onClick={toggleDropdown}>
               Services
             </button>
-            <Link to="#">Contact Us</Link>
+            <Link to="/contact-us">Contact Us</Link>
           </nav>
           <div className={styles.authButtons}>
             {user ? (
