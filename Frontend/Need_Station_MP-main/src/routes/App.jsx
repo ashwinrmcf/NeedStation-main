@@ -4,6 +4,7 @@ import './App.css';
 
 import { Outlet } from "react-router-dom";
 import Header from "../components/Header/Header.jsx";
+import PageTranslator from "../components/PageTranslator.jsx";
 import Footer from "../components/Footer/Footer.jsx";
 import ScrollToTop from "../hooks/ScrollToTop.jsx";
 import { ToastContainer } from "react-toastify";
@@ -26,6 +27,8 @@ function App() {
     <>
       <ScrollToTop />
       <Header />
+      {/* Translation Button at Root Level */}
+      <PageTranslator />
       <div className="container my-4">
         <AdvancedImage cldImg={img} />
       </div>

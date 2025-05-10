@@ -63,6 +63,52 @@ h3 {
   color: #00E0B8;
 }
 
+.logo-container {
+  height: 300px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+@keyframes breathe {
+  0% {
+    box-shadow: 0 0 15px 5px rgba(0, 224, 184, 0.5);
+    border-color: #00E0B8;
+  }
+  50% {
+    box-shadow: 0 0 25px 8px rgba(0, 224, 184, 0.7);
+    border-color: #5CE1E6;
+  }
+  100% {
+    box-shadow: 0 0 15px 5px rgba(0, 224, 184, 0.5);
+    border-color: #00E0B8;
+  }
+}
+
+.logo-image {
+  max-width: 90%;
+  max-height: 90%;
+  object-fit: contain;
+  border-radius: 8px;
+  border: 3px solid #00E0B8;
+  box-shadow: 0 0 15px 5px rgba(0, 224, 184, 0.5);
+  transition: transform 0.3s ease;
+  padding: 10px;
+  background-color: rgba(0, 0, 0, 0.2);
+  animation: breathe 3s infinite ease-in-out;
+}
+
+.logo-image:hover {
+  transform: scale(1.03);
+  animation-duration: 1.5s; /* Animation speeds up on hover */
+}
+
 .services-section {
   margin-bottom: 50px;
   padding: 30px;

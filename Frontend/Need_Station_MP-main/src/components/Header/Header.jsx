@@ -41,6 +41,7 @@ const Header = () => {
               Services
             </button>
             <Link to="/contact-us">Contact Us</Link>
+            <Link to="/language-settings">Language</Link>
           </nav>
           <div className={styles.authButtons}>
             {user ? (

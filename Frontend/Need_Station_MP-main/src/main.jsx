@@ -30,6 +30,7 @@ import SettingsPage from "./pages/HelperPages/SettingsPage";
 import EarningPage from "./pages/HelperPages/EarningAndPaymentPage";
 import ContactUs from "./pages/ContactUs/ContactUs.jsx";
 import AboutUs from "./pages/AboutUs/AboutUs.jsx";
+import TranslationCenter from "./pages/TranslationCenter/TranslationCenter.jsx";
 
 
 const router = createBrowserRouter([
@@ -51,6 +52,7 @@ const router = createBrowserRouter([
       {path: "/helper-registration", element: <HelperRegistration/>},
       {path: "/contact-us", element: <ContactUs/>},
       {path: "/about-us", element: <AboutUs/>},
+      {path: "/language-settings", element: <TranslationCenter/>},
     ],
   },
   { path: "/login", element: <Login /> },
