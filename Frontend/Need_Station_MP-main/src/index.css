@@ -10,4 +10,17 @@ body {
   margin: 0;
   font-family: 'Poppins', sans-serif;
   background: #00071A;
+  padding-top: 120px; /* Add padding for fixed header */
 } 
+
+/* Style adjustments for fixed header */
+#root > .container, 
+#root > div > .container,
+main {
+  padding-top: 20px;
+}
+
+/* Adjust other page elements for fixed header */
+.custom-carousel {
+  margin-top: 40px !important;
+}

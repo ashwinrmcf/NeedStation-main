@@ -5,6 +5,7 @@ import ajitesh from "../../assets/images/AboutUs/ajitesh.jpg";
 import abhishek from "../../assets/images/AboutUs/abhishek.jpg";
 import zainab from "../../assets/images/AboutUs/zainab.jpg";
 import aman from "../../assets/images/AboutUs/aman.jpg";
+import ashutosh from "../../assets/images/AboutUs/ashutosh2.jpeg";
 import logo from "../../assets/images/AboutUs/logo.jpeg";
 
 const AboutUs = () => {
@@ -30,7 +31,7 @@ const AboutUs = () => {
     {
       name: "Ashutosh Garg",
       role: "Operations Manager",
-      image: "/images/team-member-3.jpg",
+      image: ashutosh,
       description: "Manages day-to-day operations and service provider relationships to ensure reliable and high-quality service delivery.",
     },
     {

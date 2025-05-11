@@ -5,13 +5,23 @@
   align-items: center;
   justify-content: space-between;
   padding: 0 1.337vw;
-  margin: 6.685vh auto;
+  margin: 0 auto;
   border-radius: 16px; /* Rounded corners */
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 100%); /* Top-to-bottom gradient */
   border: 1px solid rgba(255, 255, 255, 0.3);
   backdrop-filter: blur(2.625rem);
-  position: relative;
-  z-index: 10;
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.header:hover {
+  box-shadow: 0 6px 40px rgba(0, 224, 184, 0.15);
+  border: 1px solid rgba(0, 224, 184, 0.3);
 }
 
 /* Styles for smaller screens (mobile) */
@@ -49,31 +59,87 @@
 }
 
 .logo {
-  font-size: 1.25rem;
-  font-weight: 600;
+  font-size: 1.5rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  transition: transform 0.3s ease;
+}
+
+.logo:hover {
+  transform: scale(1.05);
+}
+
+
+
+.needText {
   color: #FFFFFF;
+  transition: color 0.3s ease;
 }
 
-.logo span {
+.stationText {
   color: #00E0B8; /* Teal color for "Station" */
+  transition: color 0.3s ease;
 }
 
-.navLinks a {
+.logo:hover .needText {
+  color: #f0f0f0;
+}
+
+.logo:hover .stationText {
+  color: #4fffeb;
+}
+
+.navLinks a, .navLinks button {
   margin: 0 1vw;
   color: #FFFFFF;
   text-decoration: none;
   font-size: 1.125rem;
   font-weight: 400;
   opacity: 0.8; /* Slight transparency */
+  position: relative;
+  padding: 0.5rem 0.2rem;
+  transition: all 0.3s ease;
+}
+
+.navLinks a::after, .navLinks button::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: 0;
+  left: 0;
+  background-color: #00E0B8; /* Teal color for the underline */
+  transition: width 0.3s ease;
+}
+
+.navLinks a:hover, .navLinks button:hover {
+  opacity: 1;
+  color: #00E0B8; /* Teal color on hover */
+  transform: translateY(-2px);
+}
+
+.navLinks a:hover::after, .navLinks button:hover::after {
+  width: 100%;
+}
+
+/* Active link styling */
+.navLinks a.active, .navLinks button.active {
+  color: #00E0B8;
+  opacity: 1;
+  font-weight: 500;
+}
+
+.navLinks a.active::after, .navLinks button.active::after {
+  width: 100%;
+  background-color: #00E0B8;
 }
 
 .dropdownToggle {
-  margin: 0 1vw;
-  color: #FFFFFF;
-  text-decoration: none;
-  font-size: 1.125rem;
-  font-weight: 400;
-  opacity: 0.8; /* Slight transparency */
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: 'Poppins', sans-serif;
 }
 
 .authButtons {
@@ -81,43 +147,98 @@
   align-items: center;
 }
 
-.authButtons .login {
+/* Button effect styles */
+@keyframes borderGlow {
+  0% { border-color: currentColor; box-shadow: 0 0 0 0 rgba(0, 224, 184, 0); }
+  50% { border-color: #00E0B8; box-shadow: 0 0 8px 1px rgba(0, 224, 184, 0.4); }
+  100% { border-color: currentColor; box-shadow: 0 0 0 0 rgba(0, 224, 184, 0); }
+}
+
+.authButtons .login, .authButtons .signup, .authButtons .becomeTasker, .logout {
   font-size: 1.125rem;
   font-weight: 400;
+  padding: 1.1vh 1.5vw;
+  margin-left: 0.668vw;
+  border-radius: 12px;
+  cursor: pointer;
+  opacity: 0.8;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1); /* Professional easing */
+  backface-visibility: hidden; /* Prevents glitches */
+  transform: translateZ(0); /* Hardware acceleration */
+}
+
+.authButtons .login {
   color: #FFFFFF;
   border: 2px solid #FFFFFF;
   background-color: transparent;
-  padding: 1.1vh 1vw;
-  margin-left: 0.668vw;
-  border-radius: 12px;
-  cursor: pointer;
-  opacity: 0.8;
+  backdrop-filter: blur(4px);
 }
 
+.authButtons .login:hover, .authButtons .signup:hover, .authButtons .becomeTasker:hover, .logout:hover {
+  transform: translateY(-2px);
+  opacity: 1;
+}
+
+.authButtons .login:hover {
+  color: #FFFFFF;
+  border-color: #00E0B8;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2), 0 0 5px rgba(0, 224, 184, 0.3);
+  animation: borderGlow 2s infinite;
+}
+
+
+
 .authButtons .signup {
-  font-size: 1.125rem;
-  font-weight: 400;
   color: #FFFFFF;
   background-color: #00E0B8; /* Teal background for "Sign in" */
   border: none;
-  padding: 1.114vh 1.07vw;
-  margin-left: 0.668vw;
-  border-radius: 12px;
-  cursor: pointer;
-  opacity: 0.8;
+  z-index: 1;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
+.authButtons .signup:hover {
+  color: #FFFFFF;
+  background-color: #00E0B8;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2), 0 0 15px rgba(0, 224, 184, 0.4);
+}
+
+
+
 .authButtons .becomeTasker {
-  font-size: 1.125rem;
-  font-weight: 400;
   color: #00E0B8; /* Teal text for "Become a tasker" */
-  background-color: rgba(255, 255, 255, 0.2); /* Light transparent white background */
+  background-color: rgba(255, 255, 255, 0.1); /* Light transparent white background */
   border: 1px solid #00E0B8;
-  padding: 1.114vh 1.07vw;
-  margin-left: 0.668vw;
-  border-radius: 12px;
-  cursor: pointer;
-  opacity: 0.8;
+  backdrop-filter: blur(4px);
+}
+
+.authButtons .login::before, .authButtons .signup::before, .authButtons .becomeTasker::before, .logout::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0);
+  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+  z-index: -1;
+  transform: scale(0.8);
+  opacity: 0;
+  border-radius: 8px;
+}
+
+.authButtons .becomeTasker:hover {
+  color: #FFFFFF;
+  background-color: rgba(0, 224, 184, 0.9);
+  border-color: transparent;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2), 0 0 15px rgba(0, 224, 184, 0.4);
+}
+
+.authButtons .login:hover::before, .authButtons .signup:hover::before, .authButtons .becomeTasker:hover::before, .logout:hover::before {
+  opacity: 1;
+  transform: scale(1);
+  background-color: rgba(255, 255, 255, 0.05);
 }
 
 @media (min-width: 768px) and (max-width: 992px) {
@@ -128,17 +249,17 @@
 }
 
 
-.logout{
-  font-size: 1.125rem;
-  font-weight: 400;
+.logout {
   color: #FFFFFF;
   border: 2px solid #FFFFFF;
   background-color: transparent;
-  padding: 1.1vh 1vw;
-  margin-left: 0.668vw;
-  border-radius: 12px;
-  cursor: pointer;
-  opacity: 0.8;
+  backdrop-filter: blur(4px);
+}
+
+.logout:hover {
+  color: #FFFFFF;
+  border-color: #FF5555;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2), 0 0 5px rgba(255, 85, 85, 0.3);
 }
 
 .greeting {
