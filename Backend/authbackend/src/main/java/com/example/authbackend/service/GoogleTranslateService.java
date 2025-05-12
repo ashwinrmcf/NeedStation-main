@@ -1,11 +1,14 @@
 package com.example.authbackend.service;
 
+import org.cloudinary.json.JSONArray;
+import org.cloudinary.json.JSONObject;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
@@ -17,44 +20,36 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class GoogleTranslateService {
-    private final String API_KEY = "AIzaSyDaEJ4vo3cRDG90bsEVw2C98QNQlP5Ai6o"; // Replace with your real API key
 
-    public String translate(String text, String targetLang) {
+    private final String API_KEY = "AIzaSyDaEJ4vo3cRDG90bsEVw2C98QNQlP5Ai6o";
+    private final String ENDPOINT = "https://translation.googleapis.com/language/translate/v2";
+
+    public List<String> translateTexts(List<String> texts, String targetLang) {
+        List<String> results = new ArrayList<>();
         try {
-            String urlStr = "https://translation.googleapis.com/language/translate/v2?key=" + API_KEY;
-
             RestTemplate restTemplate = new RestTemplate();
+            String url = ENDPOINT + "?key=" + API_KEY;
 
-            // Set up headers
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON);
-
-            // Set up request body
             Map<String, Object> body = new HashMap<>();
-            body.put("q", text);
+            body.put("q", texts);
             body.put("target", targetLang);
 
-            // Wrap body and headers into HttpEntity
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
             HttpEntity<Map<String, Object>> entity = new HttpEntity<>(body, headers);
 
-            // Make the POST request
-            ResponseEntity<String> response = restTemplate.postForEntity(urlStr, entity, String.class);
+            ResponseEntity<String> response = restTemplate.postForEntity(url, entity, String.class);
+            JSONObject json = new JSONObject(response.getBody());
 
-            // Parse the JSON response to extract the translated text
-            String jsonResponse = response.getBody();
-            ObjectMapper mapper = new ObjectMapper();
-            JsonNode rootNode = mapper.readTree(jsonResponse);
-            JsonNode translationsNode = rootNode.path("data").path("translations");
-            
-            if (translationsNode.isArray() && translationsNode.size() > 0) {
-                return translationsNode.get(0).path("translatedText").asText();
+            JSONArray translations = json.getJSONObject("data").getJSONArray("translations");
+            for (int i = 0; i < translations.length(); i++) {
+                results.add(translations.getJSONObject(i).getString("translatedText"));
             }
-            
-            return "Unable to extract translation from response.";
+
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Translation error details: " + e.getMessage());
-            return "Error in translation: " + e.getMessage();
+            results = texts; // fallback to original
         }
+        return results;
     }
 }
