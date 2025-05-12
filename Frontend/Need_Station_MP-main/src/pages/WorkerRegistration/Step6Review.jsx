@@ -189,8 +189,9 @@ export default function WorkerProfileSummary({ workerId, prev }) {
               <div className="space-y-6">
                 <div className="flex items-center text-teal-400 mb-4">
                   <User className="mr-2" />
-                  <h2 className="text-2xl font-semibold">Basic Information</h2>
-                  <span className="text-white ml-2">Details</span>
+                  <div>
+                    <h2 className="text-2xl font-semibold">Basic Information <span className="text-white font-normal">Details</span></h2>
+                  </div>
                 </div>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -293,8 +294,9 @@ export default function WorkerProfileSummary({ workerId, prev }) {
               <div className="space-y-6">
                 <div className="flex items-center text-teal-400 mb-4">
                   <MapPin className="mr-2" />
-                  <h2 className="text-2xl font-semibold">Location</h2>
-                  <span className="text-white ml-2">Details</span>
+                  <div>
+                    <h2 className="text-2xl font-semibold">Location <span className="text-white font-normal">Details</span></h2>
+                  </div>
                 </div>
                 
                 <div className="space-y-6">
@@ -353,8 +355,9 @@ export default function WorkerProfileSummary({ workerId, prev }) {
               <div className="space-y-6">
                 <div className="flex items-center text-teal-400 mb-4">
                   <Briefcase className="mr-2" />
-                  <h2 className="text-2xl font-semibold">Professional</h2>
-                  <span className="text-white ml-2">Details</span>
+                  <div>
+                    <h2 className="text-2xl font-semibold">Professional <span className="text-white font-normal">Details</span></h2>
+                  </div>
                 </div>
                 
                 <div className="space-y-6">
@@ -577,8 +580,9 @@ export default function WorkerProfileSummary({ workerId, prev }) {
               <div className="space-y-6">
                 <div className="flex items-center text-teal-400 mb-4">
                   <CheckCircle className="mr-2" />
-                  <h2 className="text-2xl font-semibold">Skill</h2>
-                  <span className="text-white ml-2">Verification</span>
+                  <div>
+                    <h2 className="text-2xl font-semibold">Skill <span className="text-white font-normal">Verification</span></h2>
+                  </div>
                 </div>
                 
                 <div className="space-y-6">
@@ -636,8 +640,9 @@ export default function WorkerProfileSummary({ workerId, prev }) {
               <div className="space-y-6">
                 <div className="flex items-center text-teal-400 mb-4">
                   <DollarSign className="mr-2" />
-                  <h2 className="text-2xl font-semibold">Payment</h2>
-                  <span className="text-white ml-2">Information</span>
+                  <div>
+                    <h2 className="text-2xl font-semibold">Payment <span className="text-white font-normal">Information</span></h2>
+                  </div>
                 </div>
                 
                 <div className="space-y-6">

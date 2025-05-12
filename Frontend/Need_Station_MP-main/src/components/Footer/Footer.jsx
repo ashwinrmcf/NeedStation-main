@@ -26,11 +26,11 @@ const Footer = () => {
             <div className={`${styles["footer-links"]}`}>
               <h3>Useful Links</h3>
               <ul>
-                <li>Contact Us</li>
+                <li><Link to="/contact-us">Contact Us</Link></li>
                 <li>How it Works</li>
                 <li>FAQ</li>
                 <li>Privacy Policy</li>
-                <li>Terms & Services</li>
+                <li><Link to="/terms-and-services">Terms & Services</Link></li>
               </ul>
             </div>
 

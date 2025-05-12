@@ -1,7 +1,7 @@
 import { CheckCircle, Clock, DollarSign } from "lucide-react";
 import { motion } from "framer-motion";
 
-import Header from "../../components/common/Header";
+import DashboardHeader from "../../components/common/DashboardHeader";
 import StatCard from "../../components/common/StatCard";
 import DailyBookings from "../../components/EarningAndPayments/DailyBookings";
 import EarningHistoryTable from "../../components/EarningAndPayments/EarningHistoryTable";
@@ -15,10 +15,12 @@ const EarningData = {
 
 const EarningPage = () => {
 	return (
-		<div className='flex-1 relative z-10 overflow-auto'>
-			<Header title={"Earning and Payment"} />
+		<div className='flex-1 flex flex-col h-full'>
+			{/* Fixed position header at the top */}
+			<DashboardHeader title={"Earning and Payment"} />
 
-			<main className='max-w-7xl mx-auto py-6 px-4 lg:px-8'>
+			{/* Content area */}
+			<main className='flex-1 py-6 px-4 lg:px-8 max-w-7xl mx-auto w-full'>
 				<motion.div
 					className='grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 mb-8'
 					initial={{ opacity: 0, y: 20 }}

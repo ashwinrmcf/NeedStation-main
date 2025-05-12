@@ -1,9 +1,11 @@
 import React from 'react';
 import { useState } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 import {
   Calendar, Camera, Loader2, User,
 } from 'lucide-react';
+import Translator from '../../components/Translator';
 
 export default function Step1BasicInfo({ data, updateForm, next, workerId, updateWorkerId }) {
   const [profilePicture, setProfilePicture] = useState(null);
@@ -143,7 +145,7 @@ export default function Step1BasicInfo({ data, updateForm, next, workerId, updat
         <h1 className="text-4xl font-bold mb-2">
           Register as a <span className="text-teal-400">worker</span>
         </h1>
-
+        {/* Translation is now handled globally */}
         <div className="bg-yellow-100 text-yellow-800 px-4 py-2 rounded-md inline-flex items-center mt-6 mb-10">
           <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
             <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
@@ -152,6 +154,17 @@ export default function Step1BasicInfo({ data, updateForm, next, workerId, updat
         </div>
 
         <h2 className="text-3xl font-bold mb-0">Tell us about yourself!</h2>
+        
+        {/* Already registered link */}
+        <div className="mt-4 text-center">
+          <Link 
+            to="/worker-login" 
+            className="font-medium transition-colors hover:text-teal-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-400"
+            style={{ color: '#00E0B8' }}
+          >
+            Already registered? Login
+          </Link>
+        </div>
       </div>
 
       <div className="w-full max-w-lg mx-auto space-y-6">
@@ -295,14 +308,32 @@ export default function Step1BasicInfo({ data, updateForm, next, workerId, updat
           </div>
         </div>
 
-        <div className="mt-8">
+        <div className="mb-8 space-y-4">
           <button
             type="submit"
-            className="w-full py-3 bg-teal-500 text-white rounded-md font-semibold tracking-wide"
+            className="w-full p-3 bg-teal-500 hover:bg-teal-600 text-white font-bold rounded-md transition-colors"
             disabled={loading}
           >
-            {loading ? <Loader2 size={16} className="animate-spin mx-auto" /> : "Continue"}
+            {loading ? (
+              <span className="flex items-center justify-center">
+                <Loader2 className="animate-spin mr-2" size={20} />
+                Processing...
+              </span>
+            ) : (
+              "Continue"
+            )}
           </button>
+          
+          {/* Mobile version of already registered link */}
+          <div className="text-center block md:hidden mt-6">
+            <Link 
+              to="/worker-login" 
+              className="font-medium transition-colors hover:text-teal-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-400"
+              style={{ color: '#00E0B8' }}
+            >
+              Already registered? Login
+            </Link>
+          </div>
         </div>
       </div>
     </form>

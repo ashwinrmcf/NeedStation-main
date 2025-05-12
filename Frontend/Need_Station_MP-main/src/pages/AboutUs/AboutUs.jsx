@@ -4,6 +4,9 @@ import ashwin from "../../assets/images/AboutUs/ashwin.jpg";
 import ajitesh from "../../assets/images/AboutUs/ajitesh.jpg";
 import abhishek from "../../assets/images/AboutUs/abhishek.jpg";
 import zainab from "../../assets/images/AboutUs/zainab.jpg";
+import aman from "../../assets/images/AboutUs/aman.jpg";
+import ashutosh from "../../assets/images/AboutUs/ashutosh2.jpeg";
+import logo from "../../assets/images/AboutUs/logo.jpeg";
 
 const AboutUs = () => {
   const teamMembers = [
@@ -28,13 +31,13 @@ const AboutUs = () => {
     {
       name: "Ashutosh Garg",
       role: "Operations Manager",
-      image: "/images/team-member-3.jpg",
+      image: ashutosh,
       description: "Manages day-to-day operations and service provider relationships to ensure reliable and high-quality service delivery.",
     },
     {
       name: "Aman Soni",
       role: "Marketing Director",
-      image: "/images/team-member-4.jpg",
+      image: aman,
       description: "Develops and implements marketing strategies to expand our reach and communicate the benefits of our services.",
     },
     {
@@ -49,7 +52,7 @@ const AboutUs = () => {
   const serviceCategories = [
     {
       title: "Elder Care",
-      icon: "👵",
+      icon: "",
       services: [
         "CareTaker",
         "Paralysis Caregiver",
@@ -61,12 +64,12 @@ const AboutUs = () => {
     },
     {
       title: "Basic Needs",
-      icon: "🔧",
+      icon: "",
       services: ["Electrician", "Plumber", "Water-Supply"],
     },
     {
       title: "Maid Services",
-      icon: "🧹",
+      icon: "",
       services: ["Cooking", "Cleaning", "Laundry"],
     },
   ];
@@ -74,7 +77,7 @@ const AboutUs = () => {
   return (
     <>
       <ScrollToTop />
-      <main className={styles["about-main"]}>
+      <main className={`${styles["about-main"]} page-content-spacing`}>
         <div className={styles["container"]}>
           {/* Vision & Mission Section */}
           <section className={styles["vision-section"]}>
@@ -96,8 +99,12 @@ const AboutUs = () => {
                 </p>
               </div>
               <div className={styles["vision-image"]}>
-                <div className={styles["placeholder-image"]}>
-                  <span>NeedStation</span>
+                <div className={styles["logo-container"]}>
+                  <img 
+                    src={logo} 
+                    alt="NeedStation Logo" 
+                    className={styles["logo-image"]} 
+                  />
                 </div>
               </div>
             </div>

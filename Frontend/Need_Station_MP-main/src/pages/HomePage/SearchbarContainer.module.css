@@ -3,7 +3,7 @@
 .tagline {
   width: 60vw;
   /* height: 33.426vh; */
-  margin-top: 6.964vh;
+  margin-top: 32vh; /* Added more spacing as requested - consistent with page-content-spacing */
   margin-bottom: 8vh;
   background: transparent;
   font-size: 3rem;
@@ -71,6 +71,28 @@
   background: #1C1F28;
   font-weight: bold;
   color: #FFFFFF !important;
+  caret-color: #5CE1E6;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.typewriterContainer {
+  position: absolute;
+  pointer-events: none;
+  right: 30px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.searchbarInput::placeholder {
+  color: rgba(255, 255, 255, 0.7);
 }
 
 .searchIcon {

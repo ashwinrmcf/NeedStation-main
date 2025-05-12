@@ -1,5 +1,6 @@
 // src/pages/worker/WorkerRegistration.jsx
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Step1BasicInfo from './Step1BasicInfo';
 import Step2ContactInfo from './Step2ContactInfo';
 import Step3Address from './Step3Address';
@@ -143,6 +144,9 @@ const WorkerRegistration = () => {
     localStorage.setItem('workerId', id);
   };
 
+  // Navigation hook for redirects
+  const navigate = useNavigate();
+  
   // Final submission handler
   const handleFinalSubmit = async () => {
     setLoading(true);
@@ -154,8 +158,8 @@ const WorkerRegistration = () => {
 
       // Handle successful registration
       if (response.data) {
-        // Success message or redirect
-        alert("Registration completed successfully! You will be notified once your registration is approved.");
+        // Redirect to worker dashboard
+        navigate('/worker-dashboard');
       }
     } catch (err) {
       console.error("Registration error:", err);
@@ -212,36 +216,43 @@ const WorkerRegistration = () => {
     />
   ];
 
-  // Display progress indicator
+  // Display progress indicator with glowing effect
   const renderProgressBar = () => {
     return (
       <div className="mb-8">
         <div className="flex justify-between items-center">
           {['Basic Info', 'Address', 'Work', 'Verification', 'Payment', 'Review'].map((label, idx) => (
             <div key={idx} className="flex flex-col items-center">
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                step > idx + 1 ? 'bg-green-500' : 
-                step === idx + 1 ? 'bg-teal-500' : 'bg-gray-700'
-              }`}>
-                {step > idx + 1 ? (
-                  <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                  </svg>
-                ) : (
-                  <span className="text-white text-sm">{idx + 1}</span>
-                )}
+              <div className="relative">
+                {/* Glow effect div positioned absolutely */}
+                <div className={`absolute inset-0 rounded-full blur-sm
+                  ${step > idx + 1 ? 'bg-green-500/60' : 
+                    step === idx + 1 ? 'bg-teal-500/60' : 'bg-transparent'}
+                  transition-all duration-300`}></div>
+                  
+                {/* Main circle indicator */}
+                <div className={`w-8 h-8 rounded-full flex items-center justify-center relative
+                  ${step > idx + 1 ? 'bg-green-500 ring-2 ring-green-400' : 
+                    step === idx + 1 ? 'bg-teal-500 ring-2 ring-teal-400' : 'bg-gray-700'}
+                  transition-all duration-300`}>
+                  {step > idx + 1 ? (
+                    <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  ) : (
+                    <span className="text-white text-sm">{idx + 1}</span>
+                  )}
+                </div>
               </div>
-              <span className={`text-xs mt-1 ${
-                step === idx + 1 ? 'text-teal-500' : 'text-gray-400'
-              }`}>
+              <span className={`text-xs mt-2 ${step === idx + 1 ? 'text-teal-500 font-semibold' : 'text-gray-400'}`}>
                 {label}
               </span>
             </div>
           ))}
         </div>
-        <div className="w-full bg-gray-700 h-1 mt-4 rounded-full">
+        <div className="w-full bg-gray-700 h-1 mt-4 rounded-full overflow-hidden">
           <div 
-            className="bg-teal-500 h-1 rounded-full" 
+            className="bg-teal-500 h-1 rounded-full shadow-lg shadow-teal-500/70" 
             style={{ width: `${((step - 1) / 5) * 100}%` }}
           />
         </div>
@@ -250,7 +261,7 @@ const WorkerRegistration = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white p-4">
+    <div className="min-h-screen bg-gray-900 text-white p-4 form-content-spacing">
       <div className="max-w-4xl mx-auto">
         {/* Show progress bar for all steps except final success page */}
         {step <= 6 && renderProgressBar()}

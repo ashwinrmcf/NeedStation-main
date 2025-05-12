@@ -1,7 +1,7 @@
 import { DollarSign, ClipboardList, Star, XCircle } from "lucide-react";
 import { motion } from "framer-motion";
 
-import Header from "../../components/common/Header";
+import DashboardHeader from "../../components/common/DashboardHeader";
 import StatCard from "../../components/common/StatCard";
 import TaskHistoryTable from "../../components/CompletedTask/CompletedTaskHistoryTable";
 
@@ -16,10 +16,12 @@ const taskStats = {
 
 const CompletedTaskPage = () => {
 	return (
-		<div className='flex-1 overflow-auto relative z-10'>
-			<Header title='Completed Tasks' />
+		<div className='flex-1 flex flex-col h-full'>
+			{/* Fixed position header at the top */}
+			<DashboardHeader title='Completed Tasks' />
 
-			<main className='max-w-7xl mx-auto py-6 px-4 lg:px-8'>
+			{/* Content area */}
+			<main className='flex-1 py-6 px-4 lg:px-8 max-w-7xl mx-auto w-full'>
 				{/* STATS */}
 				<motion.div
 					className='grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 mb-8'
