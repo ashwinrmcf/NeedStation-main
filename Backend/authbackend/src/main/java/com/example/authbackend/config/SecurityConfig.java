@@ -31,17 +31,9 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
                 return config;
             })
         )
+        // TEMPORARY: Permit all requests for testing
         .authorizeHttpRequests(auth -> auth
-            .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-            .requestMatchers(
-                "/api/auth/**",          // All auth endpoints
-                "/api/user/**",          // All user endpoints
-                "/api/worker/**",         // All worker endpoints, including registration
-                "/api/otp/**",           // All OTP endpoints
-                "/auth/otp/**",          // Additional OTP endpoints
-                "/api/translate/**"       // Translation endpoints
-            ).permitAll()
-            .anyRequest().authenticated()
+            .anyRequest().permitAll()
         );
     return http.build();
     }

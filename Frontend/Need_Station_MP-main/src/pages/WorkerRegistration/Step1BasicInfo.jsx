@@ -1,9 +1,8 @@
-import React from 'react';
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import {
-  Calendar, Camera, Loader2, User,
+  Calendar, Camera, Loader2, User, CheckCircle, RefreshCw
 } from 'lucide-react';
 import Translator from '../../components/Translator';
 
@@ -11,6 +10,12 @@ export default function Step1BasicInfo({ data, updateForm, next, workerId, updat
   const [profilePicture, setProfilePicture] = useState(null);
   const [profilePictureURL, setProfilePictureURL] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [otpSent, setOtpSent] = useState(false);
+  const [otpVerified, setOtpVerified] = useState(false);
+  const [otpCode, setOtpCode] = useState('');
+  const [otpLoading, setOtpLoading] = useState(false);
+  const [otpError, setOtpError] = useState('');
+  const [verifiedWorkerId, setVerifiedWorkerId] = useState(null);
 
   // Backend API URL - update this to your actual backend URL
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api';
@@ -21,6 +26,129 @@ export default function Step1BasicInfo({ data, updateForm, next, workerId, updat
     updateForm({
       [name]: value,
     });
+    
+    // Reset OTP verification if phone number changes
+    if (name === 'phone' && (otpSent || otpVerified)) {
+      setOtpSent(false);
+      setOtpVerified(false);
+      setOtpCode('');
+      setOtpError('');
+    }
+  };
+  
+  // Function to generate OTP
+  const generateOtp = async () => {
+    const { phone } = data;
+    
+    if (!phone || phone.length !== 10) {
+      setOtpError('Please enter a valid 10-digit phone number');
+      return;
+    }
+    
+    setOtpLoading(true);
+    setOtpError('');
+    
+    try {
+      // First register the worker to get a worker ID
+      if (!workerId && !verifiedWorkerId) {
+        // Create FormData object for initial registration
+        const formData = new FormData();
+        
+        // Add profile picture if available
+        if (profilePicture) {
+          formData.append("profilePicture", profilePicture);
+        }
+        
+        // Create basic worker data to get an ID
+        const workerData = {
+          fullName: data.fullName || "Temporary Name",  // Can be updated later
+          gender: data.gender || "Other",
+          dob: data.dob || "2000-01-01",
+          phone: phone,
+          email: data.email || "",
+          whatsappNumber: data.whatsappNumber || "",
+          otpVerified: false
+        };
+        
+        // Append worker data as a plain JSON string
+        formData.append("data", JSON.stringify(workerData));
+        
+        // Register the worker first to get an ID
+        const registerResponse = await axios.post(`${API_URL}/worker/register/step1`, formData, {
+          headers: {}
+        });
+        
+        if (registerResponse.data && registerResponse.data.workerId) {
+          // Save the worker ID for OTP verification
+          const newWorkerId = registerResponse.data.workerId;
+          setVerifiedWorkerId(newWorkerId);
+          if (updateWorkerId) {
+            updateWorkerId(newWorkerId);
+          }
+          
+          // Now generate OTP using this worker ID
+          const otpResponse = await axios.post(`${API_URL}/worker/otp/generate/${newWorkerId}`);
+          
+          if (otpResponse.data && otpResponse.data.success) {
+            setOtpSent(true);
+            // In trial mode, the OTP is 123456
+            alert('OTP sent! In trial mode, use 123456 as your verification code.');
+          } else {
+            setOtpError('Failed to send OTP. Please try again.');
+          }
+        } else {
+          setOtpError('Failed to register. Please check your information.');
+        }
+      } else {
+        // If we already have a worker ID, just generate the OTP
+        const otpResponse = await axios.post(`${API_URL}/worker/otp/generate/${verifiedWorkerId || workerId}`);
+        
+        if (otpResponse.data && otpResponse.data.success) {
+          setOtpSent(true);
+          // In trial mode, the OTP is 123456
+          alert('OTP sent! In trial mode, use 123456 as your verification code.');
+        } else {
+          setOtpError('Failed to send OTP. Please try again.');
+        }
+      }
+    } catch (error) {
+      console.error('Error generating OTP:', error);
+      setOtpError('Failed to send OTP. Please try again.');
+    } finally {
+      setOtpLoading(false);
+    }
+  };
+  
+  // Function to verify OTP
+  const verifyOtp = async () => {
+    if (!otpCode || otpCode.length < 6) {
+      setOtpError('Please enter a valid OTP code');
+      return;
+    }
+    
+    setOtpLoading(true);
+    setOtpError('');
+    
+    try {
+      const verifyResponse = await axios.post(
+        `${API_URL}/worker/otp/verify/${verifiedWorkerId || workerId}`,
+        { otp: otpCode }
+      );
+      
+      if (verifyResponse.data && verifyResponse.data.success) {
+        setOtpVerified(true);
+        setOtpError('');
+        // Update form data with verification status
+        updateForm({ otpVerified: true });
+      } else {
+        setOtpError('Invalid OTP. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error verifying OTP:', error);
+      setOtpError('Failed to verify OTP. Please try again.');
+    } finally {
+      setOtpLoading(false);
+    }
   };
 
   const handleProfilePictureChange = (e) => {
@@ -56,21 +184,17 @@ export default function Step1BasicInfo({ data, updateForm, next, workerId, updat
     
     // Profile picture is now optional
 
-  // --- FULL NAME INPUT FIELD (ADDED) ---
-  // Place this in your return JSX form fields section, near the top for visibility.
-  // Example:
-  // <input
-  //   type="text"
-  //   name="fullName"
-  //   value={data.fullName || ""}
-  //   onChange={handleInputChange}
-  //   placeholder="Full Name"
-  //   required
-  // />
-  // ----------------------
-    
     // Update the form with profile picture before sending to server
-    updateForm({ profilePicture });
+    updateForm({ 
+      profilePicture,
+      otpVerified: otpVerified // Add verification status to form data
+    });
+    
+    // Check if phone verification is complete
+    if (!otpVerified) {
+      alert("Please verify your phone number before continuing.");
+      return;
+    }
     
     // Create FormData object
     const formData = new FormData();
@@ -88,7 +212,7 @@ export default function Step1BasicInfo({ data, updateForm, next, workerId, updat
       phone: phone || "",
       email: email || "",
       whatsappNumber: whatsappNumber || "",
-      otpVerified: false            // Set to false since we're not verifying OTP
+      otpVerified: otpVerified      // Set based on actual verification status
     };
     
     console.log("Sending worker data:", workerData);
@@ -103,8 +227,8 @@ export default function Step1BasicInfo({ data, updateForm, next, workerId, updat
       let url = `${API_URL}/worker/register/step1`;
       
       // Add workerId parameter if it exists
-      if (workerId) {
-        url += `?workerId=${workerId}`;
+      if (verifiedWorkerId) {
+        url += `?workerId=${verifiedWorkerId}`;
       }
       
       setLoading(true);
@@ -290,7 +414,7 @@ export default function Step1BasicInfo({ data, updateForm, next, workerId, updat
           />
         </div>
 
-        {/* Contact Number (simplified, no OTP verification) */}
+        {/* Contact Number with OTP verification */}
         <div>
           <label htmlFor="phone" className="block text-lg font-medium mb-2">Contact Number</label>
           <div className="flex space-x-3">
@@ -304,15 +428,83 @@ export default function Step1BasicInfo({ data, updateForm, next, workerId, updat
               placeholder="10-digit number"
               className="w-full p-3 bg-gray-900 border border-gray-700 rounded-md"
               required
+              disabled={otpVerified}
             />
+            {!otpSent && !otpVerified && (
+              <button 
+                type="button" 
+                onClick={generateOtp}
+                disabled={!data.phone || data.phone.length !== 10 || otpLoading}
+                className={`px-4 py-2 rounded-md font-medium transition-colors ${!data.phone || data.phone.length !== 10 || otpLoading ? 'bg-gray-700 text-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700 text-white'}`}
+              >
+                {otpLoading ? (
+                  <span className="flex items-center">
+                    <Loader2 className="animate-spin mr-2" size={16} />
+                    Sending...
+                  </span>
+                ) : (
+                  'Verify'
+                )}
+              </button>
+            )}
+            {otpVerified && (
+              <div className="flex items-center text-green-500">
+                <CheckCircle size={20} className="mr-2" />
+                Verified
+              </div>
+            )}
           </div>
+          
+          {/* OTP verification section */}
+          {otpSent && !otpVerified && (
+            <div className="mt-4 p-4 border border-gray-700 rounded-md bg-gray-800">
+              <p className="text-sm mb-3">Enter the verification code sent to your phone</p>
+              <div className="flex space-x-3">
+                <input
+                  type="text"
+                  value={otpCode}
+                  onChange={(e) => setOtpCode(e.target.value)}
+                  placeholder="Enter 6-digit code"
+                  maxLength={6}
+                  className="w-full p-3 bg-gray-900 border border-gray-700 rounded-md"
+                />
+                <button
+                  type="button"
+                  onClick={verifyOtp}
+                  disabled={!otpCode || otpCode.length !== 6 || otpLoading}
+                  className={`px-4 py-2 rounded-md font-medium transition-colors ${!otpCode || otpCode.length !== 6 || otpLoading ? 'bg-gray-700 text-gray-400 cursor-not-allowed' : 'bg-green-600 hover:bg-green-700 text-white'}`}
+                >
+                  {otpLoading ? (
+                    <span className="flex items-center">
+                      <Loader2 className="animate-spin mr-2" size={16} />
+                      Verifying...
+                    </span>
+                  ) : (
+                    'Submit'
+                  )}
+                </button>
+              </div>
+              <div className="flex justify-between mt-3">
+                <button
+                  type="button"
+                  onClick={generateOtp}
+                  disabled={otpLoading}
+                  className="text-blue-400 text-sm flex items-center hover:text-blue-300"
+                >
+                  <RefreshCw size={14} className="mr-1" />
+                  Resend code
+                </button>
+                {otpError && <p className="text-red-500 text-sm">{otpError}</p>}
+              </div>
+            </div>
+          )}
         </div>
 
         <div className="mb-8 space-y-4">
           <button
             type="submit"
             className="w-full p-3 bg-teal-500 hover:bg-teal-600 text-white font-bold rounded-md transition-colors"
-            disabled={loading}
+            disabled={loading || !otpVerified}
           >
             {loading ? (
               <span className="flex items-center justify-center">

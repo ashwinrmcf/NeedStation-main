@@ -1,0 +1,79 @@
+.verificationCard {
+  max-width: 450px;
+  margin: 0 auto;
+  padding: 2rem;
+  border-radius: 12px;
+  background: linear-gradient(144.39deg, #FFFFFF -278.56%, #6D6D6D -78.47%, #11101D 91.61%);
+  color: #fff;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+}
+
+.successContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 1.5rem 0;
+}
+
+.successIcon {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(157.81deg, #DEF9FA -43.27%, #BEF3F5 -21.24%, #9DEDF0 12.19%, #7DE7EB 29.82%, #5CE1E6 51.94%, #33BBCF 90.29%);
+  color: #00040E;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+}
+
+.continueButton {
+  margin-top: 1.5rem !important;
+  background: linear-gradient(157.81deg, #DEF9FA -43.27%, #BEF3F5 -21.24%, #9DEDF0 12.19%, #7DE7EB 29.82%, #5CE1E6 51.94%, #33BBCF 90.29%) !important;
+  color: #00040E !important;
+  font-weight: 500 !important;
+  padding: 0.75rem 2rem !important;
+}
+
+/* Style for input field to match theme */
+.verificationCard :global(.MuiOutlinedInput-root) {
+  border-radius: 8px;
+  color: white;
+}
+
+.verificationCard :global(.MuiOutlinedInput-notchedOutline) {
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.verificationCard :global(.MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline) {
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.verificationCard :global(.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline) {
+  border-color: #5CE1E6;
+}
+
+.verificationCard :global(.MuiFormLabel-root) {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.verificationCard :global(.MuiFormLabel-root.Mui-focused) {
+  color: #5CE1E6;
+}
+
+/* Responsive styles */
+@media screen and (max-width: 600px) {
+  .verificationCard {
+    padding: 1.5rem;
+    max-width: 350px;
+  }
+  
+  .successIcon {
+    width: 60px;
+    height: 60px;
+    font-size: 2rem;
+  }
+}

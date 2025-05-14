@@ -1,6 +1,7 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import App from "./routes/App.jsx";
+import HindiApp from "./routes/HindiApp.jsx";
 import { AuthProvider } from "./store/AuthContext.jsx";
 import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
@@ -34,15 +35,23 @@ import ContactUs from "./pages/ContactUs/ContactUs.jsx";
 import AboutUs from "./pages/AboutUs/AboutUs.jsx";
 import TranslationCenter from "./pages/TranslationCenter/TranslationCenter.jsx";
 import TermsAndServices from "./pages/TermsAndServices/TermsAndServices.jsx";
+import WhyBecomeHelper from "./pages/WhyBecomeHelper/WhyBecomeHelper.jsx";
+
+// Hindi components
+import HindiHome from "./pages/Hindi/Home.jsx";
+import HindiAboutUs from "./pages/Hindi/AboutUs.jsx";
+// We'll create more Hindi components as needed
 
 
 const router = createBrowserRouter([
+  // English routes
   {
     path: "/",
     element: <App />,
     children: [
       { path: "/", element: <Home /> },
       { path: "/basic-needs-home", element: <BasicNeedsHome /> },
+      { path: "/why-become-helper", element: <WhyBecomeHelper /> },
       { path: "/maid-services", element: <MaidServicesHome/>},
       { path: "/electrician", element: <Electrician /> },
       { path: "/plumber", element: <Plumber /> },
@@ -59,6 +68,7 @@ const router = createBrowserRouter([
       {path: "/terms-and-services", element: <TermsAndServices/>},
     ],
   },
+
   { path: "/login", element: <Login /> },
   { path: "/signup", element: <Signup /> },
   { path: "/worker-login", element: <WorkerLogin /> },
@@ -78,6 +88,17 @@ const router = createBrowserRouter([
       { path: "completed-task", element: <CompletedTaskPage /> },
       { path: "earnings", element: <EarningPage /> },
       { path: "settings", element: <SettingsPage /> },
+    ],
+  },
+
+  // Hindi routes under /hi path
+  {
+    path: "hi",
+    element: <HindiApp />,
+    children: [
+      { path: "", element: <HindiHome /> },
+      { path: "about-us", element: <HindiAboutUs /> },
+      // Additional Hindi routes can be added here as needed
     ],
   },
   

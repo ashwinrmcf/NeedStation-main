@@ -3,6 +3,7 @@ package com.example.authbackend.model;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "worker")
@@ -83,6 +84,13 @@ public class Worker {
     @Column(nullable = false)
     private LocalDate registrationDate = LocalDate.now();
     private LocalDate verificationDate;
+    
+    // OTP verification fields
+    private String phoneVerificationOtp;
+    private LocalDateTime otpCreatedAt;
+    private LocalDateTime otpExpiresAt;
+    private Boolean phoneVerified = false;
+    private Integer otpAttempts = 0; // Track failed attempts for security
 
     public Long getId() {
         return id;
@@ -362,6 +370,46 @@ public class Worker {
 
     public void setVerificationDate(LocalDate verificationDate) {
         this.verificationDate = verificationDate;
+    }
+    
+    public String getPhoneVerificationOtp() {
+        return phoneVerificationOtp;
+    }
+
+    public void setPhoneVerificationOtp(String phoneVerificationOtp) {
+        this.phoneVerificationOtp = phoneVerificationOtp;
+    }
+
+    public LocalDateTime getOtpCreatedAt() {
+        return otpCreatedAt;
+    }
+
+    public void setOtpCreatedAt(LocalDateTime otpCreatedAt) {
+        this.otpCreatedAt = otpCreatedAt;
+    }
+
+    public LocalDateTime getOtpExpiresAt() {
+        return otpExpiresAt;
+    }
+
+    public void setOtpExpiresAt(LocalDateTime otpExpiresAt) {
+        this.otpExpiresAt = otpExpiresAt;
+    }
+
+    public Boolean getPhoneVerified() {
+        return phoneVerified;
+    }
+
+    public void setPhoneVerified(Boolean phoneVerified) {
+        this.phoneVerified = phoneVerified;
+    }
+
+    public Integer getOtpAttempts() {
+        return otpAttempts;
+    }
+
+    public void setOtpAttempts(Integer otpAttempts) {
+        this.otpAttempts = otpAttempts;
     }
 
     public Worker() {

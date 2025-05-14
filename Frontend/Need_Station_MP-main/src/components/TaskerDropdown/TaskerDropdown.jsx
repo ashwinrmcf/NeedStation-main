@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { UserCircle2, LogIn, UserPlus, Briefcase } from 'lucide-react';
 import styles from './TaskerDropdown.module.css';
+import './force-dropdown.css'; // Import special styling for Hindi dropdown fix
 
 const TaskerDropdown = ({ isVisible }) => {
   // Animation variants
@@ -77,7 +78,7 @@ const TaskerDropdown = ({ isVisible }) => {
         </motion.div>
         
         <motion.div variants={itemVariants}>
-          <Link to="/worker-registration" className={`${styles.dropdownItem} ${styles.highlighted}`}>
+          <Link to="/why-become-helper" className={`${styles.dropdownItem} ${styles.highlighted}`}>
             <UserCircle2 size={18} />
             <span>Why become a Helper?</span>
           </Link>

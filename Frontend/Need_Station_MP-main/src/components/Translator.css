@@ -49,6 +49,67 @@
   background: #f0f0f0;
   border: 1px solid #ddd;
   border-radius: 4px;
+}
+
+/* Language-specific styling for translator elements */
+
+/* Make sure all language-specific elements have adequate spacing */
+html:not([lang="en"]) .translator-container input,
+html:not([lang="en"]) .translator-container textarea,
+html:not([lang="en"]) .translator-container button {
+  margin: 8px 0;
+  line-height: 1.6;
+}
+
+/* Hindi specific translator styles */
+html[lang="hi"] .translator-container input,
+html[lang="hi"] .translator-container textarea {
+  font-family: 'Noto Sans Devanagari', sans-serif;
+  padding: 12px;
+  line-height: 1.7;
+}
+
+/* Fix layout issues for specific languages */
+html[lang="hi"] .card,
+html[lang="bn"] .card,
+html[lang="ta"] .card {
+  display: flex;
+  flex-direction: column;
+  min-height: 200px;
+  padding: 15px;
+}
+
+/* Text direction support for RTL languages if added in future */
+html[dir="rtl"] .translator-container {
+  direction: rtl;
+  text-align: right;
+}
+
+/* Footer specific fixes for all non-English languages */
+html:not([lang="en"]) footer {
+  display: flex;
+  flex-direction: column;
+}
+
+html:not([lang="en"]) footer > div,
+html:not([lang="en"]) footer > nav {
+  margin-bottom: 20px;
+}
+
+html:not([lang="en"]) footer .footer-navigation {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 15px;
+}
+
+/* Fix for contact info in all non-English languages */
+html:not([lang="en"]) footer .contact-info {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.swap-btn {
   cursor: pointer;
   font-size: 18px;
   transition: all 0.2s;

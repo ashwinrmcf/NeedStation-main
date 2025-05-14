@@ -1,5 +1,3 @@
-
-
 .tagline {
   width: 60vw;
   /* height: 33.426vh; */
@@ -41,7 +39,6 @@
   flex-direction: column;
   align-items: center;
 }
-
 
 .searchbar {
   width: 50vw;

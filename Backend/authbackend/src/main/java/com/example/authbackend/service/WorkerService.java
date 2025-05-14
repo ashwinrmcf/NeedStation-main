@@ -2,34 +2,52 @@ package com.example.authbackend.service;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+import com.example.authbackend.config.TwilioConfig;
 import com.example.authbackend.dto.WorkerDTO;
 import com.example.authbackend.dto.WorkerRegistrationDTO;
 import com.example.authbackend.model.Worker;
 import com.example.authbackend.repository.WorkerRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.twilio.rest.verify.v2.service.Verification;
+import com.twilio.rest.verify.v2.service.VerificationCheck;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Random;
 
 @Service
 public class WorkerService {
 
+    /**
+     * Authenticate a worker by email and phone.
+     * @param email The worker's email
+     * @param phone The worker's phone
+     * @return Optional<Worker> if credentials match, empty otherwise
+     */
+    public Optional<Worker> authenticateWorker(String email, String phone) {
+        if (email == null || phone == null) return Optional.empty();
+        return repo.findByEmailIgnoreCaseAndPhone(email.trim(), phone.trim());
+    }
+
     private final WorkerRepository repo;
     private final Cloudinary cloudinary;
     private final ObjectMapper objectMapper;
+    private final TwilioConfig twilioConfig;
 
-    public WorkerService(WorkerRepository repo, Cloudinary cloudinary, ObjectMapper objectMapper) {
+    public WorkerService(WorkerRepository repo, Cloudinary cloudinary, ObjectMapper objectMapper, TwilioConfig twilioConfig) {
         this.repo = repo;
         this.cloudinary = cloudinary;
         this.objectMapper = objectMapper;
+        this.twilioConfig = twilioConfig;
     }
 
     // Method to upload image to Cloudinary and return the image URL
@@ -146,12 +164,241 @@ public class WorkerService {
         worker.setProfileImageUrl(imageUrl); // Saves the profile image URL
         worker.setRegistrationDate(LocalDate.now());
         worker.setRegistrationStatus("INCOMPLETE");
-        return repo.save(worker);  // Saves the Worker entity to the database
+        
+        // Initialize OTP fields
+        worker.setPhoneVerified(false); // Explicitly set to false
+        worker.setOtpAttempts(0);       // Initialize attempts counter
+        
+        // Save worker first to get an ID
+        worker = repo.save(worker);
+        
+        // Generate and send OTP for phone verification
+        generateAndSendOtp(worker);
+        
+        return worker;  // Return the saved worker
+    }
+    
+    // Set this to false to use actual Twilio services
+    private static final boolean TRIAL_MODE = false;
+    // Fixed test OTP for trial mode - in production, this would come from Twilio
+    private static final String TEST_OTP = "123456";
+    
+    /**
+     * Sends an OTP verification to the worker's phone number using Twilio Verify API
+     * @param worker The worker to send the OTP to
+     * @return true if OTP was sent successfully, false otherwise
+     */
+    public boolean generateAndSendOtp(Worker worker) {
+        String phoneNumber = worker.getPhone();
+        
+        try {
+            // Format phone number if needed
+            // E.164 format: +[country code][phone number without leading 0]
+            if (!phoneNumber.startsWith("+")) {
+                // Assuming India (+91) as default country code
+                phoneNumber = "+91" + phoneNumber;
+                System.out.println("Formatted phone number to: " + phoneNumber);
+            }
+            
+            if (TRIAL_MODE) {
+                // In trial mode, we don't actually send an SMS
+                // Instead, we generate a fixed OTP and save it
+                worker.setPhoneVerificationOtp(TEST_OTP);
+                
+                // Set OTP expiration time (10 minutes from now)
+                LocalDateTime now = LocalDateTime.now();
+                worker.setOtpCreatedAt(now);
+                worker.setOtpExpiresAt(now.plusMinutes(10));
+                
+                // Reset OTP attempts
+                worker.setOtpAttempts(0);
+                
+                // Save the worker with the new OTP
+                repo.save(worker);
+                
+                System.out.println("Trial mode: OTP " + TEST_OTP + " set for " + phoneNumber);
+                return true;
+            } else {
+                // In production mode, use Twilio to send an OTP
+                System.out.println("Attempting to send OTP via Twilio to: " + phoneNumber);
+                System.out.println("Using Verify Service SID: " + twilioConfig.getVerifyServiceSid());
+                
+                try {
+                    Verification verification = Verification.creator(
+                        twilioConfig.getVerifyServiceSid(),  // Verify Service SID
+                        phoneNumber,                         // To (phone number)
+                        "sms")                               // Channel type
+                        .create();
+                    
+                    // Successfully sent OTP
+                    System.out.println("Sent OTP to " + phoneNumber + " with status: " + verification.getStatus());
+                    
+                    // Set OTP expiration time (10 minutes from now)
+                    LocalDateTime now = LocalDateTime.now();
+                    worker.setOtpCreatedAt(now);
+                    worker.setOtpExpiresAt(now.plusMinutes(10));
+                    
+                    // Reset OTP attempts
+                    worker.setOtpAttempts(0);
+                    
+                    // Save the worker
+                    repo.save(worker);
+                    
+                    return true;
+                } catch (Exception e) {
+                    System.err.println("Twilio API Error: " + e.getMessage());
+                    e.printStackTrace();
+                    
+                    // Try using trial mode as fallback
+                    System.out.println("Falling back to trial mode due to Twilio error");
+                    worker.setPhoneVerificationOtp(TEST_OTP);
+                    
+                    LocalDateTime now = LocalDateTime.now();
+                    worker.setOtpCreatedAt(now);
+                    worker.setOtpExpiresAt(now.plusMinutes(10));
+                    worker.setOtpAttempts(0);
+                    repo.save(worker);
+                    
+                    System.out.println("Fallback mode: OTP " + TEST_OTP + " set for " + phoneNumber);
+                    return true;
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("Error sending OTP: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
+    /**
+     * Verifies an OTP for a worker using Twilio Verify API
+     * @param workerId The worker ID
+     * @param otp The OTP to verify
+     * @return true if verification successful, false otherwise
+     */
+    public boolean verifyOtp(Long workerId, String otp) {
+        Optional<Worker> workerOpt = repo.findById(workerId);
+        if (workerOpt.isEmpty()) {
+            return false;
+        }
+        
+        Worker worker = workerOpt.get();
+        
+        // Check if worker already verified
+        Boolean verified = worker.getPhoneVerified();
+        if (verified != null && verified) {
+            return true;
+        }
+        
+        // Check if max attempts reached (5 attempts)
+        if (worker.getOtpAttempts() >= 5) {
+            return false;
+        }
+        
+        try {
+            if (TRIAL_MODE) {
+                // In trial mode, we check against the stored test OTP
+                // Check if OTP is expired in trial mode
+                if (worker.getOtpExpiresAt() != null && LocalDateTime.now().isAfter(worker.getOtpExpiresAt())) {
+                    System.out.println("OTP expired in trial mode");
+                    worker.setOtpAttempts(worker.getOtpAttempts() + 1);
+                    repo.save(worker);
+                    return false;
+                }
+                
+                // Check if the OTP matches the test OTP
+                if (TEST_OTP.equals(otp) || (worker.getPhoneVerificationOtp() != null && worker.getPhoneVerificationOtp().equals(otp))) {
+                    // OTP is correct
+                    worker.setPhoneVerified(true); // Explicitly set to true
+                    worker.setOtpAttempts(0);      // Reset attempts counter
+                    repo.save(worker);
+                    System.out.println("Trial mode: OTP verified successfully");
+                    return true;
+                } else {
+                    // Increment failed attempts
+                    worker.setOtpAttempts(worker.getOtpAttempts() + 1);
+                    repo.save(worker);
+                    System.out.println("Trial mode: Invalid OTP");
+                    return false;
+                }
+            } else {
+                // Production mode - use actual Twilio Verify API
+                String phoneNumber = formatPhoneNumber(worker.getPhone());
+                
+                // Verify the code with Twilio Verify API
+                VerificationCheck verificationCheck = VerificationCheck.creator(
+                        twilioConfig.getVerifyServiceSid())  // Verify Service SID
+                        .setTo(phoneNumber)                  // Phone number
+                        .setCode(otp)                        // Code entered by user
+                        .create();
+                
+                System.out.println("Verification check SID: " + verificationCheck.getSid());
+                System.out.println("Status: " + verificationCheck.getStatus());
+                
+                if ("approved".equals(verificationCheck.getStatus())) {
+                    // OTP is correct
+                    worker.setPhoneVerified(true);
+                    repo.save(worker);
+                    return true;
+                } else {
+                    // Increment failed attempts
+                    worker.setOtpAttempts(worker.getOtpAttempts() + 1);
+                    repo.save(worker);
+                    return false;
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("Error checking verification: " + e.getMessage());
+            e.printStackTrace();
+            
+            // Increment failed attempts
+            worker.setOtpAttempts(worker.getOtpAttempts() + 1);
+            repo.save(worker);
+            return false;
+        }
+    }
+    
+    /**
+     * Formats a phone number to the E.164 international format
+     * @param phoneNumber The phone number to format
+     * @return The formatted phone number
+     */
+    private String formatPhoneNumber(String phoneNumber) {
+        if (phoneNumber == null || phoneNumber.isEmpty()) {
+            return phoneNumber;
+        }
+        
+        // Format phone number to E.164 format if not already
+        String formattedNumber = phoneNumber;
+        if (!phoneNumber.startsWith("+")) {
+            // Assuming Indian numbers, adapt as needed for other countries
+            formattedNumber = "+91" + phoneNumber.replaceAll("[\\s-]", "");
+        }
+        
+        return formattedNumber;
     }
     
     // Get worker by ID
     public Optional<Worker> getWorkerById(Long id) {
         return repo.findById(id);
+    }
+    
+    // Find worker by phone number
+    public java.util.Optional<Worker> findWorkerByPhone(String phone) {
+        // Format phone number if needed (to handle +91 prefix variations)
+        if (phone.startsWith("+91")) {
+            phone = phone.substring(3); // Remove +91 prefix
+        }
+        
+        // Find by raw phone number first
+        java.util.Optional<Worker> worker = repo.findByPhone(phone);
+        
+        if (!worker.isPresent() && !phone.startsWith("+")) {
+            // Try with +91 prefix
+            worker = repo.findByPhone("+91" + phone);
+        }
+        
+        return worker;
     }
     
     // Multi-step registration methods

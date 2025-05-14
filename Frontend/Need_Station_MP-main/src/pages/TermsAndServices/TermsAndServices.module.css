@@ -4,6 +4,7 @@
   margin: 0 auto;
   padding: 2rem;
   color: white;
+  margin-top: 26vh; /* Slightly reduced top spacing */
 }
 
 .termsHeader {

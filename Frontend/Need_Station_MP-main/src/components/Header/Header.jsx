@@ -13,7 +13,26 @@ const Header = () => {
 
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [isTaskerDropdownOpen, setTaskerDropdownOpen] = useState(false);
+  const [currentLanguage, setCurrentLanguage] = useState('en');
   const taskerButtonRef = useRef(null);
+  
+  // Check current language on mount and when localStorage changes
+  useEffect(() => {
+    const checkLanguage = () => {
+      const lang = localStorage.getItem('needstation-language') || 'en';
+      setCurrentLanguage(lang);
+    };
+    
+    // Check on mount
+    checkLanguage();
+    
+    // Listen for storage changes (in case language is changed)
+    window.addEventListener('storage', checkLanguage);
+    
+    return () => {
+      window.removeEventListener('storage', checkLanguage);
+    };
+  }, []);
 
   const toggleDropdown = () => {
     setDropdownOpen(!isDropdownOpen);
@@ -67,7 +86,9 @@ const Header = () => {
                   className={styles.taskerContainer}
                   onMouseEnter={() => setTaskerDropdownOpen(true)}
                   onMouseLeave={() => setTaskerDropdownOpen(false)}
+                  onClick={() => currentLanguage === 'hi' && setTaskerDropdownOpen(!isTaskerDropdownOpen)}
                   ref={taskerButtonRef}
+                  data-language={currentLanguage}
                 >
                   <button className={styles.becomeTasker}>
                     Become a Tasker

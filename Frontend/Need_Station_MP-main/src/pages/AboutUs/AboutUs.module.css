@@ -1,6 +1,7 @@
 .about-main {
   max-width: 1200px;
-  margin: 30px auto;
+  margin: 0 auto;
+  margin-top: 26vh; /* Slightly reduced top spacing */
   background: transparent;
   padding: 20px;
   border-radius: 8px;

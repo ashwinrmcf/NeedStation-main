@@ -32,63 +32,274 @@
   gap: 25px;
   margin-bottom: 20px;
   max-width: 1000px;
+  width: 100%;
+}
+
+/* Media Queries for Responsive Design */
+@media screen and (max-width: 1200px) {
+  .languageGrid {
+    grid-template-columns: repeat(3, minmax(220px, 1fr));
+    max-width: 800px;
+  }
+}
+
+@media screen and (max-width: 900px) {
+  .languageGrid {
+    grid-template-columns: repeat(2, minmax(200px, 1fr));
+    gap: 20px;
+    max-width: 600px;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .languageGrid {
+    grid-template-columns: repeat(1, 1fr);
+    gap: 15px;
+    max-width: 100%;
+    padding: 0 10px;
+  }
+  
+  .translationHeader h1 {
+    font-size: 1.8rem !important;
+  }
+  
+  .translationHeader p {
+    font-size: 1rem !important;
+  }
 }
 
 .languageCard {
   background-color: #1a2234;
   border: 2px solid #2d3748;
-  border-radius: 12px;
+  border-radius: 16px;
   cursor: pointer;
   text-align: center;
-  transition: all 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   overflow: hidden;
   display: flex;
   flex-direction: column;
   height: 100%;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3), 0 6px 6px rgba(0, 0, 0, 0.2);
   position: relative;
   color: white;
+  /* Enhanced for background images */
+  min-height: 300px;
+  background-size: cover !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  /* Add subtle border glow */
+  border: 2px solid rgba(0, 224, 184, 0.3);
+  /* Enhanced image effects */
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+
+@media screen and (max-width: 900px) {
+  .languageCard {
+    min-height: 280px;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .languageCard {
+    min-height: 250px;
+  }
+  
+  .languageCard:hover {
+    transform: translateY(-5px) scale(1.01) rotateX(1deg);
+  }
+  
+  .languageCard.active {
+    transform: scale(1.02);
+  }
 }
 
 .languageCard:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
-  border-color: #4fd1c5;
+  transform: translateY(-7px) scale(1.02) rotateX(2deg);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+  border-color: #00E0B8;
+  /* Enhanced glow effect on hover */
+  box-shadow: 0 0 30px rgba(0, 224, 184, 0.5), 0 0 15px rgba(0, 224, 184, 0.3);
+  z-index: 5;
+}
+
+.languageCard:hover .cardContent,
+.languageCard.active .cardContent {
+  transform: translateZ(30px);
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.8));
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.25);
 }
 
 .languageCard.active {
-  background-color: #162032;
-  border-color: #4fd1c5;
-  box-shadow: 0 0 20px rgba(79, 209, 197, 0.4);
+  border-color: #00E0B8;
+  border-width: 3px;
+  box-shadow: 0 0 30px rgba(0, 224, 184, 0.7), 0 0 15px rgba(0, 224, 184, 0.5);
+  /* Scale effect for active card */
+  transform: scale(1.05);
+  z-index: 10;
+}
+
+.statusBadge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: #00E0B8;
+  color: #0b1120;
+  font-weight: bold;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  z-index: 15;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .cardContent {
-  padding: 1.5rem 1rem;
+  padding: 2rem 1.5rem;
   flex-grow: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   position: relative;
-  z-index: 2;
+  z-index: 3;
   color: white;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-  background-color: rgba(0, 0, 0, 0.4);
-  border-radius: 8px;
-  margin: 0.5rem;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 1);
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.7));
+  backdrop-filter: blur(1px);
+  border-radius: 12px;
+  margin: 0.75rem;
+  /* More opaque overlay for high visibility */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+  /* Create depth with subtle 3D transform */
+  transform: translateZ(20px);
+}
+
+@media screen and (max-width: 900px) {
+  .cardContent {
+    padding: 1.5rem 1rem;
+    margin: 0.5rem;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .cardContent {
+    padding: 1.25rem 0.75rem;
+    transform: translateZ(10px);
+  }
+  
+  .languageCard:hover .cardContent {
+    transform: translateZ(15px);
+  }
 }
 
 .flag {
-  font-size: 3rem;
-  margin-bottom: 15px;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+  font-size: 3.5rem;
+  margin-bottom: 20px;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.5));
+  transform: scale(1);
+  transition: transform 0.3s ease;
+}
+
+@media screen and (max-width: 900px) {
+  .flag {
+    font-size: 3rem;
+    margin-bottom: 15px;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .flag {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+  }
+  
+  .languageCard:hover .flag {
+    transform: scale(1.05);
+  }
+}
+
+.languageCard:hover .flag {
+  transform: scale(1.1) rotate(5deg);
+}
+
+.languageCard.active .flag {
+  transform: scale(1.15);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1.15);
+  }
+  50% {
+    transform: scale(1.25);
+  }
+  100% {
+    transform: scale(1.15);
+  }
 }
 
 .languageCard h3 {
-  font-size: 1.3rem;
+  font-size: 1.7rem;
   font-weight: bold;
-  margin-bottom: 5px;
+  margin-bottom: 8px;
   color: white;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  position: relative;
+  display: inline-block;
+  /* Enhance text visibility with stronger shadow */
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 1), 0 0 4px rgba(0, 0, 0, 0.8);
+}
+
+@media screen and (max-width: 900px) {
+  .languageCard h3 {
+    font-size: 1.5rem;
+    margin-bottom: 6px;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .languageCard h3 {
+    font-size: 1.3rem;
+    margin-bottom: 4px;
+  }
+}
+
+.languageCard h3:after {
+  content: '';
+  position: absolute;
+  width: 50%;
+  height: 2px;
+  background-color: #00E0B8;
+  bottom: -4px;
+  left: 25%;
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.languageCard .flag,
+.languageCard h3,
+.languageCard .countryName,
+.languageCard .code {
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+.languageCard:hover h3:after,
+.languageCard.active h3:after {
+  transform: scaleX(1);
 }
 
 .code {
@@ -104,20 +315,63 @@
 }
 
 .selectButton {
-  background-color: #1f2937;
+  background-color: rgba(0, 224, 184, 0.4);
   color: white;
-  padding: 0.75rem;
-  width: 100%;
-  text-align: center;
-  font-weight: bold;
+  font-weight: 600;
   transition: all 0.3s ease;
-  font-size: 0.9rem;
-  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  font-family: inherit;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 0.8rem 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.selectButton:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: 0.5s;
+}
+
+.languageCard:hover .selectButton:before {
+  left: 100%;
+}
+
+.selectButton:hover {
+  background-color: #00E0B8;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
 }
 
 .active .selectButton {
-  background-color: #38b2ac;
-  color: white;
+  background-color: #00E0B8;
+  color: #0b1120;
+  border: none;
+  padding: 1rem 1.5rem;
+  border-radius: 0 0 14px 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+  margin-top: auto;
+  position: relative;
+  z-index: 3;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
 
 .infoSection {
@@ -128,6 +382,21 @@
   border-radius: 12px;
   margin-top: 2rem;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
+
+@media screen and (max-width: 900px) {
+  .infoSection {
+    padding: 1.5rem;
+    max-width: 600px;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .infoSection {
+    padding: 1.25rem;
+    margin-top: 1rem;
+    border-radius: 8px;
+  }
 }
 
 .infoHeader {
@@ -190,14 +459,138 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: rgba(11, 17, 32, 0.9);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   z-index: 9999;
   color: white;
-  backdrop-filter: blur(4px);
+  padding: 0 20px;
+  text-align: center;
+}
+
+@media screen and (max-width: 600px) {
+  .loadingOverlay p {
+    font-size: 1rem !important;
+  }
+  
+  .spinner {
+    width: 50px;
+    height: 50px;
+    border-width: 4px;
+  }
+}
+
+/* New overlay for background images */
+.cardOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to bottom, rgba(11, 17, 32, 0.1), rgba(11, 17, 32, 0.5));
+  z-index: 2;
+  opacity: 0.6;
+  border-radius: 10px;
+  transition: opacity 0.3s ease;
+}
+
+.languageCard:hover .cardOverlay {
+  opacity: 0.7;
+}
+
+.languageCard.active .cardOverlay {
+  opacity: 0.7;
+}
+
+.languageCard:hover .cardOverlay {
+  background: linear-gradient(to bottom, rgba(11, 17, 32, 0.1), rgba(11, 17, 32, 0.6));
+}
+
+.languageCard.active .cardOverlay {
+  background: linear-gradient(to bottom, rgba(0, 224, 184, 0.1), rgba(11, 17, 32, 0.7));
+}
+
+/* Language background classes - Enhanced with image filters for better quality */
+.englishBg {
+  background-image: url('/src/assets/images/Languages/english.jpg');
+  background-size: cover;
+  background-position: center;
+  cursor: pointer;
+  filter: brightness(1.2) contrast(1.2) saturate(1.2);
+  /* Subtle zoom animation */
+  animation: slow-zoom 20s infinite alternate;
+}
+
+.hindiBg {
+  background-image: url('/src/assets/images/Languages/hindi.jpg');
+  background-size: cover;
+  background-position: center;
+  cursor: pointer;
+  filter: brightness(1.15) contrast(1.2) saturate(1.2);
+  /* Subtle zoom animation with different timing */
+  animation: slow-zoom 25s infinite alternate-reverse;
+}
+
+.tamilBg {
+  background-image: url('/src/assets/images/Languages/tamil nadu.jpg');
+  background-size: cover;
+  background-position: center;
+  cursor: pointer;
+  filter: brightness(1.15) contrast(1.2) saturate(1.2);
+  /* Subtle zoom animation with different timing */
+  animation: slow-zoom 22s infinite alternate;
+}
+
+.bengaliBg {
+  background-image: url('/src/assets/images/Languages/bengali.jpg');
+  background-size: cover;
+  background-position: center;
+  cursor: pointer;
+  filter: brightness(1.15) contrast(1.15) saturate(1.15);
+  /* Subtle zoom animation with different timing */
+  animation: slow-zoom 28s infinite alternate-reverse;
+}
+
+.malayalamBg {
+  background-image: url('/src/assets/images/Languages/malyalam.jpg');
+  background-size: cover;
+  background-position: center;
+  cursor: pointer;
+  filter: brightness(1.15) contrast(1.15) saturate(1.15);
+  /* Subtle zoom animation with different timing */
+  animation: slow-zoom 26s infinite alternate;
+}
+
+.teluguBg {
+  background-image: url('/src/assets/images/Languages/telugu.jpg');
+  background-size: cover;
+  background-position: center;
+  cursor: pointer;
+  filter: brightness(1.2) contrast(1.15) saturate(1.15);
+  /* Subtle zoom animation with different timing */
+  animation: slow-zoom 24s infinite alternate-reverse;
+}
+
+.kannadaBg {
+  background-image: url('/src/assets/images/Languages/kannada.jpg');
+  background-size: cover;
+  background-position: center;
+  cursor: pointer;
+  filter: brightness(1.15) contrast(1.2) saturate(1.15);
+  /* Subtle zoom animation with different timing */
+  animation: slow-zoom 27s infinite alternate;
+}
+
+.gujaratiBg {
+  background-image: url('/src/assets/images/Languages/gujrati.jpg');
+  background-size: cover;
+  background-position: center;
+  cursor: pointer;
+  filter: brightness(1.15) contrast(1.2) saturate(1.15);
+  /* Subtle zoom animation with different timing */
+  animation: slow-zoom 23s infinite alternate-reverse;
 }
 
 .loadingOverlay p {
@@ -218,6 +611,27 @@
 @keyframes spin {
   to {
     transform: rotate(360deg);
+  }
+}
+
+@keyframes slow-zoom {
+  0% {
+    background-size: 100% auto;
+  }
+  100% {
+    background-size: 110% auto;
+  }
+}
+
+@keyframes subtle-float {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+  100% {
+    transform: translateY(0);
   }
 }
 
