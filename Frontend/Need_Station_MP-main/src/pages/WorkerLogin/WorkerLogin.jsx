@@ -41,48 +41,75 @@ const WorkerLogin = () => {
     setOtpError('');
     
     try {
-      // Find worker by phone number to get workerId
-      const findWorkerResponse = await axios.get(
-        `http://localhost:8080/api/worker/findByPhone/${formData.phone}`,
+      // First try to find the worker by phone number using a temporary registration
+      // This will return the workerId if found or create a new registration if not
+      const registerRequest = {
+        fullName: "",  // These will be populated later
+        gender: "Other",
+        dob: "2000-01-01",
+        phone: formData.phone,
+        email: "",
+        whatsappNumber: formData.phone
+      };
+      
+      // Use the new Free OTP API endpoints
+      const response = await axios.post(
+        'http://localhost:8080/api/workers/register/step1',
+        registerRequest,
         {
           headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
+            'Content-Type': 'application/json'
           }
         }
       );
       
-      if (!findWorkerResponse.data.workerId) {
-        setOtpError('No worker found with this phone number');
-        setOtpLoading(false);
-        return;
-      }
-      
-      const foundWorkerId = findWorkerResponse.data.workerId;
-      setWorkerId(foundWorkerId);
-      
-      // Generate OTP for the worker
-      const otpResponse = await axios.post(
-        `http://localhost:8080/api/worker/otp/generate/${foundWorkerId}`,
-        {},
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-          }
-        }
-      );
-      
-      if (otpResponse.data.success) {
+      // Check if we got a workerId
+      if (response.data && response.data.workerId) {
+        // Save the worker ID for OTP verification
+        const foundWorkerId = response.data.workerId;
+        setWorkerId(foundWorkerId);
+        
+        // OTP is sent automatically during registration
         setOtpSent(true);
-        // In trial mode, the OTP is 123456
-        alert('OTP sent! In trial mode, use 123456 as your verification code.');
+        console.log('OTP sent successfully via Free OTP API');
+        alert('OTP sent! Please check your phone for the verification code.');
       } else {
-        setOtpError('Failed to send OTP. Please try again.');
+        setOtpError('Could not find or register your account. Please try again.');
       }
     } catch (error) {
       console.error('Error generating OTP:', error);
-      setOtpError('Failed to send OTP. Please try again.');
+      if (error.response && error.response.status === 409 && error.response.data && error.response.data.workerId) {
+        // This means the worker already exists, which is good for login
+        setWorkerId(error.response.data.workerId);
+        
+        // Now send the OTP using the resend endpoint
+        try {
+          const resendResponse = await axios.post(
+            'http://localhost:8080/api/workers/resend-otp',
+            { workerId: error.response.data.workerId },
+            {
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            }
+          );
+          
+          if (resendResponse.data && resendResponse.data.sent) {
+            setOtpSent(true);
+            console.log('OTP resent successfully');
+            alert('OTP sent! Please check your phone for the verification code.');
+          } else {
+            setOtpError('Failed to send OTP. Please try again.');
+          }
+        } catch (resendError) {
+          console.error('Error resending OTP:', resendError);
+          setOtpError('Failed to send OTP. Please try again.');
+        }
+      } else if (error.response && error.response.data && error.response.data.error) {
+        setOtpError(error.response.data.error);
+      } else {
+        setOtpError('Failed to send OTP. Please try again.');
+      }
     } finally {
       setOtpLoading(false);
     }
@@ -98,20 +125,24 @@ const WorkerLogin = () => {
     setOtpError('');
     
     try {
+      // Use the new Free OTP API endpoint for verification
       const verifyResponse = await axios.post(
-        `http://localhost:8080/api/worker/otp/verify/${workerId}`,
-        { otp: otpCode },
+        'http://localhost:8080/api/workers/verify-otp',
+        { 
+          workerId: workerId,
+          otp: otpCode 
+        },
         {
           headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
+            'Content-Type': 'application/json'
           }
         }
       );
       
-      if (verifyResponse.data.success) {
+      if (verifyResponse.data && verifyResponse.data.verified) {
         setOtpVerified(true);
         setOtpError('');
+        console.log('OTP verified successfully via Free OTP API');
         // Automatically proceed with login after verification
         handleLoginAfterVerification();
       } else {
@@ -119,7 +150,11 @@ const WorkerLogin = () => {
       }
     } catch (error) {
       console.error('Error verifying OTP:', error);
-      setOtpError('Failed to verify OTP. Please try again.');
+      if (error.response && error.response.data && error.response.data.error) {
+        setOtpError(error.response.data.error);
+      } else {
+        setOtpError('Failed to verify OTP. Please try again.');
+      }
     } finally {
       setOtpLoading(false);
     }

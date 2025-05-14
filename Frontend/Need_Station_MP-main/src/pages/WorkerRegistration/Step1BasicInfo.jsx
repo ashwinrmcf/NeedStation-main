@@ -36,7 +36,7 @@ export default function Step1BasicInfo({ data, updateForm, next, workerId, updat
     }
   };
   
-  // Function to generate OTP
+  // Function to generate OTP using the Free OTP API
   const generateOtp = async () => {
     const { phone } = data;
     
@@ -51,75 +51,107 @@ export default function Step1BasicInfo({ data, updateForm, next, workerId, updat
     try {
       // First register the worker to get a worker ID
       if (!workerId && !verifiedWorkerId) {
-        // Create FormData object for initial registration
-        const formData = new FormData();
-        
-        // Add profile picture if available
-        if (profilePicture) {
-          formData.append("profilePicture", profilePicture);
-        }
-        
-        // Create basic worker data to get an ID
+        // Create worker data for registration
         const workerData = {
           fullName: data.fullName || "Temporary Name",  // Can be updated later
           gender: data.gender || "Other",
           dob: data.dob || "2000-01-01",
           phone: phone,
           email: data.email || "",
-          whatsappNumber: data.whatsappNumber || "",
-          otpVerified: false
+          whatsappNumber: data.whatsappNumber || ""
         };
-        
-        // Append worker data as a plain JSON string
-        formData.append("data", JSON.stringify(workerData));
-        
-        // Register the worker first to get an ID
-        const registerResponse = await axios.post(`${API_URL}/worker/register/step1`, formData, {
-          headers: {}
-        });
-        
-        if (registerResponse.data && registerResponse.data.workerId) {
-          // Save the worker ID for OTP verification
-          const newWorkerId = registerResponse.data.workerId;
-          setVerifiedWorkerId(newWorkerId);
-          if (updateWorkerId) {
-            updateWorkerId(newWorkerId);
-          }
+
+        try {
+          // Register the worker first using the new Free OTP API endpoint
+          const registerResponse = await axios.post(`${API_URL}/workers/register/step1`, workerData, {
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          });
           
-          // Now generate OTP using this worker ID
-          const otpResponse = await axios.post(`${API_URL}/worker/otp/generate/${newWorkerId}`);
-          
-          if (otpResponse.data && otpResponse.data.success) {
+          if (registerResponse.data && registerResponse.data.workerId) {
+            // Save the worker ID for OTP verification
+            const newWorkerId = registerResponse.data.workerId;
+            setVerifiedWorkerId(newWorkerId);
+            if (updateWorkerId) {
+              updateWorkerId(newWorkerId);
+            }
+            
             setOtpSent(true);
-            // In trial mode, the OTP is 123456
-            alert('OTP sent! In trial mode, use 123456 as your verification code.');
+            console.log('OTP sent successfully during registration');
+            alert('OTP sent! Please check your phone for the verification code.');
           } else {
-            setOtpError('Failed to send OTP. Please try again.');
+            setOtpError('Failed to register. Please check your information.');
           }
-        } else {
-          setOtpError('Failed to register. Please check your information.');
+        } catch (registerError) {
+          // Handle 409 Conflict error - Worker already exists with this phone number
+          if (registerError.response && registerError.response.status === 409 && 
+              registerError.response.data && registerError.response.data.workerId) {
+            
+            // Worker already exists, capture the existing workerId
+            const existingWorkerId = registerError.response.data.workerId;
+            setVerifiedWorkerId(existingWorkerId);
+            if (updateWorkerId) {
+              updateWorkerId(existingWorkerId);
+            }
+            
+            // Now send OTP to the existing worker using resend endpoint
+            const resendResponse = await axios.post(
+              `${API_URL}/workers/resend-otp`,
+              { workerId: existingWorkerId },
+              { headers: { 'Content-Type': 'application/json' } }
+            );
+            
+            if (resendResponse.data && resendResponse.data.sent) {
+              setOtpSent(true);
+              console.log('OTP sent to existing worker');
+              alert('This phone number is already registered. OTP sent for verification!');
+            } else {
+              setOtpError('Failed to send OTP to existing account. Please try again.');
+            }
+          } else {
+            // For other registration errors
+            console.error('Registration error:', registerError);
+            if (registerError.response && registerError.response.data && registerError.response.data.error) {
+              setOtpError(registerError.response.data.error);
+            } else {
+              setOtpError('Failed to register. Please check your information and try again.');
+            }
+          }
         }
       } else {
-        // If we already have a worker ID, just generate the OTP
-        const otpResponse = await axios.post(`${API_URL}/worker/otp/generate/${verifiedWorkerId || workerId}`);
+        // If we already have a worker ID, resend the OTP
+        const existingId = verifiedWorkerId || workerId;
+        const resendResponse = await axios.post(`${API_URL}/workers/resend-otp`, {
+          workerId: existingId
+        }, {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
         
-        if (otpResponse.data && otpResponse.data.success) {
+        if (resendResponse.data && resendResponse.data.sent) {
           setOtpSent(true);
-          // In trial mode, the OTP is 123456
-          alert('OTP sent! In trial mode, use 123456 as your verification code.');
+          console.log('OTP resent successfully');
+          alert('OTP sent! Please check your phone for the verification code.');
         } else {
           setOtpError('Failed to send OTP. Please try again.');
         }
       }
     } catch (error) {
       console.error('Error generating OTP:', error);
-      setOtpError('Failed to send OTP. Please try again.');
+      // Only get here for errors not caught in the inner try/catch
+      if (error.response && error.response.data && error.response.data.error) {
+        setOtpError(error.response.data.error);
+      } else {
+        setOtpError('Failed to send OTP. Please try again.');
+      }
     } finally {
       setOtpLoading(false);
     }
   };
   
-  // Function to verify OTP
+  // Function to verify OTP using the Free OTP API
   const verifyOtp = async () => {
     if (!otpCode || otpCode.length < 6) {
       setOtpError('Please enter a valid OTP code');
@@ -131,21 +163,34 @@ export default function Step1BasicInfo({ data, updateForm, next, workerId, updat
     
     try {
       const verifyResponse = await axios.post(
-        `${API_URL}/worker/otp/verify/${verifiedWorkerId || workerId}`,
-        { otp: otpCode }
+        `${API_URL}/workers/verify-otp`,
+        { 
+          workerId: verifiedWorkerId || workerId,
+          otp: otpCode 
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }
       );
       
-      if (verifyResponse.data && verifyResponse.data.success) {
+      if (verifyResponse.data && verifyResponse.data.verified) {
         setOtpVerified(true);
         setOtpError('');
         // Update form data with verification status
         updateForm({ otpVerified: true });
+        console.log('OTP verified successfully');
       } else {
         setOtpError('Invalid OTP. Please try again.');
       }
     } catch (error) {
       console.error('Error verifying OTP:', error);
-      setOtpError('Failed to verify OTP. Please try again.');
+      if (error.response && error.response.data && error.response.data.error) {
+        setOtpError(error.response.data.error);
+      } else {
+        setOtpError('Failed to verify OTP. Please try again.');
+      }
     } finally {
       setOtpLoading(false);
     }
