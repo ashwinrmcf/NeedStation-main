@@ -1,3 +1,10 @@
+.headerContainer {
+  position: relative;
+  width: 100%;
+  height: auto;
+  z-index: 1000;
+}
+
 .header {
   width: 86.364vw;
   min-height: 10.306vh;
@@ -78,7 +85,11 @@
 }
 
 .stationText {
+<<<<<<< HEAD
   color: #00E0B8; /* Teal color for "Station" */
+=======
+  color: #00ced1; /* Dark turquoise color for "Station" */
+>>>>>>> 1008e561591a1687e1e5894e1664b046427cf89d
   transition: color 0.3s ease;
 }
 
@@ -87,7 +98,37 @@
 }
 
 .logo:hover .stationText {
+<<<<<<< HEAD
   color: #4fffeb;
+=======
+  color: #4dffff;
+}
+
+.taskerContainer {
+  position: relative;
+  cursor: pointer;
+  display: inline-block; /* Keeps the container sized to its content */
+}
+
+/* Original becomeTasker button styling preserved exactly */
+.becomeTasker {
+  min-width: 9.738vw;
+  cursor: pointer;
+  background: #00ced1;
+  color: #0e0e0e;
+  font-size: 1.125rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 12px;
+  padding: 1.1vh 1.5vw; /* Match login/signup padding */
+  transition: all 0.2s ease;
+}
+
+.becomeTasker:hover {
+  background: #00b3b6;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 206, 209, 0.3);
+>>>>>>> 1008e561591a1687e1e5894e1664b046427cf89d
 }
 
 .navLinks a, .navLinks button {
@@ -144,9 +185,143 @@
 
 .authButtons {
   display: flex;
+  gap: 1vw;
   align-items: center;
 }
 
+<<<<<<< HEAD
+=======
+/* User Profile Styles */
+.userProfileContainer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.notificationButton {
+  position: relative;
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s;
+}
+
+.notificationButton:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.notificationDot {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 8px;
+  height: 8px;
+  background-color: #00E0B8;
+  border-radius: 50%;
+}
+
+.userProfile {
+  position: relative;
+}
+
+.userProfileButton {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 24px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.userProfileButton:hover {
+  background-color: rgba(0, 0, 0, 0.5);
+  border-color: #00E0B8;
+}
+
+.userAvatar {
+  width: 24px;
+  height: 24px;
+  background-color: #00E0B8;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #0f172a;
+}
+
+.userName {
+  font-size: 0.9rem;
+  font-weight: 500;
+  max-width: 120px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.userDropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 200px;
+  background-color: #0f172a;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.profileLink {
+  display: block;
+  padding: 12px 16px;
+  color: white;
+  text-decoration: none;
+  transition: background-color 0.2s;
+  font-size: 0.9rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.profileLink:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+  color: #00E0B8;
+}
+
+.logoutButton {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 12px 16px;
+  color: #f87171;
+  cursor: pointer;
+  text-align: left;
+  font-size: 0.9rem;
+  transition: background-color 0.2s;
+}
+
+.logoutButton:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+>>>>>>> 1008e561591a1687e1e5894e1664b046427cf89d
 /* Button effect styles */
 @keyframes borderGlow {
   0% { border-color: currentColor; box-shadow: 0 0 0 0 rgba(0, 224, 184, 0); }
@@ -154,6 +329,7 @@
   100% { border-color: currentColor; box-shadow: 0 0 0 0 rgba(0, 224, 184, 0); }
 }
 
+<<<<<<< HEAD
 @keyframes pulseGlow {
   0% { box-shadow: 0 0 0 0 rgba(0, 224, 184, 0.7); }
   70% { box-shadow: 0 0 10px 10px rgba(0, 224, 184, 0); }
@@ -181,6 +357,8 @@
   50% { text-shadow: 0 0 8px rgba(0, 224, 184, 0.4); }
 }
 
+=======
+>>>>>>> 1008e561591a1687e1e5894e1664b046427cf89d
 .authButtons .login, .authButtons .signup, .authButtons .becomeTasker, .logout {
   font-size: 1.125rem;
   font-weight: 400;
@@ -238,6 +416,7 @@
   background-color: rgba(255, 255, 255, 0.1); /* Light transparent white background */
   border: 1px solid #00E0B8;
   backdrop-filter: blur(4px);
+<<<<<<< HEAD
   position: relative;
   overflow: hidden;
   transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
@@ -276,6 +455,8 @@
   transform-origin: left;
   transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   z-index: -1;
+=======
+>>>>>>> 1008e561591a1687e1e5894e1664b046427cf89d
 }
 
 .authButtons .login::before, .authButtons .signup::before, .authButtons .becomeTasker::before, .logout::before {
@@ -295,6 +476,7 @@
 
 .authButtons .becomeTasker:hover {
   color: #FFFFFF;
+<<<<<<< HEAD
   border-color: #00E0B8;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15), 0 0 8px rgba(0, 224, 184, 0.3);
   letter-spacing: 0.02em;
@@ -310,6 +492,11 @@
 .authButtons .becomeTasker:hover::after {
   transform: scaleX(1);
   background-color: rgba(0, 224, 184, 0.3);
+=======
+  background-color: rgba(0, 224, 184, 0.9);
+  border-color: transparent;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2), 0 0 15px rgba(0, 224, 184, 0.4);
+>>>>>>> 1008e561591a1687e1e5894e1664b046427cf89d
 }
 
 .authButtons .login:hover::before, .authButtons .signup:hover::before, .authButtons .becomeTasker:hover::before, .logout:hover::before {

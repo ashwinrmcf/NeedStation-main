@@ -1,11 +1,14 @@
 package com.example.authbackend.config;
 
+import com.example.authbackend.security.OtpSecurityFilter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
@@ -16,6 +19,9 @@ import java.util.List;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+    
+    @Autowired
+    private OtpSecurityFilter otpSecurityFilter;
 
     @Bean
 public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -31,7 +37,11 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
                 return config;
             })
         )
+        // Add our custom OTP security filter
+        .addFilterBefore(otpSecurityFilter, BasicAuthenticationFilter.class)
+        // TEMPORARY: Permit all requests for testing
         .authorizeHttpRequests(auth -> auth
+<<<<<<< HEAD
             .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
             .requestMatchers(
                 "/api/auth/**",          // All auth endpoints
@@ -42,6 +52,9 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
                 "/api/translate/**"       // Translation endpoints
             ).permitAll()
             .anyRequest().authenticated()
+=======
+            .anyRequest().permitAll()
+>>>>>>> 1008e561591a1687e1e5894e1664b046427cf89d
         );
     return http.build();
     }

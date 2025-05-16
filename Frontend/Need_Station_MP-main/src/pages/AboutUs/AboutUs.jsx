@@ -77,7 +77,7 @@ const AboutUs = () => {
   return (
     <>
       <ScrollToTop />
-      <main className={styles["about-main"]}>
+      <main className={`${styles["about-main"]} page-content-spacing`}>
         <div className={styles["container"]}>
           {/* Vision & Mission Section */}
           <section className={styles["vision-section"]}>

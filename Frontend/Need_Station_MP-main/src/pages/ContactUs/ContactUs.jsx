@@ -29,7 +29,7 @@ const ContactUs = () => {
   return (
     <>
       <ScrollToTop />
-      <main>
+      <main className="page-content-spacing">
         <div className={styles["container"]}>
           {!submitted ? (
             <form className={styles["contact-form"]} onSubmit={handleSubmit}>

@@ -1,0 +1,6 @@
+### Test 2Factor API directly - SMS VERSION
+GET https://2factor.in/API/V1/1fd3579b-3102-11f0-8b17-0200cd936042/SMS/YOUR_PHONE_NUMBER/1234
+
+# Replace YOUR_PHONE_NUMBER with your actual phone number (without +91)
+# This uses the SMS-only endpoint without a template to ensure SMS delivery, not voice call
+# The API should respond with a success status if everything is configured correctly

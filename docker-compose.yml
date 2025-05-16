@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  # NeedStation Backend
+  # You can uncomment this service when you're ready to run your backend with docker
+  # authbackend:
+  #   build: ./Backend/authbackend
+  #   ports:
+  #     - "8080:8080"
+  #   environment:
+  #     - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/NeedStation
+  #     - SPRING_DATASOURCE_USERNAME=root
+  #     - SPRING_DATASOURCE_PASSWORD=Mickie@007
+  #   depends_on:
+  #     - db
+  #     - free-otp-api
+
+  # MySQL Database
+  # You can uncomment this service when you're ready to run your database with docker
+  # db:
+  #   image: mysql:8.0
+  #   ports:
+  #     - "3306:3306"
+  #   environment:
+  #     - MYSQL_ROOT_PASSWORD=Mickie@007
+  #     - MYSQL_DATABASE=NeedStation
+  #   volumes:
+  #     - mysql_data:/var/lib/mysql
+
+  # Free OTP API Service
+  free-otp-api:
+    build:
+      context: ./free-otp-api-master
+      dockerfile: Dockerfile
+    ports:
+      - "3030:3030"
+    environment:
+      - PORT=3030
+      - HOST=0.0.0.0
+    volumes:
+      - ./free-otp-api-master:/app
+      - /app/node_modules
+
+volumes:
+  mysql_data:

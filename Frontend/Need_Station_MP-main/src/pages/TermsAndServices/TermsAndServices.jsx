@@ -3,7 +3,11 @@ import styles from "./TermsAndServices.module.css";
 
 const TermsAndServices = () => {
   return (
+<<<<<<< HEAD
     <div className={styles.termsContainer}>
+=======
+    <div className={`${styles.termsContainer} page-content-spacing`}>
+>>>>>>> 1008e561591a1687e1e5894e1664b046427cf89d
       <div className={styles.termsHeader}>
         <h1>Terms <span className={styles.highlight}>& Services</span></h1>
         <div className={styles.headerAccent}></div>

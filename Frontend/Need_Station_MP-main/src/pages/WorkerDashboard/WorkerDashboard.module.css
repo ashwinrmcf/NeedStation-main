@@ -1,0 +1,446 @@
+.dashboardContainer {
+  min-height: 100vh;
+  background: linear-gradient(to bottom, #0f172a, #1e293b);
+  color: #e2e8f0;
+  padding: 2rem;
+}
+
+.dashboardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.dashboardHeader h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: white;
+}
+
+.welcomeText {
+  font-size: 1.25rem;
+  color: #94a3b8;
+}
+
+.dashboardContent {
+  display: grid;
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Welcome Card Overlay */
+.welcomeCardOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.75);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.welcomeCard {
+  background: linear-gradient(135deg, #1e293b, #0f172a);
+  border-radius: 1rem;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  width: 90%;
+  max-width: 800px;
+  overflow: hidden;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  animation: slideUp 0.5s ease;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(50px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.welcomeHeader {
+  background: linear-gradient(90deg, #0ea5e9, #38bdf8);
+  color: white;
+  padding: 1.5rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.welcomeHeader h2 {
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 600;
+}
+
+.closeButton {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 2rem;
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+}
+
+.closeButton:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.welcomeContent {
+  padding: 2rem;
+  display: flex;
+  gap: 2rem;
+}
+
+.welcomeIcon {
+  font-size: 5rem;
+  background: linear-gradient(135deg, #0ea5e9, #38bdf8);
+  border-radius: 1rem;
+  width: 100px;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 15px -3px rgba(14, 165, 233, 0.3);
+}
+
+.welcomeInfo {
+  flex: 1;
+}
+
+.welcomeMessage {
+  font-size: 1.25rem;
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+}
+
+.highlight {
+  color: #38bdf8;
+  font-weight: 600;
+}
+
+.workerDetails {
+  background-color: rgba(15, 23, 42, 0.5);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid rgba(148, 163, 184, 0.1);
+}
+
+.detailItem {
+  display: flex;
+  margin-bottom: 0.75rem;
+}
+
+.detailItem:last-child {
+  margin-bottom: 0;
+}
+
+.detailLabel {
+  font-weight: 500;
+  color: #94a3b8;
+  width: 140px;
+}
+
+.detailValue {
+  color: white;
+  font-weight: 500;
+}
+
+.welcomeNote {
+  background-color: rgba(56, 189, 248, 0.1);
+  border-left: 4px solid #38bdf8;
+  padding: 1rem;
+  border-radius: 0 0.5rem 0.5rem 0;
+  margin-bottom: 1rem;
+}
+
+.welcomeNote p {
+  margin: 0;
+  line-height: 1.5;
+}
+
+.verificationStatus {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.verifiedBadge, .pendingBadge {
+  padding: 0.5rem 1rem;
+  border-radius: 2rem;
+  font-weight: 500;
+  font-size: 0.875rem;
+}
+
+.verifiedBadge {
+  background-color: rgba(16, 185, 129, 0.2);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.pendingBadge {
+  background-color: rgba(245, 158, 11, 0.2);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.welcomeActions {
+  background-color: rgba(15, 23, 42, 0.7);
+  padding: 1.5rem 2rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.actionButton {
+  background-color: #0ea5e9;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.actionButton:hover {
+  background-color: #0284c7;
+}
+
+.dismissButton {
+  background-color: transparent;
+  border: 1px solid rgba(148, 163, 184, 0.5);
+  color: #94a3b8;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.dismissButton:hover {
+  background-color: rgba(148, 163, 184, 0.1);
+  color: white;
+}
+
+/* Dashboard Cards */
+.dashboardCard {
+  background-color: rgba(30, 41, 59, 0.5);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(148, 163, 184, 0.1);
+}
+
+.dashboardCard h3 {
+  margin-top: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: white;
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+}
+
+.profileSummary {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.profileImageContainer {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  overflow: hidden;
+  background-color: #0ea5e9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.profileImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profileInitials {
+  font-size: 2rem;
+  font-weight: 600;
+  color: white;
+}
+
+.profileDetails {
+  flex: 1;
+}
+
+.profileName {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: white;
+  margin-bottom: 0.25rem;
+}
+
+.profileRole {
+  color: #94a3b8;
+  margin-bottom: 0.75rem;
+}
+
+.profileVerification {
+  display: flex;
+}
+
+.verifiedTag, .pendingTag {
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.verifiedTag {
+  background-color: rgba(16, 185, 129, 0.2);
+  color: #34d399;
+}
+
+.pendingTag {
+  background-color: rgba(245, 158, 11, 0.2);
+  color: #fbbf24;
+}
+
+.quickStatsContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.statCard {
+  background-color: rgba(30, 41, 59, 0.5);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(148, 163, 184, 0.1);
+  transition: transform 0.2s;
+}
+
+.statCard:hover {
+  transform: translateY(-5px);
+}
+
+.statIcon {
+  font-size: 2rem;
+  background-color: rgba(56, 189, 248, 0.1);
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.statContent {
+  flex: 1;
+}
+
+.statValue {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: white;
+  margin-bottom: 0.25rem;
+}
+
+.statLabel {
+  color: #94a3b8;
+  font-size: 0.875rem;
+}
+
+/* Loader */
+.loaderContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #0f172a;
+}
+
+.loader {
+  width: 50px;
+  height: 50px;
+  border: 5px solid rgba(56, 189, 248, 0.3);
+  border-radius: 50%;
+  border-top-color: #38bdf8;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Error Container */
+.errorContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #0f172a;
+  text-align: center;
+  padding: 2rem;
+}
+
+.errorIcon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+}
+
+.returnButton {
+  margin-top: 1.5rem;
+  background-color: #0ea5e9;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.noProfileContainer {
+  text-align: center;
+  padding: 3rem;
+  background-color: rgba(30, 41, 59, 0.5);
+  border-radius: 1rem;
+}
+
+.registrationButton {
+  margin-top: 1.5rem;
+  background-color: #0ea5e9;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  cursor: pointer;
+}

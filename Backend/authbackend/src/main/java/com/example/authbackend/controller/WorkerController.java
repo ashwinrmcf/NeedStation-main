@@ -15,11 +15,79 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/worker")
 @CrossOrigin(origins = "*") // Allow all origins explicitly here
 public class WorkerController {
+
+    // Worker login endpoint - updated to support OTP verification
+    @PostMapping("/login")
+    public ResponseEntity<?> loginWorker(@RequestBody com.example.authbackend.dto.WorkerLoginDTO loginDTO) {
+        try {
+            // If verified flag is true, we can skip email check and authenticate by workerId
+            if (loginDTO.isVerified() && loginDTO.getWorkerId() != null) {
+                Optional<Worker> workerOpt = workerService.getWorkerById(loginDTO.getWorkerId());
+                if (workerOpt.isPresent() && workerOpt.get().getPhone().equals(loginDTO.getPhone())) {
+                    Worker worker = workerOpt.get();
+                    Map<String, Object> response = new HashMap<>();
+                    response.put("workerId", worker.getId());
+                    response.put("fullName", worker.getFullName());
+                    response.put("email", worker.getEmail());
+                    response.put("phone", worker.getPhone());
+                    response.put("message", "Login successful");
+                    return ResponseEntity.ok(response);
+                }
+            }
+            
+            // Fall back to regular email/phone authentication if OTP verification not used
+            java.util.Optional<Worker> workerOpt = workerService.authenticateWorker(loginDTO.getEmail(), loginDTO.getPhone());
+            if (workerOpt.isPresent()) {
+                Worker worker = workerOpt.get();
+                // You can customize the returned fields as needed
+                Map<String, Object> response = new HashMap<>();
+                response.put("workerId", worker.getId());
+                response.put("fullName", worker.getFullName());
+                response.put("email", worker.getEmail());
+                response.put("phone", worker.getPhone());
+                response.put("message", "Login successful");
+                return ResponseEntity.ok(response);
+            } else {
+                Map<String, String> error = new HashMap<>();
+                error.put("error", "Invalid credentials");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+            }
+        } catch (Exception e) {
+            Map<String, String> error = new HashMap<>();
+            error.put("error", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+        }
+    }
+    
+    // Find worker by phone number (for OTP login verification)
+    @GetMapping("/findByPhone/{phone}")
+    public ResponseEntity<?> findWorkerByPhone(@PathVariable String phone) {
+        try {
+            java.util.Optional<Worker> workerOpt = workerService.findWorkerByPhone(phone);
+            if (workerOpt.isPresent()) {
+                Worker worker = workerOpt.get();
+                Map<String, Object> response = new HashMap<>();
+                response.put("workerId", worker.getId());
+                response.put("found", true);
+                return ResponseEntity.ok(response);
+            } else {
+                Map<String, Object> error = new HashMap<>();
+                error.put("found", false);
+                error.put("message", "No worker found with this phone number");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+            }
+        } catch (Exception e) {
+            Map<String, String> error = new HashMap<>();
+            error.put("error", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+        }
+    }
 
     @Autowired
     private com.fasterxml.jackson.databind.ObjectMapper objectMapper;

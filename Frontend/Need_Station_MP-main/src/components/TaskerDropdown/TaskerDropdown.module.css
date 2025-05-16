@@ -1,0 +1,84 @@
+.taskerDropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 15px;
+  width: 250px;
+  z-index: 1000;
+  filter: drop-shadow(0 10px 25px rgba(0, 0, 0, 0.3));
+}
+
+.dropdownArrow {
+  position: absolute;
+  top: -8px;
+  right: 25px;
+  width: 16px;
+  height: 16px;
+  background: #121212;
+  transform: rotate(45deg);
+  border-top: 2px solid #00ced1;
+  border-left: 2px solid #00ced1;
+  z-index: 0;
+}
+
+.dropdownContent {
+  position: relative;
+  background: #121212;
+  border-radius: 8px;
+  border: 2px solid #00ced1;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.dropdownHeader {
+  padding: 15px;
+  background: #181818;
+  color: #00ced1;
+  font-weight: 600;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid rgba(0, 206, 209, 0.3);
+}
+
+.dropdownDivider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+  margin: 0;
+}
+
+.dropdownItem {
+  padding: 14px 15px;
+  color: #ffffff;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: all 0.2s ease;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.dropdownItem:hover {
+  background: rgba(0, 206, 209, 0.1);
+  color: #00ced1;
+}
+
+.highlighted {
+  background: rgba(0, 206, 209, 0.05);
+  border-top: 1px solid rgba(0, 206, 209, 0.2);
+  border-bottom: 1px solid rgba(0, 206, 209, 0.2);
+}
+
+.highlighted:hover {
+  background: rgba(0, 206, 209, 0.15);
+}
+
+/* Animation for each item on hover */
+.dropdownItem svg {
+  transition: transform 0.2s ease;
+}
+
+.dropdownItem:hover svg {
+  transform: translateX(3px);
+}

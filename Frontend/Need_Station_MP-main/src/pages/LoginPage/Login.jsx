@@ -52,7 +52,7 @@ const Login = () => {
         </Link>
       </div>
 
-      <div className={styles["form-container"]}>
+      <div className={`${styles["form-container"]} signup-form-spacing`}>
         <h2>Login</h2>
         <input
           type="text"

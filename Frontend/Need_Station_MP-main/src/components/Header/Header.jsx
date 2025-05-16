@@ -1,8 +1,14 @@
 import { Link, NavLink } from "react-router-dom";
+<<<<<<< HEAD
 import { useState, useEffect } from "react";
+=======
+import { useState, useEffect, useRef } from "react";
+>>>>>>> 1008e561591a1687e1e5894e1664b046427cf89d
 import { useLocation } from "react-router-dom"; 
 import styles from "./Header.module.css";
 import HeaderDropdown from "../HeaderDropdown/HeaderDropdown.jsx";
+import TaskerDropdown from "../TaskerDropdown/TaskerDropdown.jsx";
+import { AnimatePresence } from "framer-motion";
 import { useAuth } from "../../store/AuthContext.jsx";
 
 const Header = () => {
@@ -10,6 +16,27 @@ const Header = () => {
   console.log("AuthContext user:", user);
 
   const [isDropdownOpen, setDropdownOpen] = useState(false);
+  const [isTaskerDropdownOpen, setTaskerDropdownOpen] = useState(false);
+  const [currentLanguage, setCurrentLanguage] = useState('en');
+  const taskerButtonRef = useRef(null);
+  
+  // Check current language on mount and when localStorage changes
+  useEffect(() => {
+    const checkLanguage = () => {
+      const lang = localStorage.getItem('needstation-language') || 'en';
+      setCurrentLanguage(lang);
+    };
+    
+    // Check on mount
+    checkLanguage();
+    
+    // Listen for storage changes (in case language is changed)
+    window.addEventListener('storage', checkLanguage);
+    
+    return () => {
+      window.removeEventListener('storage', checkLanguage);
+    };
+  }, []);
 
   const toggleDropdown = () => {
     setDropdownOpen(!isDropdownOpen);
@@ -23,11 +50,7 @@ const Header = () => {
 
   return (
     <>
-      <div
-        style={{
-          minHeight: isDropdownOpen ? "40vh" : "auto",
-        }}
-      >
+      <div className={styles.headerContainer}>
         <header className={styles.header}>
           <Link to="/">
             <div className={styles.logo} data-no-translate="true">
@@ -63,11 +86,21 @@ const Header = () => {
                 <Link to="/signup">
                   <button className={styles.signup}>Sign up</button>
                 </Link>
-                <Link to="/helper-registration">
+                <div 
+                  className={styles.taskerContainer}
+                  onMouseEnter={() => setTaskerDropdownOpen(true)}
+                  onMouseLeave={() => setTaskerDropdownOpen(false)}
+                  onClick={() => currentLanguage === 'hi' && setTaskerDropdownOpen(!isTaskerDropdownOpen)}
+                  ref={taskerButtonRef}
+                  data-language={currentLanguage}
+                >
                   <button className={styles.becomeTasker}>
                     Become a Tasker
                   </button>
-                </Link>
+                  <AnimatePresence>
+                    {isTaskerDropdownOpen && <TaskerDropdown isVisible={true} />}
+                  </AnimatePresence>
+                </div>
               </>
             )}
           </div>

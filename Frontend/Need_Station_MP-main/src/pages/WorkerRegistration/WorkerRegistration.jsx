@@ -1,5 +1,6 @@
 // src/pages/worker/WorkerRegistration.jsx
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Step1BasicInfo from './Step1BasicInfo';
 import Step2ContactInfo from './Step2ContactInfo';
 import Step3Address from './Step3Address';
@@ -143,6 +144,9 @@ const WorkerRegistration = () => {
     localStorage.setItem('workerId', id);
   };
 
+  // Navigation hook for redirects
+  const navigate = useNavigate();
+  
   // Final submission handler
   const handleFinalSubmit = async () => {
     setLoading(true);
@@ -154,8 +158,8 @@ const WorkerRegistration = () => {
 
       // Handle successful registration
       if (response.data) {
-        // Success message or redirect
-        alert("Registration completed successfully! You will be notified once your registration is approved.");
+        // Redirect to worker dashboard
+        navigate('/worker-dashboard');
       }
     } catch (err) {
       console.error("Registration error:", err);
@@ -257,7 +261,7 @@ const WorkerRegistration = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white p-4">
+    <div className="min-h-screen bg-gray-900 text-white p-4 form-content-spacing">
       <div className="max-w-4xl mx-auto">
         {/* Show progress bar for all steps except final success page */}
         {step <= 6 && renderProgressBar()}

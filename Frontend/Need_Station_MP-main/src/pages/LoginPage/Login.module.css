@@ -4,7 +4,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 2.786vh 3.342vw;
+  padding: 1vh 3.342vw;
   background-color: transparent;
 }
 
@@ -52,13 +52,13 @@
   background-color: transparent;
   text-align: center;
   color: white;
-  margin-bottom: 10vh;
+  margin-bottom: 5vh;
 }
 
 .form-container h2 {
   font-size: 2.5rem;
   margin: 0;
-  padding: 2.786vh 0;
+  padding: 1vh 0;
 }
 
 .input-box {
@@ -88,7 +88,7 @@
 
 .separator {
   width: 30%;
-  margin: 2.786vh 0;
+  margin: 1.5vh 0;
   color: white;
   font-size: 1.125rem;
   display: flex;
@@ -129,9 +129,9 @@
 
 .terms {
   width: 30vw;
-  margin: 2.786vh auto;
+  margin: 1.5vh auto;
   font-size: 1.2rem;
-  line-height: 4.4vh;
+  line-height: 3vh;
   text-align: left;
   color: white;
 }
@@ -139,4 +139,122 @@
 .terms a {
   color: #26D0CE;
   text-decoration: underline;
+}
+
+/* OTP Verification Styles */
+.input-group {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 35vw;
+}
+
+.input-verified {
+  border: 1px solid #26D0CE !important;
+}
+
+.verify-btn {
+  position: relative;
+  border: none;
+  border-radius: 0.5rem;
+  background-color: #007BFF;
+  color: white;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+  margin-left: 10px;
+  height: 5vh;
+  transition: background-color 0.3s;
+}
+
+.verify-btn:hover {
+  background-color: #0056b3;
+}
+
+.verify-btn:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+}
+
+.btn-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.spin-icon {
+  animation: spin 1s linear infinite;
+  margin-right: 5px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.verified-indicator {
+  display: flex;
+  align-items: center;
+  color: #26D0CE;
+  font-size: 0.9rem;
+  margin-left: 10px;
+}
+
+.verified-icon {
+  margin-right: 5px;
+}
+
+.otp-container {
+  width: 35vw;
+  background-color: #222;
+  border-radius: 0.625rem;
+  padding: 1rem;
+  margin-top: 1rem;
+}
+
+.otp-instruction {
+  color: #ccc;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+  text-align: left;
+}
+
+.otp-input-group {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.otp-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.resend-btn {
+  background: none;
+  border: none;
+  color: #007BFF;
+  font-size: 0.85rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 0;
+}
+
+.resend-icon {
+  margin-right: 5px;
+}
+
+.error-message {
+  color: #dc3545;
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+.message {
+  margin-top: 1rem;
+  padding: 0.5rem;
+  border-radius: 0.3rem;
+  font-size: 0.9rem;
 }

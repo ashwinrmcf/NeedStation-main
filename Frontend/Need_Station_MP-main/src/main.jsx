@@ -1,6 +1,7 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import App from "./routes/App.jsx";
+import HindiApp from "./routes/HindiApp.jsx";
 import { AuthProvider } from "./store/AuthContext.jsx";
 import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
@@ -8,6 +9,7 @@ import Home from "./pages/HomePage/Home.jsx";
 import BasicNeedsHome from "./pages/BasicNeeds/BasicNeedsHome.jsx";
 import Login from "./pages/LoginPage/Login.jsx";
 import Signup from "./pages/SignupPage/Signup.jsx";
+import WorkerLogin from "./pages/WorkerLogin/WorkerLogin.jsx";
 import MaidServicesHome from "./pages/MaidServices/MaidServicesHome.jsx";
 import Electrician from "./pages/BasicNeeds/Electrician.jsx";
 import Plumber from "./pages/BasicNeeds/Plumber.jsx";
@@ -22,6 +24,7 @@ import TestRouterContext from "./test/TestRouterContext.jsx";
 import PaymentGateway from "./pages/PaymentGateway/PaymentGateway.jsx";
 import AvailableHelpers from "./pages/BasicNeeds/AvailableHelpers.jsx";
 import HelperRegistration from "./pages/WorkerRegistration/WorkerRegistration.jsx";
+import WorkerDashboard from "./pages/WorkerDashboard/WorkerDashboard.jsx";
 import HelperLayout from "./components/layouts/HelperLayout.jsx";
 import OverviewPage from "./pages/HelperPages/OverviewPage.jsx";
 import UpcomingTaskPage from "./pages/HelperPages/UpcomingTasksPage";
@@ -32,15 +35,26 @@ import ContactUs from "./pages/ContactUs/ContactUs.jsx";
 import AboutUs from "./pages/AboutUs/AboutUs.jsx";
 import TranslationCenter from "./pages/TranslationCenter/TranslationCenter.jsx";
 import TermsAndServices from "./pages/TermsAndServices/TermsAndServices.jsx";
+<<<<<<< HEAD
+=======
+import WhyBecomeHelper from "./pages/WhyBecomeHelper/WhyBecomeHelper.jsx";
+
+// Hindi components
+import HindiHome from "./pages/Hindi/Home.jsx";
+import HindiAboutUs from "./pages/Hindi/AboutUs.jsx";
+// We'll create more Hindi components as needed
+>>>>>>> 1008e561591a1687e1e5894e1664b046427cf89d
 
 
 const router = createBrowserRouter([
+  // English routes
   {
     path: "/",
     element: <App />,
     children: [
       { path: "/", element: <Home /> },
       { path: "/basic-needs-home", element: <BasicNeedsHome /> },
+      { path: "/why-become-helper", element: <WhyBecomeHelper /> },
       { path: "/maid-services", element: <MaidServicesHome/>},
       { path: "/electrician", element: <Electrician /> },
       { path: "/plumber", element: <Plumber /> },
@@ -57,8 +71,11 @@ const router = createBrowserRouter([
       {path: "/terms-and-services", element: <TermsAndServices/>},
     ],
   },
+
   { path: "/login", element: <Login /> },
   { path: "/signup", element: <Signup /> },
+  { path: "/worker-login", element: <WorkerLogin /> },
+  { path: "/worker-dashboard", element: <WorkerDashboard /> },
   {
     path: "/user-details",
     element: <BasicNeedsServiceUserDescription />,
@@ -74,6 +91,17 @@ const router = createBrowserRouter([
       { path: "completed-task", element: <CompletedTaskPage /> },
       { path: "earnings", element: <EarningPage /> },
       { path: "settings", element: <SettingsPage /> },
+    ],
+  },
+
+  // Hindi routes under /hi path
+  {
+    path: "hi",
+    element: <HindiApp />,
+    children: [
+      { path: "", element: <HindiHome /> },
+      { path: "about-us", element: <HindiAboutUs /> },
+      // Additional Hindi routes can be added here as needed
     ],
   },
   
