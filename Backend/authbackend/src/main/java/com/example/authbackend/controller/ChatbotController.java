@@ -1,5 +1,6 @@
 package com.example.authbackend.controller;
 
+import com.example.authbackend.dto.ChatbotResponse;
 import com.example.authbackend.model.ChatRequest;
 import com.example.authbackend.service.ChatbotService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +22,8 @@ public class ChatbotController {
     }
 
     @PostMapping
-    public ResponseEntity<Map<String, String>> processMessage(@RequestBody ChatRequest request) {
-        Map<String, String> response = chatbotService.generateResponse(request.getMessage());
+    public ResponseEntity<ChatbotResponse> getChatbotResponse(@RequestBody ChatRequest request) { // Changed back to ChatRequest
+        ChatbotResponse response = chatbotService.generateResponse(request.getMessage()); // Use getMessage()
         return ResponseEntity.ok(response);
     }
 }

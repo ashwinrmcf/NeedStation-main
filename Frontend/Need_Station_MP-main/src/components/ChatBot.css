@@ -14,17 +14,21 @@
 }
 
 .chat-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
   width: 60px;
   height: 60px;
   border-radius: 50%;
   background-color: var(--primary-color);
-  color: var(--text-light);
+  color: white;
+  border: none;
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  border: none;
-  box-shadow: 0 4px 15px rgba(14, 165, 233, 0.3);
+  z-index: 1000;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   transition: all 0.3s ease;
   backdrop-filter: blur(5px);
   border: 2px solid rgba(255, 255, 255, 0.1);
@@ -70,10 +74,22 @@
 
 .chat-header h3 {
   margin: 0;
-  font-size: 18px;
+  font-size: 20px;
   position: relative;
   z-index: 1;
   letter-spacing: 0.5px;
+  font-weight: 700;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
+.need-text {
+  color: #ffffff;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.6), 0 0 5px rgba(0,0,0,0.5);
+}
+
+.station-text {
+  color: #38bdf8;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.6), 0 0 5px rgba(0,0,0,0.5), 0 0 10px rgba(14,165,233,0.5);
 }
 
 .chat-header::after {
@@ -125,6 +141,12 @@
   animation: fadeIn 0.3s;
 }
 
+.message-content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
 .user-message {
   align-self: flex-end;
   flex-direction: row-reverse;
@@ -152,9 +174,22 @@
 }
 
 .bot-message .message-avatar {
-  background: linear-gradient(135deg, var(--primary-color), #0891b2);
+  background: linear-gradient(135deg, #0ea5e9, #0284c7);
   color: white;
   font-size: 16px;
+  box-shadow: 0 0 10px rgba(14, 165, 233, 0.6);
+  animation: avatarGlow 2s infinite alternate;
+}
+
+@keyframes avatarGlow {
+  0% {
+    box-shadow: 0 0 5px rgba(14, 165, 233, 0.4);
+    transform: scale(1);
+  }
+  100% {
+    box-shadow: 0 0 12px rgba(14, 165, 233, 0.7);
+    transform: scale(1.05);
+  }
 }
 
 .message-text {
@@ -162,7 +197,7 @@
   border-radius: 18px;
   font-size: 14px;
   line-height: 1.5;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 .user-message .message-text {
@@ -173,10 +208,11 @@
 }
 
 .bot-message .message-text {
-  background-color: var(--bot-message-bg);
+  background-color: #0d3a5c; /* Darker blue for better contrast with dark background */
   color: var(--text-light);
   border-bottom-left-radius: 4px;
   border-top-left-radius: 4px;
+  border-left: 2px solid var(--light-accent);
 }
 
 .chat-input {
@@ -185,6 +221,103 @@
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   background-color: rgba(17, 24, 39, 0.7);
   backdrop-filter: blur(10px);
+}
+
+.redirect-button {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 16px;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  align-self: flex-start;
+  margin-top: 4px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.redirect-button:hover {
+  background-color: var(--hover-color);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+
+.redirect-button:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+/* Language options styling */
+.language-options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 10px;
+  width: 100%;
+}
+
+.language-options-row {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+}
+
+.language-button {
+  background-color: #1e293b;
+  color: white;
+  border: 1px solid var(--light-accent);
+  padding: 8px 10px;
+  border-radius: 12px;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex: 1;
+}
+
+.language-button:hover {
+  background-color: var(--primary-color);
+  transform: translateY(-2px);
+}
+
+.language-button:active {
+  transform: translateY(0);
+}
+
+.language-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.language-changing {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  color: var(--light-accent);
+  font-size: 13px;
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid transparent;
+  border-top-color: var(--light-accent);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 .chat-input input {

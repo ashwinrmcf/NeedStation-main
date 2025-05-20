@@ -1,91 +1,58 @@
+
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { CheckCircle, MessageCircle, Calendar } from 'lucide-react';
 
-const HowItWorks = () => {
-  const navigate = useNavigate();
-  
-  // Function to check if user is logged in (using localStorage)
-  const isUserLoggedIn = () => {
-    return localStorage.getItem('token') !== null;
-  };
-
-  // Handle Get Started button click
-  const handleGetStarted = () => {
-    if (isUserLoggedIn()) {
-      // If logged in, scroll to top of page
-      window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-      });
-    } else {
-      // If not logged in, redirect to signup page
-      navigate('/signup');
+export default function HowItWorks() {
+  const steps = [
+    {
+      icon: <MessageCircle size={28} className="text-cyan-400" />,
+      number: 1,
+      title: "Describe Your Task",
+      description: "Tell us what you need done, when and where it works for you."
+    },
+    {
+      icon: <CheckCircle size={28} className="text-cyan-300" />,
+      number: 2,
+      title: "Choose Your Tasker",
+      description: "Browse trusted Taskers by skills, reviews, and price. Chat with them to confirm details."
+    },
+    {
+      icon: <Calendar size={28} className="text-cyan-300" />,
+      number: 3,
+      title: "Get It Done!",
+      description: "Your Tasker arrives and gets the job done. Pay securely and leave a review, all through NeedStation."
     }
-  };
+  ];
 
   return (
-    <section className="text-white py-12 px-4 sm:px-8 lg:px-16">
-      <h2 className="text-center text-4xl font-semibold mb-10">How it works</h2>
-      
-      <div className="flex flex-col lg:flex-row justify-between items-center gap-8">
-        {/* Left side with steps */}
-        <div className="w-full lg:w-1/2">
-          {/* Step 1 */}
-          <div className="flex items-start gap-4 mb-6">
-            <div className="flex items-center justify-center bg-cyan-400 text-black rounded-full w-10 h-10 text-lg font-bold flex-shrink-0">
-              1
+    <div className=" text-white py-16">
+      <div className="max-w-6xl mx-auto px-4">
+        <h3 className="text-4xl font-bold text-center mb-16 text-white">
+          How it <span className='text-cyan-300'>works</span> 
+        </h3>
+        
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {steps.map((step, index) => (
+            <div key={index} className="flex flex-col items-center text-center">
+              <div className="bg-gray-800 rounded-full p-6 mb-6 relative">
+                {step.icon}
+                <div className="absolute -top-2 -left-2 bg-cyan-400 text-gray-900 rounded-full w-8 h-8 flex items-center justify-center font-bold">
+                  {step.number}
+                </div>
+              </div>
+              
+              <h3 className="text-xl font-semibold mb-3">{step.title}</h3>
+              <p className="text-gray-300">{step.description}</p>
             </div>
-            <div>
-              <h3 className="text-xl font-semibold">Choose a Tasker by price, skills, and reviews</h3>
-            </div>
-          </div>
-          
-          {/* Step 2 */}
-          <div className="flex items-start gap-4 mb-6">
-            <div className="flex items-center justify-center bg-cyan-400 text-black rounded-full w-10 h-10 text-lg font-bold flex-shrink-0">
-              2
-            </div>
-            <div>
-              <h3 className="text-xl font-semibold">Schedule a Tasker as early as today.</h3>
-            </div>
-          </div>
-    
-          {/* Step 3 */}
-          <div className="flex items-start gap-4 mb-6">
-            <div className="flex items-center justify-center bg-cyan-400 text-black rounded-full w-10 h-10 text-lg font-bold flex-shrink-0">
-              3
-            </div>
-            <div>
-              <h3 className="text-xl font-semibold">Chat, pay, tip, and review all in one place.</h3>
-            </div>
-          </div>
-
-          {/* Get Started Button */}
-          <div className="mt-6">
-            <button 
-              onClick={handleGetStarted}
-              className="bg-cyan-400 hover:bg-cyan-500 text-black font-bold py-3 px-8 rounded-md transition duration-300"
-            >
-              Get Started
-            </button>
-          </div>
+          ))}
         </div>
         
-        {/* Right side with image */}
-        <div className="w-full lg:w-1/2 rounded-lg overflow-hidden">
-          <img 
-            src="/images/how-it-works.jpg" 
-            alt="People discussing tasks" 
-            className="w-full h-auto rounded-lg"
-            onError={(e) => {
-              e.target.onerror = null;
-              e.target.src = 'https://via.placeholder.com/500x300?text=How+It+Works';
-            }}
-          />
+        <div className="mt-12 flex justify-center">
+          <button className="bg-cyan-300 hover:bg-cyan-400 text-gray-900 font-bold py-3 px-8 rounded-md transition-colors">
+            Get Started
+          </button>
         </div>
       </div>
-    </section>
+    </div>
   );
-};
-
-export default HowItWorks;
+}
