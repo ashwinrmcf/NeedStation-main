@@ -35,15 +35,12 @@ import ContactUs from "./pages/ContactUs/ContactUs.jsx";
 import AboutUs from "./pages/AboutUs/AboutUs.jsx";
 import TranslationCenter from "./pages/TranslationCenter/TranslationCenter.jsx";
 import TermsAndServices from "./pages/TermsAndServices/TermsAndServices.jsx";
-<<<<<<< HEAD
-=======
 import WhyBecomeHelper from "./pages/WhyBecomeHelper/WhyBecomeHelper.jsx";
 
 // Hindi components
 import HindiHome from "./pages/Hindi/Home.jsx";
 import HindiAboutUs from "./pages/Hindi/AboutUs.jsx";
 // We'll create more Hindi components as needed
->>>>>>> 1008e561591a1687e1e5894e1664b046427cf89d
 
 
 const router = createBrowserRouter([

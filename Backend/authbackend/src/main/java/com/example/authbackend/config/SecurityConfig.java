@@ -41,20 +41,7 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
         .addFilterBefore(otpSecurityFilter, BasicAuthenticationFilter.class)
         // TEMPORARY: Permit all requests for testing
         .authorizeHttpRequests(auth -> auth
-<<<<<<< HEAD
-            .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-            .requestMatchers(
-                "/api/auth/**",          // All auth endpoints
-                "/api/user/**",          // All user endpoints
-                "/api/worker/**",         // All worker endpoints, including registration
-                "/api/otp/**",           // All OTP endpoints
-                "/auth/otp/**",          // Additional OTP endpoints
-                "/api/translate/**"       // Translation endpoints
-            ).permitAll()
-            .anyRequest().authenticated()
-=======
             .anyRequest().permitAll()
->>>>>>> 1008e561591a1687e1e5894e1664b046427cf89d
         );
     return http.build();
     }

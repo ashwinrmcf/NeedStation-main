@@ -1,9 +1,5 @@
 import { Link, NavLink } from "react-router-dom";
-<<<<<<< HEAD
-import { useState, useEffect } from "react";
-=======
 import { useState, useEffect, useRef } from "react";
->>>>>>> 1008e561591a1687e1e5894e1664b046427cf89d
 import { useLocation } from "react-router-dom"; 
 import styles from "./Header.module.css";
 import HeaderDropdown from "../HeaderDropdown/HeaderDropdown.jsx";

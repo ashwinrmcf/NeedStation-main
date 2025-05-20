@@ -32,8 +32,6 @@
   gap: 25px;
   margin-bottom: 20px;
   max-width: 1000px;
-<<<<<<< HEAD
-=======
   width: 100%;
 }
 
@@ -68,48 +66,19 @@
   .translationHeader p {
     font-size: 1rem !important;
   }
->>>>>>> 1008e561591a1687e1e5894e1664b046427cf89d
 }
 
 .languageCard {
   background-color: #1a2234;
   border: 2px solid #2d3748;
-<<<<<<< HEAD
-  border-radius: 12px;
-  cursor: pointer;
-  text-align: center;
-  transition: all 0.3s ease;
-=======
   border-radius: 16px;
   cursor: pointer;
   text-align: center;
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
->>>>>>> 1008e561591a1687e1e5894e1664b046427cf89d
   overflow: hidden;
   display: flex;
   flex-direction: column;
   height: 100%;
-<<<<<<< HEAD
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  position: relative;
-  color: white;
-}
-
-.languageCard:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
-  border-color: #4fd1c5;
-}
-
-.languageCard.active {
-  background-color: #162032;
-  border-color: #4fd1c5;
-  box-shadow: 0 0 20px rgba(79, 209, 197, 0.4);
-}
-
-.cardContent {
-  padding: 1.5rem 1rem;
-=======
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3), 0 6px 6px rgba(0, 0, 0, 0.2);
   position: relative;
   color: white;
@@ -195,34 +164,12 @@
 
 .cardContent {
   padding: 2rem 1.5rem;
->>>>>>> 1008e561591a1687e1e5894e1664b046427cf89d
   flex-grow: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   position: relative;
-<<<<<<< HEAD
-  z-index: 2;
-  color: white;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-  background-color: rgba(0, 0, 0, 0.4);
-  border-radius: 8px;
-  margin: 0.5rem;
-}
-
-.flag {
-  font-size: 3rem;
-  margin-bottom: 15px;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
-}
-
-.languageCard h3 {
-  font-size: 1.3rem;
-  font-weight: bold;
-  margin-bottom: 5px;
-  color: white;
-=======
   z-index: 3;
   color: white;
   text-shadow: 0 2px 6px rgba(0, 0, 0, 1);
@@ -353,7 +300,6 @@
 .languageCard:hover h3:after,
 .languageCard.active h3:after {
   transform: scaleX(1);
->>>>>>> 1008e561591a1687e1e5894e1664b046427cf89d
 }
 
 .code {
@@ -369,22 +315,6 @@
 }
 
 .selectButton {
-<<<<<<< HEAD
-  background-color: #1f2937;
-  color: white;
-  padding: 0.75rem;
-  width: 100%;
-  text-align: center;
-  font-weight: bold;
-  transition: all 0.3s ease;
-  font-size: 0.9rem;
-  letter-spacing: 0.5px;
-}
-
-.active .selectButton {
-  background-color: #38b2ac;
-  color: white;
-=======
   background-color: rgba(0, 224, 184, 0.4);
   color: white;
   font-weight: 600;
@@ -442,7 +372,6 @@
   text-transform: uppercase;
   letter-spacing: 1.2px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
->>>>>>> 1008e561591a1687e1e5894e1664b046427cf89d
 }
 
 .infoSection {
@@ -455,8 +384,6 @@
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
 }
 
-<<<<<<< HEAD
-=======
 @media screen and (max-width: 900px) {
   .infoSection {
     padding: 1.5rem;
@@ -472,7 +399,6 @@
   }
 }
 
->>>>>>> 1008e561591a1687e1e5894e1664b046427cf89d
 .infoHeader {
   margin-bottom: 1.5rem;
   border-bottom: 1px solid #2d3748;
@@ -533,20 +459,13 @@
   left: 0;
   right: 0;
   bottom: 0;
-<<<<<<< HEAD
-  background-color: rgba(0, 0, 0, 0.8);
-=======
   background-color: rgba(11, 17, 32, 0.9);
->>>>>>> 1008e561591a1687e1e5894e1664b046427cf89d
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   z-index: 9999;
   color: white;
-<<<<<<< HEAD
-  backdrop-filter: blur(4px);
-=======
   padding: 0 20px;
   text-align: center;
 }
@@ -672,7 +591,6 @@
   filter: brightness(1.15) contrast(1.2) saturate(1.15);
   /* Subtle zoom animation with different timing */
   animation: slow-zoom 23s infinite alternate-reverse;
->>>>>>> 1008e561591a1687e1e5894e1664b046427cf89d
 }
 
 .loadingOverlay p {
@@ -696,8 +614,6 @@
   }
 }
 
-<<<<<<< HEAD
-=======
 @keyframes slow-zoom {
   0% {
     background-size: 100% auto;
@@ -719,4 +635,3 @@
   }
 }
 
->>>>>>> 1008e561591a1687e1e5894e1664b046427cf89d

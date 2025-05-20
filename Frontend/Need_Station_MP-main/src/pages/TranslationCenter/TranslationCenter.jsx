@@ -2,11 +2,8 @@ import React, { useState, useEffect } from "react";
 import styles from "./TranslationCenter.module.css";
 import translationService from "../../services/TranslationService";
 
-<<<<<<< HEAD
-=======
 // We'll use image backgrounds for better visual appeal and language representation
 
->>>>>>> 1008e561591a1687e1e5894e1664b046427cf89d
 export default function TranslationCenter() {
   // Initialize with translation service language preference
   const [targetLang, setTargetLang] = useState(() => {
@@ -16,16 +13,6 @@ export default function TranslationCenter() {
 
   // Languages available for translation
   const languages = [
-<<<<<<< HEAD
-    { code: "en", name: "English", flag: "🇺🇸", description: "United States" },
-    { code: "hi", name: "Hindi", flag: "🇮🇳", description: "India" },
-    { code: "ta", name: "Tamil", flag: "🇮🇳", description: "India" },
-    { code: "bn", name: "Bengali", flag: "🇮🇳", description: "India" },
-    { code: "ml", name: "Malayalam", flag: "🇮🇳", description: "India" },
-    { code: "te", name: "Telugu", flag: "🇮🇳", description: "India" },
-    { code: "kn", name: "Kannada", flag: "🇮🇳", description: "India" },
-    { code: "gu", name: "Gujarati", flag: "🇮🇳", description: "India" },
-=======
     { code: "en", name: "English", flag: "🇺🇸", description: "United States", bgClass: "englishBg" },
     { code: "hi", name: "Hindi", flag: "🇮🇳", description: "India", bgClass: "hindiBg" },
     { code: "ta", name: "Tamil", flag: "🇮🇳", description: "India", bgClass: "tamilBg" },
@@ -34,7 +21,6 @@ export default function TranslationCenter() {
     { code: "te", name: "Telugu", flag: "🇮🇳", description: "India", bgClass: "teluguBg" },
     { code: "kn", name: "Kannada", flag: "🇮🇳", description: "India", bgClass: "kannadaBg" },
     { code: "gu", name: "Gujarati", flag: "🇮🇳", description: "India", bgClass: "gujaratiBg" },
->>>>>>> 1008e561591a1687e1e5894e1664b046427cf89d
   ];
 
   // Use translation service on component mount
@@ -43,9 +29,6 @@ export default function TranslationCenter() {
     setTargetLang(translationService.getCurrentLanguage());
   }, []);
 
-<<<<<<< HEAD
-  const handleTranslate = async (langCode) => {
-=======
   // Function to clean language prefixes from text before translation
   const cleanLanguagePrefixes = (text) => {
     if (!text) return '';
@@ -89,17 +72,10 @@ export default function TranslationCenter() {
   
   const handleTranslate = async (langCode) => {
     console.log('Language card clicked:', langCode);
->>>>>>> 1008e561591a1687e1e5894e1664b046427cf89d
     setTranslating(true);
     setTargetLang(langCode);
     
     try {
-<<<<<<< HEAD
-      // Use the translation service to handle the translation
-      await translationService.setLanguage(langCode);
-    } catch (error) {
-      console.error("Translation failed:", error);
-=======
       // Store language preference in localStorage
       localStorage.setItem('needstation-language', langCode);
       sessionStorage.setItem('needstation-auto-translate', 'true');
@@ -200,24 +176,16 @@ export default function TranslationCenter() {
       console.error("Translation failed:", error);
       // Notify user of error but keep the app running
       console.log("Translation service unavailable, please try again later");
->>>>>>> 1008e561591a1687e1e5894e1664b046427cf89d
     } finally {
       setTranslating(false);
     }
   };
 
   return (
-<<<<<<< HEAD
-    <div className="container my-5">
-      <div className={styles.translationHeader}>
-        <h1 className="text-4xl font-bold mb-2">Language <span className="text-teal-400">Settings</span></h1>
-        <p className="text-lg mb-5">Select your preferred language to translate our entire website.</p>
-=======
     <div className="container page-content-spacing">
       <div className={styles.translationHeader}>
         <h1 className="text-4xl font-bold mb-2 text-white">Language <span className="text-teal-400">Settings</span></h1>
         <p className="text-lg mb-5 text-white">Select your preferred language to translate our entire website.</p>
->>>>>>> 1008e561591a1687e1e5894e1664b046427cf89d
         <div className={styles.headerAccent}></div>
       </div>
 
@@ -235,11 +203,6 @@ export default function TranslationCenter() {
             {languages.map((lang) => (
             <div 
               key={lang.code} 
-<<<<<<< HEAD
-              className={`${styles.languageCard} ${targetLang === lang.code ? styles.active : ''}`}
-              onClick={() => handleTranslate(lang.code)}
-            >
-=======
               className={`${styles.languageCard} ${styles[lang.bgClass]} ${targetLang === lang.code ? styles.active : ''}`}
               onClick={(e) => {
                 e.preventDefault();
@@ -257,18 +220,12 @@ export default function TranslationCenter() {
               )}
               {/* No overlay - using clear cards with high visibility */}
               
->>>>>>> 1008e561591a1687e1e5894e1664b046427cf89d
               <div className={styles.cardContent}>
                 <div className={styles.flag}>{lang.flag}</div>
                 <h3>{lang.name}</h3>
                 <p className={styles.countryName}>{lang.description}</p>
                 <p className={styles.code}>{lang.code.toUpperCase()}</p>
               </div>
-<<<<<<< HEAD
-              <div className={styles.selectButton} onClick={() => handleTranslate(lang.code)}>
-                {targetLang === lang.code ? 'Selected' : 'Select'}
-              </div>
-=======
               
               <button 
                 className={styles.selectButton} 
@@ -281,7 +238,6 @@ export default function TranslationCenter() {
               >
                 {targetLang === lang.code ? 'Selected' : 'Select'}
               </button>
->>>>>>> 1008e561591a1687e1e5894e1664b046427cf89d
             </div>
           ))}
           </div>
@@ -298,11 +254,7 @@ export default function TranslationCenter() {
           <div className={styles.noteIcon}>ℹ️</div>
           <div>
             <h3 className="font-bold text-lg">Please Note</h3>
-<<<<<<< HEAD
-            <p>Our translation service uses Google Translate API. While we strive for accuracy, some translations may not be perfect.</p>
-=======
             <p className="text-white">Our translation service uses Google Translate API. While we strive for accuracy, some translations may not be perfect.</p>
->>>>>>> 1008e561591a1687e1e5894e1664b046427cf89d
           </div>
         </div>
       </div>

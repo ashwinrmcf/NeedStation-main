@@ -4,16 +4,10 @@ import axios from 'axios';
 const isBrowser = typeof window !== 'undefined';
 const safeWindow = isBrowser ? window : {};
 
-<<<<<<< HEAD
-// Global translation cache
-if (isBrowser) {
-  safeWindow.translationCache = safeWindow.translationCache || {};
-=======
 // Global translation cache and state
 if (isBrowser) {
   safeWindow.translationCache = safeWindow.translationCache || {};
   safeWindow.needStationTranslationReady = safeWindow.needStationTranslationReady || false;
->>>>>>> 1008e561591a1687e1e5894e1664b046427cf89d
 }
 
 // List of common text elements that appear throughout the site
@@ -125,131 +119,6 @@ class TranslationService {
     const startTime = isBrowser ? performance.now() : 0;
     this.translating = true;
     
-<<<<<<< HEAD
-    // Protect logo and other elements first
-    this.protectElements();
-    
-    // Create tree walker to find text nodes
-    const walker = document.createTreeWalker(
-      document.body,
-      NodeFilter.SHOW_TEXT,
-      {
-        acceptNode: (node) => {
-          // Skip nodes that are part of the logo (NeedStation)
-          if (node.nodeValue && (
-              node.nodeValue.includes("NeedStation") || 
-              node.nodeValue === "Need" || 
-              node.nodeValue === "Station")) {
-            return NodeFilter.FILTER_REJECT;
-          }
-          
-          // Skip invisible nodes or empty text
-          if (!node.parentNode || 
-              node.parentNode.offsetParent === null || 
-              !node.nodeValue.trim()) {
-            return NodeFilter.FILTER_REJECT;
-          }
-          
-          // Skip scripts, styles and other non-visible elements
-          const parentTagName = node.parentNode.tagName?.toLowerCase();
-          if (parentTagName === 'script' || 
-              parentTagName === 'style' || 
-              parentTagName === 'noscript') {
-            return NodeFilter.FILTER_REJECT;
-          }
-          
-          // Skip elements with data-no-translate attribute
-          let parent = node.parentNode;
-          while (parent) {
-            if (parent.getAttribute && 
-                parent.getAttribute('data-no-translate') === 'true') {
-              return NodeFilter.FILTER_REJECT;
-            }
-            parent = parent.parentNode;
-          }
-          
-          return NodeFilter.FILTER_ACCEPT;
-        },
-      }
-    );
-    
-    // Collect nodes to translate
-    let nodes = [];
-    let nodesToTranslate = [];
-    let node;
-    
-    while ((node = walker.nextNode())) {
-      const text = node.nodeValue.trim();
-      
-      // Skip empty text
-      if (!text) continue;
-      
-      // Check if this text is already in cache
-      if (safeWindow.translationCache?.[this.currentLang]?.[text]) {
-        console.log('Found in cache:', text, '->', safeWindow.translationCache[this.currentLang][text]);
-        node.nodeValue = node.nodeValue.replace(
-          text, 
-          safeWindow.translationCache[this.currentLang][text]
-        );
-      } else {
-        console.log('Adding to translation queue:', text);
-        nodes.push(node);
-        nodesToTranslate.push(text);
-      }
-    }
-    
-    // If we have nodes that need translation
-    if (nodesToTranslate.length > 0) {
-      try {
-        // Split into smaller batches for faster processing (max 100 items per batch)
-        const batchSize = 100;
-        const batches = [];
-        
-        for (let i = 0; i < nodesToTranslate.length; i += batchSize) {
-          batches.push(nodesToTranslate.slice(i, i + batchSize));
-        }
-        
-        // Translate all batches in parallel for speed
-        const batchResults = await Promise.all(
-          batches.map(batch => 
-            axios.post("http://localhost:8080/api/translate/batch", {
-              texts: batch,
-              lang: this.currentLang,
-            })
-          )
-        );
-        
-        // Flatten the results
-        let allTranslations = [];
-        batchResults.forEach(result => {
-          allTranslations = [...allTranslations, ...result.data.translations];
-        });
-        
-        // Apply translations and update cache
-        nodes.forEach((node, idx) => {
-          const originalText = nodesToTranslate[idx];
-          const translatedText = allTranslations[idx];
-          
-          // Update cache
-          if (!safeWindow.translationCache[this.currentLang]) {
-            safeWindow.translationCache[this.currentLang] = {};
-          }
-          safeWindow.translationCache[this.currentLang][originalText] = translatedText;
-          
-          // Update node text
-          node.nodeValue = node.nodeValue.replace(originalText, translatedText);
-        });
-      } catch (error) {
-        console.error("Translation failed:", error);
-      }
-    }
-    
-    // Calculate time taken and log for optimization
-    const endTime = performance.now();
-    console.log(`Translation completed in ${(endTime - startTime).toFixed(2)}ms`);
-    
-    this.translating = false;
-=======
     try {
       // Set global translation state
       safeWindow.needStationTranslationReady = true;
@@ -616,7 +485,6 @@ class TranslationService {
     } catch (error) {
       console.error('Error translating dynamic content:', error);
     }
->>>>>>> 1008e561591a1687e1e5894e1664b046427cf89d
   }
 
   /**
@@ -631,8 +499,6 @@ class TranslationService {
       try {
         localStorage.setItem('needstation-language', langCode);
         console.log('Language preference saved to localStorage');
-<<<<<<< HEAD
-=======
         
         // Set a flag to indicate translation should happen on all page loads
         if (langCode !== 'en') {
@@ -640,7 +506,6 @@ class TranslationService {
         } else {
           sessionStorage.removeItem('needstation-auto-translate');
         }
->>>>>>> 1008e561591a1687e1e5894e1664b046427cf89d
       } catch (e) {
         console.error('Error setting localStorage:', e);
       }
@@ -650,13 +515,10 @@ class TranslationService {
     if (langCode !== 'en') {
       console.log('Calling translatePage for non-English language');
       try {
-<<<<<<< HEAD
-=======
         // Load any cached translations first
         this.loadTranslationCache();
         
         // Translate the current page
->>>>>>> 1008e561591a1687e1e5894e1664b046427cf89d
         await this.translatePage();
         console.log('Translation completed successfully');
       } catch (error) {

@@ -10,6 +10,7 @@ import HindiHeader from "../components/Hindi/HindiHeader.jsx";
 import HindiFooter from "../components/Hindi/HindiFooter.jsx";
 import ScrollToTop from "../hooks/ScrollToTop.jsx";
 import { ToastContainer } from "react-toastify";
+import ChatBot from "../components/ChatBot.jsx";
 
 // HindiApp is a wrapper that uses dedicated Hindi components
 function HindiApp() {
@@ -45,6 +46,7 @@ function HindiApp() {
         <Outlet />
       </main>
       <HindiFooter />
+      <ChatBot />
       <ToastContainer
         position="bottom-right"
         autoClose={5000}

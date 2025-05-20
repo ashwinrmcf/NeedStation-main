@@ -11,6 +11,7 @@ import Footer from "../components/Footer/Footer.jsx";
 import ScrollToTop from "../hooks/ScrollToTop.jsx";
 import { ToastContainer } from "react-toastify";
 import translationService from "../services/TranslationService";
+import ChatBot from "../components/ChatBot.jsx";
 
 import { Cloudinary } from "@cloudinary/url-gen";
 import { AdvancedImage } from '@cloudinary/react';
@@ -18,10 +19,6 @@ import { auto } from "@cloudinary/url-gen/actions/resize";
 import { autoGravity } from "@cloudinary/url-gen/qualifiers/gravity";
 
 function App() {
-<<<<<<< HEAD
-  const cld = new Cloudinary({ cloud: { cloudName: 'dchmvabfy' } });
-=======
->>>>>>> 1008e561591a1687e1e5894e1664b046427cf89d
   const location = useLocation();
 
   // Cloudinary image setup (optional visual, can be removed if unused)
@@ -31,32 +28,6 @@ function App() {
     .format('auto')
     .quality('auto')
     .resize(auto().gravity(autoGravity()).width(500).height(500));
-  
-  // Initialize translation service on first load
-  useEffect(() => {
-    // Apply translation if stored language exists
-    const storedLang = localStorage.getItem('needstation-language');
-    if (storedLang && storedLang !== 'en') {
-      translationService.setLanguage(storedLang);
-    }
-  }, []); // Only run once on initial mount
-  
-  // Apply translations whenever the route changes
-  useEffect(() => {
-    // Skip initial render
-    if (location.pathname) {
-      // Use a longer delay to ensure the DOM is fully rendered
-      const timer = setTimeout(() => {
-        const storedLang = localStorage.getItem('needstation-language');
-        if (storedLang && storedLang !== 'en') {
-          // Directly translate the page without changing the stored language
-          translationService.translatePage();
-        }
-      }, 500); // Increased delay for better reliability
-      
-      return () => clearTimeout(timer);
-    }
-  }, [location.pathname]); // Re-run when the route changes
 
   // Common helper to clean text of language tags before translation
   const cleanTextForTranslation = (text) => {
@@ -356,6 +327,7 @@ function App() {
       </div>
       <Outlet />
       <Footer />
+      <ChatBot />
       <ToastContainer />
     </>
   );
