@@ -18,7 +18,7 @@ const Footer = () => {
               Need<span>Station</span>
             </h2> </Link>
             <p className={`${styles["payment-tagline"]}`}>
-              A new way to make the payments easy, reliable and secure.
+              Connecting Helpers and Clients for a Better Community
             </p>
           </div>
 

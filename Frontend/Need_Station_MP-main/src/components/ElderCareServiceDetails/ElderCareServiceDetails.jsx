@@ -1,7 +1,38 @@
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../store/AuthContext';
+
 const ElderCareServiceDetails = ({data}) => {
+  const navigate = useNavigate();
+  const { user } = useAuth();
 
   if (!data) {
     return <div>Error: Service data is not available.</div>;
+  }
+  
+  const handleBookNow = () => {
+    // Check if user is logged in
+    if (!user) {
+      // If not logged in, redirect to login page
+      navigate('/login', {
+        state: {
+          redirectAfterLogin: '/user-details',
+          serviceData: {
+            service: data.heading,
+            description: data.description,
+            serviceType: 'ElderCare'
+          }
+        }
+      });
+    } else {
+      // If logged in, redirect to user-details page with service info
+      navigate('/user-details', {
+        state: {
+          service: data.heading,
+          description: data.description,
+          serviceType: 'ElderCare'
+        }
+      });
+    }
   }
 
   return <>
@@ -20,10 +51,13 @@ const ElderCareServiceDetails = ({data}) => {
             <li key = {index}> {service} </li>
           ))}
         </ul>
-        <button className="hover:bg-teal-600 text-black font-semibold py-2 px-4 rounded-lg" style={{
-  background:  "linear-gradient(157.81deg, #DEF9FA -43.27%, #BEF3F5 -21.24%, #9DEDF0 12.19%, #7DE7EB 29.82%, #5CE1E6 51.94%, #33BBCF 90.29%)"
-}}
->
+        <button 
+          onClick={handleBookNow}
+          className="hover:bg-teal-600 text-black font-semibold py-2 px-4 rounded-lg" 
+          style={{
+            background: "linear-gradient(157.81deg, #DEF9FA -43.27%, #BEF3F5 -21.24%, #9DEDF0 12.19%, #7DE7EB 29.82%, #5CE1E6 51.94%, #33BBCF 90.29%)"
+          }}
+        >
           Book Now
         </button>
       </div>

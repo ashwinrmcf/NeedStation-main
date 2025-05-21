@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";  // ✅ Added useNavigate
+import { Link, useNavigate, useLocation } from "react-router-dom";  // Added useLocation to access route state
 import styles from "./BasicNeedsServiceUserDescription.module.css";
 import ScrollToTop from "../../hooks/ScrollToTop";
 import MapPicker from "../../components/Map/MapPicker.jsx";
@@ -9,7 +9,12 @@ const BasicNeedsServiceUserDescription = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitMessage, setSubmitMessage] = useState("");
   
-  const navigate = useNavigate();  // ✅ Needed for navigate()
+  const navigate = useNavigate();
+  const location = useLocation();
+  
+  // Extract service information from the location state
+  const serviceInfo = location.state || {};
+  const { service, description, serviceType } = serviceInfo;
 
   const handleLocationSelect = (location) => {
     setSelectedLocation(location);
@@ -90,6 +95,15 @@ const BasicNeedsServiceUserDescription = () => {
       </div>
 
       <div className={styles["task-section"]}>
+        {service && (
+          <div className={styles["box"]} style={{ marginBottom: "15px", backgroundColor: "rgba(5, 12, 33, 0.8)" }}>
+            <h1 style={{ color: "#5CE1E6", marginBottom: "10px" }}>{service} Service</h1>
+            <p style={{ fontSize: "18px", color: "#ffffff", marginBottom: "5px" }}>
+              {description || `Professional ${service} services from certified experts.`}
+            </p>
+            {serviceType && <p style={{ fontSize: "16px", color: "#bbbbbb" }}>Category: {serviceType}</p>}
+          </div>
+        )}
         <div className={styles["box"]}>
           <h1>Your Task Location</h1>
           <div style={{ marginTop: "20px", position: "relative" }}>
@@ -190,7 +204,9 @@ const BasicNeedsServiceUserDescription = () => {
               height: "228px",
               fontSize: "25px",
             }}
-            placeholder="Need a reliable and efficient tasker to clean my apartment."
+            placeholder={service 
+              ? `I need a professional ${service} service. ${description || ''}` 
+              : "Need a reliable and efficient tasker to clean my apartment."}
           ></textarea>
         </div>
       </div>

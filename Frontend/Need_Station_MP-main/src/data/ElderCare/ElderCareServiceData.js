@@ -3,6 +3,7 @@ import image2 from "../../assets/images/ElderCare/Babysitter.webp";
 import image3 from "../../assets/images/ElderCare/Nurse.webp";
 import image4 from "../../assets/images/ElderCare/ParalysisCare.jpeg";
 import image5 from "../../assets/images/ElderCare/post-natal.jpg";
+import image6 from "../../assets/images/ElderCare/Full-body-checkup.jpg";
 
 const ElderCareServiceData = [
   {
@@ -94,6 +95,24 @@ const ElderCareServiceData = [
       "Overnight care and sleep support."
     ],
     image: [image5]
+  },
+  {
+    id: 6,
+    heading: "Health Checkup and Services",
+    description: "Comprehensive health assessment and preventive care services delivered by skilled medical professionals. Regular checkups to monitor and maintain your well-being.",
+    highlights: [
+      "Thorough physical examinations and health assessments.",
+      "Preventive screenings and early detection of health issues.",
+      "Personalized health plans and lifestyle recommendations."
+    ],
+    offeredServices: [
+      "Complete physical examinations and vital signs monitoring.",
+      "Blood tests and laboratory diagnostics.",
+      "Cardiac health assessment (ECG, blood pressure monitoring).",
+      "Vision and hearing tests.",
+      "Preventive health counseling and lifestyle guidance."
+    ],
+    image: [image6]
   }
   
 ]

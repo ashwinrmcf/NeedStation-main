@@ -10,7 +10,7 @@ const AvailableServices = () => {
     { title: 'Paralysis Caregiver', price: '₹9k', imgUrl: image1, pageName:'/paralysis-care' },
     { title: 'Postnatal Caregiver', price: '₹6k', imgUrl: 'https://i.ibb.co/sVrg60H/post-natal.jpg',pageName:'/postnatal-care' },
     { title: 'Nurse', price: '₹5k', imgUrl: image2, pageName:'/nurse' },
-    { title: 'Health Checkup Services', price: '₹3k', imgUrl: image3, pageName:'Something' },
+    { title: 'Health Checkup Services', price: '₹3k', imgUrl: image3, pageName:'/health-checkup' },
      { title: 'Baby Sitter', price: '₹6k', imgUrl: 'https://i.ibb.co/F62S1J1/babysitter.webp' ,pageName:'/babysitter'},
   ];
 

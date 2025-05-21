@@ -19,6 +19,7 @@ import CareTaker from "./pages/ElderCare/CareTaker.jsx";
 import Nurse from "./pages/ElderCare/Nurse.jsx";
 import ParalysisCare from "./pages/ElderCare/ParalysisCare.jsx";
 import PostnatalCare from "./pages/ElderCare/PostnatalCare.jsx";
+import HealthCheckup from "./pages/ElderCare/HealthCheckup.jsx";
 import BasicNeedsServiceUserDescription from "./pages/BasicNeeds/BasicNeedsServiceUserDescription.jsx";
 import TestRouterContext from "./test/TestRouterContext.jsx";
 import PaymentGateway from "./pages/PaymentGateway/PaymentGateway.jsx";
@@ -61,6 +62,7 @@ const router = createBrowserRouter([
       { path: "/nurse", element: <Nurse /> },
       { path: "/paralysis-care", element: <ParalysisCare /> },
       { path: "/postnatal-care", element: <PostnatalCare /> },
+      { path: "/health-checkup", element: <HealthCheckup /> },
       {path: "/helper-registration", element: <HelperRegistration/>},
       {path: "/contact-us", element: <ContactUs/>},
       {path: "/about-us", element: <AboutUs/>},
