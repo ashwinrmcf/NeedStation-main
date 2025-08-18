@@ -79,7 +79,7 @@ const MapPicker = ({ onLocationSelect }) => {
   };
 
   return (
-    <LoadScript googleMapsApiKey=" " libraries={["places"]}>
+    <LoadScript googleMapsApiKey="AIzaSyBwNUkrw0WOChZUk6PVTMB-4F5eV0frh1o" libraries={["places"]}>
       <Autocomplete onLoad={onLoad} onPlaceChanged={onPlaceChanged}>
         <input
           type="text"

@@ -1,0 +1,105 @@
+.termsContainer {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  color: white;
+  margin-top: 26vh; /* Slightly reduced top spacing */
+}
+
+.termsHeader {
+  text-align: center;
+  margin-bottom: 3rem;
+  position: relative;
+}
+
+.termsHeader h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: white;
+}
+
+.highlight {
+  color: #00E0B8; /* Teal highlight color */
+}
+
+.headerAccent {
+  width: 80px;
+  height: 4px;
+  background: linear-gradient(90deg, #4fd1c5, #38b2ac);
+  margin: 0 auto;
+  border-radius: 2px;
+}
+
+.termsContent {
+  background-color: #111827;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  margin-bottom: 2rem;
+}
+
+.termsSection {
+  margin-bottom: 2.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 1.5rem;
+}
+
+.termsSection:last-child {
+  border-bottom: none;
+}
+
+.termsSection h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #00E0B8; /* Teal color for section headings */
+}
+
+.termsSection p {
+  margin-bottom: 1rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.termsSection strong {
+  color: #fff;
+  font-weight: 600;
+}
+
+.bulletList {
+  list-style-type: disc;
+  padding-left: 2rem;
+  margin-bottom: 1rem;
+}
+
+.bulletList li {
+  margin-bottom: 0.5rem;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.lastUpdated {
+  text-align: right;
+  font-style: italic;
+  color: rgba(255, 255, 255, 0.6);
+  margin-top: 3rem;
+}
+
+@media (max-width: 768px) {
+  .termsContainer {
+    padding: 1rem;
+  }
+  
+  .termsHeader h1 {
+    font-size: 2rem;
+  }
+  
+  .termsContent {
+    padding: 1.5rem;
+  }
+  
+  .termsSection h2 {
+    font-size: 1.3rem;
+  }
+}

@@ -1,9 +1,7 @@
-
-
 .tagline {
   width: 60vw;
   /* height: 33.426vh; */
-  margin-top: 6.964vh;
+  margin-top: 32vh; /* Added more spacing as requested - consistent with page-content-spacing */
   margin-bottom: 8vh;
   background: transparent;
   font-size: 3rem;
@@ -21,17 +19,32 @@
   min-height: 12vh;
   margin-left: 24.8vw;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: flex-start;
   align-items: center;
   border-radius: 1.813rem;
   background: linear-gradient(90.78deg, #EC83BB 8.06%, #B664DB 73.25%);
+  transition: min-height 0.3s ease;
 }
 
+/* Add expanded state for the container */
+.expanded {
+  min-height: auto;
+  padding-bottom: 1rem;
+}
+
+.searchForm {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 
 .searchbar {
   width: 50vw;
   height: 11vh;
   background: #1C1F28;
+  margin-top: 0.5vh;
   /* border: 4.04px solid; */
   border-radius: 1.813rem;
   /* border: 4.04px solid;
@@ -55,6 +68,28 @@
   background: #1C1F28;
   font-weight: bold;
   color: #FFFFFF !important;
+  caret-color: #5CE1E6;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.typewriterContainer {
+  position: absolute;
+  pointer-events: none;
+  right: 30px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.searchbarInput::placeholder {
+  color: rgba(255, 255, 255, 0.7);
 }
 
 .searchIcon {
@@ -63,6 +98,35 @@
   color: #a1a1a1; /* Icon color */
   width: 2.674vw;
   font-size: 1.875rem;
+}
+
+/* Dropdown Styles */
+.dropdown {
+  width: 50vw;
+  background: #1C1F28;
+  border-radius: 1.813rem;
+  margin-top: 0.5rem;
+  box-shadow: 0px 0px 13.928vh 1.079vw #5CE1E6BF;
+  z-index: 1000;
+}
+
+.dropdownItem {
+  padding: 0.8rem;
+  font-size: 1.5rem;
+  color: #FFFFFF;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  height: 3.5rem;
+  display: flex;
+  align-items: center;
+}
+
+.dropdownItem:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.dropdownItem strong {
+  color: #5CE1E6;
 }
 
 /* User and Helper Info Div */

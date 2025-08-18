@@ -1,16 +1,17 @@
 /* Entire Dropdown Menu */
 .dropdownMenu {
-  position: absolute;
-   /* Below the header */
-  left: 0;
-  width: 100%; /* Full width of the header */
-  background: transparent; /* Light transparent background */
-  padding: 1rem;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  z-index: 5;
-  margin-left: 10vw;
-  margin-top: -4vh;
-  
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 86.364vw; /* Match header width */
+  background: #121212; /* Solid background - not transparent */
+  padding: 2rem;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+  z-index: 99;
+  top: calc(10.306vh + 40px); /* Position below header */
+  border-radius: 0 0 16px 16px; /* Rounded corners at bottom */
+  border: 1px solid #00E0B8; /* Teal border */
+  border-top: 2px solid #00E0B8; /* Teal accent line at the top */
 }
 
 /* Dropdown Rows */
@@ -35,18 +36,23 @@
 
 .services a {
   font-size: 1.125rem;
-  font-weight: 400;
+  font-weight: 500;
   color: #FFFFFF;
-  border: 2px solid #FFFFFF;
-  background-color: transparent;
-  padding: 1.1vh 1vw;
-  margin-left: 0.668vw;
+  border: 2px solid rgba(255, 255, 255, 0.7);
+  background-color: rgba(0, 0, 0, 0.4);
+  padding: 1.1vh 1.5vw;
+  margin: 0.5rem;
   border-radius: 12px;
   cursor: pointer;
-  opacity: 0.8;
+  opacity: 1;
+  text-decoration: none;
+  transition: all 0.2s ease;
 }
 
-/* .services a:hover {
+.services a:hover {
   background: #00E0B8;
-  color: #fff;
-} */
+  color: #000;
+  border-color: #00E0B8;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 224, 184, 0.3);
+}

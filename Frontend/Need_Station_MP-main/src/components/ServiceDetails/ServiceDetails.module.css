@@ -6,6 +6,7 @@
   width: 85vw;
   /* max-width: 1592px; */
   margin: 0 auto;
+  margin-top: 5rem; /* Added top margin for spacing between header and content */
   padding: 3vh 40px;
   box-sizing: border-box;
   position: relative;

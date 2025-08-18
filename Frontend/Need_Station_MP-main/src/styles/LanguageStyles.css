@@ -1,0 +1,257 @@
+/* Language-specific styles to ensure proper appearance in different languages */
+
+/* Default (English) styles - maintain current appearance */
+:root {
+  --font-family-default: 'Poppins', sans-serif;
+  --font-size-base: 1rem;
+  --line-height-base: 1.5;
+  --text-spacing: normal;
+  --direction: ltr;
+}
+
+/* Hindi language styles */
+html[lang="hi"] {
+  --font-family-default: 'Poppins', sans-serif; /* Using Poppins as requested */
+  --font-size-base: 1.1rem;
+  --line-height-base: 1.7;
+  --text-spacing: 0.05em;
+  --direction: ltr;
+}
+
+/* Hindi tasker dropdown fix - force visibility */
+html[lang="hi"] .taskerContainer .hindiTaskerDropdown,
+html[lang="hi"] .taskerContainer > div {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  z-index: 99999 !important;
+  position: absolute !important;
+  top: 100% !important;
+  right: 0 !important;
+  background: #192339 !important;
+  border-radius: 10px !important;
+  width: 250px !important;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Tamil language styles */
+html[lang="ta"] {
+  --font-family-default: 'Noto Sans Tamil', 'Poppins', sans-serif;
+  --font-size-base: 1.1rem;
+  --line-height-base: 1.7;
+  --text-spacing: 0.04em;
+  --direction: ltr;
+}
+
+/* Bengali language styles */
+html[lang="bn"] {
+  --font-family-default: 'Noto Sans Bengali', 'Poppins', sans-serif;
+  --font-size-base: 1.1rem;
+  --line-height-base: 1.6;
+  --text-spacing: 0.05em;
+  --direction: ltr;
+}
+
+/* Malayalam language styles */
+html[lang="ml"] {
+  --font-family-default: 'Noto Sans Malayalam', 'Poppins', sans-serif;
+  --font-size-base: 1.1rem;
+  --line-height-base: 1.7;
+  --text-spacing: 0.04em;
+  --direction: ltr;
+}
+
+/* Telugu language styles */
+html[lang="te"] {
+  --font-family-default: 'Noto Sans Telugu', 'Poppins', sans-serif;
+  --font-size-base: 1.1rem;
+  --line-height-base: 1.7;
+  --text-spacing: 0.05em;
+  --direction: ltr;
+}
+
+/* Kannada language styles */
+html[lang="kn"] {
+  --font-family-default: 'Noto Sans Kannada', 'Poppins', sans-serif;
+  --font-size-base: 1.1rem;
+  --line-height-base: 1.7;
+  --text-spacing: 0.04em;
+  --direction: ltr;
+}
+
+/* Gujarati language styles */
+html[lang="gu"] {
+  --font-family-default: 'Noto Sans Gujarati', 'Poppins', sans-serif;
+  --font-size-base: 1.05rem;
+  --line-height-base: 1.6;
+  --text-spacing: 0.05em;
+  --direction: ltr;
+}
+
+/* Apply the CSS variables to all elements */
+body {
+  font-family: var(--font-family-default);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-base);
+  letter-spacing: var(--text-spacing);
+  direction: var(--direction);
+}
+
+/* Ensure proper text direction */
+body[dir="rtl"] {
+  direction: rtl;
+  text-align: right;
+}
+
+/* Special language-specific fixes */
+
+/* Hindi fixes */
+html[lang="hi"] .footer-links,
+html[lang="hi"] footer nav {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Login/Signup button fixes for Hindi */
+html[lang="hi"] .login-button,
+html[lang="hi"] .signup-button,
+html[lang="hi"] [class*="login"],
+html[lang="hi"] [class*="signup"],
+html[lang="hi"] [class*="auth"],
+html[lang="hi"] .authButtons .login,
+html[lang="hi"] .authButtons .signup {
+  padding: 10px 24px !important;
+  min-width: 120px !important;
+  white-space: nowrap !important;
+  text-align: center !important;
+  font-size: 0.95rem !important;
+  line-height: 1.4 !important;
+  overflow: hidden !important;
+  letter-spacing: 0.02em !important;
+}
+
+/* Extra specificity for header buttons */
+html[lang="hi"] .header .authButtons .login,
+html[lang="hi"] .header .authButtons .signup,
+html[lang="hi"] .header .authButtons .logout {
+  margin: 0 8px !important;
+  min-height: 42px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* Fix for Become a Tasker button in Hindi mode */
+html[lang="hi"] .header .authButtons .becomeTasker {
+  margin: 0 8px !important;
+  min-height: 42px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  z-index: 1 !important; /* Ensure proper stacking */
+}
+
+/* Fix for TaskerDropdown in Hindi mode */
+html[lang="hi"] .taskerContainer:hover .taskerDropdown,
+html[lang="hi"] .taskerContainer:hover [class*="taskerDropdown"] {
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  z-index: 1001 !important;
+  pointer-events: all !important;
+}
+
+/* Ensure the TaskerDropdown is properly visible and positioned in Hindi */
+html[lang="hi"] .taskerDropdown {
+  position: absolute !important;
+  top: calc(100% + 10px) !important;
+  right: 0 !important;
+  width: 250px !important;
+  z-index: 1001 !important;
+  transform: none !important; /* Override any transforms that might hide it */
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* Make sure animation doesn't interfere with display */
+html[lang="hi"] .taskerContainer:hover ~ div[style*="transform"],
+html[lang="hi"] .taskerContainer:hover ~ div[style*="opacity"],
+html[lang="hi"] .taskerContainer:hover ~ div[style*="visibility"] {
+  transform: none !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* Handle Framer Motion animations specifically */
+html[lang="hi"] .taskerContainer:hover ~ [data-framer-component],
+html[lang="hi"] .taskerContainer:hover ~ [style*="transform"] {
+  transform: translate3d(0, 0, 0) !important;
+  opacity: 1 !important;
+}
+
+html[lang="hi"] footer .needText,
+html[lang="hi"] footer .stationText {
+  font-size: 1.5rem;
+}
+
+html[lang="hi"] footer a,
+html[lang="hi"] footer p,
+html[lang="hi"] footer span {
+  margin-right: 1.5rem;
+  line-height: 1.8;
+  padding: 4px 0;
+  display: block;
+}
+
+/* Footer address and contact info for Hindi */
+html[lang="hi"] footer address,
+html[lang="hi"] footer .contact-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 15px;
+}
+
+/* Specific adjustments for header navigation links in non-English */
+html:not([lang="en"]) .navLinks a,
+html:not([lang="en"]) .navLinks button {
+  margin: 0 1.5vw;
+  font-size: 1rem;
+  white-space: nowrap;
+}
+
+/* Footer adjustments for all non-English languages */
+html:not([lang="en"]) footer {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 2rem 0;
+}
+
+html:not([lang="en"]) .footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+/* Adjust line height in cards for non-English */
+html:not([lang="en"]) .card p,
+html:not([lang="en"]) .review-card p {
+  line-height: 1.8;
+}
+
+/* Better space for navigation items in non-English languages */
+html:not([lang="en"]) .navigation {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+/* Ensure that buttons have enough space for translated text */
+html:not([lang="en"]) button,
+html:not([lang="en"]) .button {
+  padding: 0.75rem 1.5rem;
+  white-space: normal;
+  min-height: 2.5rem;
+}

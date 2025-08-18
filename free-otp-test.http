@@ -1,0 +1,44 @@
+### Free OTP API Integration Test Script
+### Use this file with REST Client extension in VS Code or any HTTP client tool
+
+### 1. Check Free OTP API Service Status
+GET http://localhost:8080/api/free-otp/status
+Accept: application/json
+
+### 2. Get Available Phone Numbers for India
+GET http://localhost:8080/api/free-otp/phone/in
+Accept: application/json
+
+### 3. Listen for OTP on a Specific Phone Number (replace with a number from previous request)
+GET http://localhost:8080/api/free-otp/listen/in/919876543210?timeoutSeconds=10
+Accept: application/json
+
+### 4. Test Worker Registration with Free OTP (Step 1)
+POST http://localhost:8080/api/workers/register/step1
+Content-Type: application/json
+
+{
+  "fullName": "Test User",
+  "gender": "Male",
+  "dob": "1990-01-01",
+  "phone": "9876543210",
+  "email": "test@example.com",
+  "whatsappNumber": "9876543210"
+}
+
+### 5. Test OTP Verification
+POST http://localhost:8080/api/workers/verify-otp
+Content-Type: application/json
+
+{
+  "workerId": 1,
+  "otp": "123456"
+}
+
+### 6. Test Rate Limiting (Run multiple times to trigger rate limit)
+GET http://localhost:8080/api/free-otp/phone/in
+Accept: application/json
+
+### 7. Test Security Filter (Should get 429 after multiple rapid requests)
+GET http://localhost:8080/api/free-otp/listen/in/919876543210
+Accept: application/json

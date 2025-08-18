@@ -1,24 +1,31 @@
-import React, { useState, useCallback } from "react";
-import GoogleMapWrapper from "../../components/Map/GoogleMapWrapper";
+import React, { useState } from "react";
 import { GoogleMap, LoadScript, Marker, Autocomplete } from "@react-google-maps/api";
-<LoadScript googleMapsApiKey=" " libraries={["places"]}></LoadScript>
+
+// Libraries constant outside the component
+const libraries = ["places"];
+
 const containerStyle = {
   width: "100%",
   height: "300px",
-  borderRadius: "12px"
+  borderRadius: "12px",
 };
 
 const center = {
-  lat: 22.7196, // Default to Indore
+  lat: 22.7196, // Default center (Indore)
   lng: 75.8577,
 };
 
 const MapPicker = ({ onLocationSelect }) => {
   const [markerPosition, setMarkerPosition] = useState(center);
   const [autocomplete, setAutocomplete] = useState(null);
+  const [map, setMap] = useState(null);
 
   const onLoad = (autocompleteInstance) => {
     setAutocomplete(autocompleteInstance);
+  };
+
+  const onMapLoad = (mapInstance) => {
+    setMap(mapInstance);
   };
 
   const onPlaceChanged = () => {
@@ -27,7 +34,7 @@ const MapPicker = ({ onLocationSelect }) => {
       const location = {
         lat: place.geometry.location.lat(),
         lng: place.geometry.location.lng(),
-        address: place.formatted_address
+        address: place.formatted_address,
       };
       setMarkerPosition(location);
       onLocationSelect(location);
@@ -35,17 +42,43 @@ const MapPicker = ({ onLocationSelect }) => {
   };
 
   const handleMapClick = (e) => {
-    const location = {
-      lat: e.latLng.lat(),
-      lng: e.latLng.lng(),
-      address: `Lat: ${e.latLng.lat()}, Lng: ${e.latLng.lng()}`,
+    const clickedLat = e.latLng.lat();
+    const clickedLng = e.latLng.lng();
+    
+    // Create a temporary location object for the marker
+    const tempLocation = {
+      lat: clickedLat,
+      lng: clickedLng,
     };
-    setMarkerPosition(location);
-    onLocationSelect(location);
+    setMarkerPosition(tempLocation);
+    
+    // Use Geocoder to get the address from coordinates
+    const geocoder = new window.google.maps.Geocoder();
+    geocoder.geocode({ location: { lat: clickedLat, lng: clickedLng } }, (results, status) => {
+      if (status === "OK" && results[0]) {
+        const formattedAddress = results[0].formatted_address;
+        const location = {
+          lat: clickedLat,
+          lng: clickedLng,
+          address: formattedAddress,
+        };
+        setMarkerPosition(location);
+        onLocationSelect(location);
+      } else {
+        // Fallback if geocoding fails
+        const location = {
+          lat: clickedLat,
+          lng: clickedLng,
+          address: "Unknown location", // Better fallback than coordinates
+        };
+        onLocationSelect(location);
+        console.error("Geocoder failed due to: " + status);
+      }
+    });
   };
 
   return (
-    <LoadScript googleMapsApiKey=" " libraries={["places"]}>
+    <LoadScript googleMapsApiKey="AIzaSyBwNUkrw0WOChZUk6PVTMB-4F5eV0frh1o" libraries={["places"]}>
       <Autocomplete onLoad={onLoad} onPlaceChanged={onPlaceChanged}>
         <input
           type="text"
@@ -65,7 +98,7 @@ const MapPicker = ({ onLocationSelect }) => {
       <GoogleMap
         mapContainerStyle={containerStyle}
         center={markerPosition}
-        zoom={14}
+        zoom={18}
         onClick={handleMapClick}
       >
         <Marker position={markerPosition} />

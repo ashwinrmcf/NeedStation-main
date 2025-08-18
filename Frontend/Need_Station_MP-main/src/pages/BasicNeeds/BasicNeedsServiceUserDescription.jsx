@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";  // Added useLocation to access route state
 import styles from "./BasicNeedsServiceUserDescription.module.css";
 import ScrollToTop from "../../hooks/ScrollToTop";
 import MapPicker from "../../components/Map/MapPicker.jsx";
@@ -8,6 +8,13 @@ const BasicNeedsServiceUserDescription = () => {
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitMessage, setSubmitMessage] = useState("");
+  
+  const navigate = useNavigate();
+  const location = useLocation();
+  
+  // Extract service information from the location state
+  const serviceInfo = location.state || {};
+  const { service, description, serviceType } = serviceInfo;
 
   const handleLocationSelect = (location) => {
     setSelectedLocation(location);
@@ -16,41 +23,47 @@ const BasicNeedsServiceUserDescription = () => {
 
   const submitLocationToDatabase = async () => {
     if (!selectedLocation) {
-      setSubmitMessage("Please select a location first");
+      setSubmitMessage("❗ Please select a location first");
+      return;
+    }
+
+    const username = localStorage.getItem("username");  // ✅ Correct way to get email
+
+    if (!username) {
+      setSubmitMessage("❗ User email not found. Please login again.");
       return;
     }
 
     setIsSubmitting(true);
-    
+
     try {
-      // Using the absolute URL pointing to your backend server on port 8080
       const response = await fetch('http://localhost:8080/api/user/update-location', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
+          username: username,                 // ✅ Correct email coming from localStorage
           address: selectedLocation.address,
-          latitude: selectedLocation.lat,
-          longitude: selectedLocation.lng
+          lat: selectedLocation.lat,
+          lng: selectedLocation.lng
         }),
       });
 
       if (response.ok) {
-        setSubmitMessage("Location successfully saved!");
+        setSubmitMessage("✅ Location successfully saved!"); // ✅ navigate only after success
       } else {
         const errorData = await response.json().catch(() => null);
         console.error("Server error:", errorData);
-        setSubmitMessage(`Failed to save location: ${errorData?.message || response.statusText}`);
+        setSubmitMessage(`❌ Failed to save location: ${errorData?.message || response.statusText}`);
       }
     } catch (error) {
       console.error("Error submitting location:", error);
-      setSubmitMessage("Error connecting to server. Please try again later.");
+      setSubmitMessage("❌ Error connecting to server. Please try again later.");
     } finally {
       setIsSubmitting(false);
     }
   };
-
   return (
     <>
       <ScrollToTop />
@@ -82,6 +95,15 @@ const BasicNeedsServiceUserDescription = () => {
       </div>
 
       <div className={styles["task-section"]}>
+        {service && (
+          <div className={styles["box"]} style={{ marginBottom: "15px", backgroundColor: "rgba(5, 12, 33, 0.8)" }}>
+            <h1 style={{ color: "#5CE1E6", marginBottom: "10px" }}>{service} Service</h1>
+            <p style={{ fontSize: "18px", color: "#ffffff", marginBottom: "5px" }}>
+              {description || `Professional ${service} services from certified experts.`}
+            </p>
+            {serviceType && <p style={{ fontSize: "16px", color: "#bbbbbb" }}>Category: {serviceType}</p>}
+          </div>
+        )}
         <div className={styles["box"]}>
           <h1>Your Task Location</h1>
           <div style={{ marginTop: "20px", position: "relative" }}>
@@ -182,7 +204,9 @@ const BasicNeedsServiceUserDescription = () => {
               height: "228px",
               fontSize: "25px",
             }}
-            placeholder="Need a reliable and efficient tasker to clean my apartment."
+            placeholder={service 
+              ? `I need a professional ${service} service. ${description || ''}` 
+              : "Need a reliable and efficient tasker to clean my apartment."}
           ></textarea>
         </div>
       </div>

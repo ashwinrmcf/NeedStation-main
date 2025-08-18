@@ -1,14 +1,16 @@
 import { motion } from "framer-motion";
 
-import Header from "../../components/common/Header";
+import DashboardHeader from "../../components/common/DashboardHeader";
 import UpcomingTask from "../../components/UpcomingTasks/UpcomingTasksCard";
 
 const UpcomingTaskPage = () => {
 	return (
-		<div className='flex-1 overflow-auto relative z-10'>
-			<Header title='Upcoming Tasks' />
+		<div className='flex-1 flex flex-col h-full'>
+			{/* Fixed position header at the top */}
+			<DashboardHeader title='Upcoming Tasks' />
 
-			<main className='max-w-7xl mx-auto py-6 px-4 lg:px-8'>
+			{/* Content area - ensuring full opacity */}
+			<main className='flex-1 py-6 px-4 lg:px-8 max-w-7xl mx-auto w-full'>
 
 				<motion.div
 					className='py-4 space-y-6'
