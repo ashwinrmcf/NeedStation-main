@@ -35,7 +35,13 @@
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
 		</dependency>
-		
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-crypto</artifactId>
+			<version>6.2.1</version> <!-- use the version compatible with your Spring Boot version -->
+		</dependency>
+
+
 		<!-- Twilio SDK for SMS services -->
 		<dependency>
 			<groupId>com.twilio.sdk</groupId>

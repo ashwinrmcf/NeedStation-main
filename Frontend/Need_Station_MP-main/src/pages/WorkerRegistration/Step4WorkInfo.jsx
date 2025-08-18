@@ -18,7 +18,14 @@ export default function SkillVerificationPage({ data, updateForm, prev, next, wo
 
   const handleCertificateUpload = (e) => {
     if (e.target.files) {
-      const newFiles = Array.from(e.target.files);
+      const newFiles = Array.from(e.target.files).filter(file => {
+        const validTypes = ['image/png', 'image/jpg', 'image/jpeg', 'application/pdf'];
+        if (!validTypes.includes(file.type)) {
+          alert(`File ${file.name} is not supported. Please upload PNG, JPG, or PDF files only.`);
+          return false;
+        }
+        return true;
+      });
       setCertificates([...certificates, ...newFiles]);
     }
   };
@@ -38,13 +45,25 @@ export default function SkillVerificationPage({ data, updateForm, prev, next, wo
 
   const handleIdProofUpload = (e) => {
     if (e.target.files && e.target.files[0]) {
-      setIdProof(e.target.files[0]);
+      const file = e.target.files[0];
+      const validTypes = ['image/png', 'image/jpg', 'image/jpeg', 'application/pdf'];
+      if (!validTypes.includes(file.type)) {
+        alert('Please upload PNG, JPG, or PDF files only for ID proof.');
+        return;
+      }
+      setIdProof(file);
     }
   };
 
   const handleSelfieUpload = (e) => {
     if (e.target.files && e.target.files[0]) {
-      setSelfieWithId(e.target.files[0]);
+      const file = e.target.files[0];
+      const validTypes = ['image/png', 'image/jpg', 'image/jpeg', 'application/pdf'];
+      if (!validTypes.includes(file.type)) {
+        alert('Please upload PNG, JPG, or PDF files only for selfie with ID.');
+        return;
+      }
+      setSelfieWithId(file);
     }
   };
 
@@ -66,44 +85,62 @@ export default function SkillVerificationPage({ data, updateForm, prev, next, wo
     }
 
     try {
-      // Create FormData for file uploads
-      const formPayload = new FormData();
+      // API URL
+      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api';
       
-      // Add data as JSON
-      formPayload.append("data", new Blob([
-        JSON.stringify({
-          aadharNumber: formData.aadharNumber,
-          policeVerificationStatus: formData.policeVerificationStatus
-        })
-      ], { type: 'application/json' }));
+      // Add files one by one with separate requests to avoid conflicts
+      let uploadPromises = [];
       
       // Add ID proof if available
       if (idProof) {
-        formPayload.append("idProof", idProof);
+        const idProofForm = new FormData();
+        idProofForm.append("file", idProof);
+        idProofForm.append("fileType", "ID_PROOF");
+        uploadPromises.push(
+          axios.post(`${API_URL}/worker/upload/document?workerId=${workerId}`, idProofForm, {
+            headers: { 'Content-Type': 'multipart/form-data' }
+          })
+        );
       }
       
       // Add selfie with ID if available
       if (selfieWithId) {
-        formPayload.append("selfieWithId", selfieWithId);
+        const selfieForm = new FormData();
+        selfieForm.append("file", selfieWithId);
+        selfieForm.append("fileType", "SELFIE_WITH_ID");
+        uploadPromises.push(
+          axios.post(`${API_URL}/worker/upload/document?workerId=${workerId}`, selfieForm, {
+            headers: { 'Content-Type': 'multipart/form-data' }
+          })
+        );
       }
       
       // Add certificates if available
-      if (certificates.length > 0) {
-        certificates.forEach((cert, index) => {
-          formPayload.append(`certificates`, cert);
-        });
+      certificates.forEach((cert, index) => {
+        const certForm = new FormData();
+        certForm.append("file", cert);
+        certForm.append("fileType", "CERTIFICATE");
+        uploadPromises.push(
+          axios.post(`${API_URL}/worker/upload/document?workerId=${workerId}`, certForm, {
+            headers: { 'Content-Type': 'multipart/form-data' }
+          })
+        );
+      });
+      
+      // Upload all files
+      if (uploadPromises.length > 0) {
+        await Promise.all(uploadPromises);
       }
       
-      // API URL
-      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api';
-      
-      // Send data to backend
+      // Send basic data to backend as form parameters
       const response = await axios.post(
-        `${API_URL}/worker/register/step4?workerId=${workerId}`,
-        formPayload,
+        `${API_URL}/worker/register/step4`,
+        null,
         {
-          headers: {
-            'Content-Type': 'multipart/form-data'
+          params: {
+            workerId: workerId,
+            aadharNumber: formData.aadharNumber,
+            policeVerificationStatus: formData.policeVerificationStatus
           }
         }
       );

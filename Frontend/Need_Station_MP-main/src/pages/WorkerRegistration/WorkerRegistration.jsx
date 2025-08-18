@@ -26,7 +26,8 @@ const WorkerRegistration = () => {
     }
   }, []);
 
-  // State to store the local image preview URL
+  // State to store image previews that persist across steps
+  const [imagePreviewUrls, setImagePreviewUrls] = useState({});
   const [localProfileImageUrl, setLocalProfileImageUrl] = useState(null);
 
   const [formData, setFormData] = useState({
@@ -176,7 +177,11 @@ const WorkerRegistration = () => {
       updateForm={updateForm} 
       next={next} 
       workerId={workerId} 
-      updateWorkerId={updateWorkerId} 
+      updateWorkerId={updateWorkerId}
+      imagePreviewUrls={imagePreviewUrls}
+      setImagePreviewUrls={setImagePreviewUrls}
+      localProfileImageUrl={localProfileImageUrl}
+      setLocalProfileImageUrl={setLocalProfileImageUrl}
     />,
     <Step2ContactInfo 
       data={formData} 

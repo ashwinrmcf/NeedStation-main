@@ -183,20 +183,17 @@ public class WorkerController {
     }
 
     // Step 4: Verification
-    @PostMapping(value = "/register/step4", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping("/register/step4")
     public ResponseEntity<?> registerStep4(
             @RequestParam("workerId") Long workerId,
-            @RequestPart("data") WorkerRegistrationDTO dto,
-            @RequestPart(value = "idProof", required = false) MultipartFile idProof,
-            @RequestPart(value = "selfieWithId", required = false) MultipartFile selfieWithId,
-            @RequestPart(value = "certificates", required = false) MultipartFile[] certificates) {
+            @RequestParam("aadharNumber") String aadharNumber,
+            @RequestParam("policeVerificationStatus") String policeVerificationStatus) {
         try {
             System.out.println("Received Step 4 registration request - Worker ID: " + workerId);
-            System.out.println("Verification details: aadharNumber=" + dto.getAadharNumber());
-            System.out.println("ID Proof provided: " + (idProof != null && !idProof.isEmpty()));
-            System.out.println("Selfie provided: " + (selfieWithId != null && !selfieWithId.isEmpty()));
+            System.out.println("Verification details: aadharNumber=" + aadharNumber);
+            System.out.println("Police verification status: " + policeVerificationStatus);
             
-            Worker worker = workerService.updateVerificationDetails(workerId, dto, idProof, selfieWithId, certificates);
+            Worker worker = workerService.updateVerificationDetails(workerId, aadharNumber, policeVerificationStatus);
             Map<String, Object> response = new HashMap<>();
             response.put("workerId", worker.getId());
             response.put("message", "Verification details saved successfully");
@@ -233,31 +230,6 @@ public class WorkerController {
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             System.err.println("Error in registerStep5: " + e.getMessage());
-            e.printStackTrace();
-            Map<String, String> errorResponse = new HashMap<>();
-            errorResponse.put("error", e.getMessage());
-            errorResponse.put("errorType", e.getClass().getSimpleName());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(errorResponse);
-        }
-    }
-
-    // Get all worker information for review page
-    @GetMapping("/details/{workerId}")
-    public ResponseEntity<?> getWorkerDetails(@PathVariable Long workerId) {
-        try {
-            System.out.println("Fetching details for worker ID: " + workerId);
-            return workerService.getWorkerById(workerId)
-                    .map(worker -> {
-                        System.out.println("Worker found: " + worker.getFullName() + ", Profile image: " + worker.getProfileImageUrl());
-                        return ResponseEntity.ok(worker);
-                    })
-                    .orElseGet(() -> {
-                        System.err.println("Worker not found with ID: " + workerId);
-                        return ResponseEntity.notFound().build();
-                    });
-        } catch (Exception e) {
-            System.err.println("Error fetching worker details: " + e.getMessage());
             e.printStackTrace();
             Map<String, String> errorResponse = new HashMap<>();
             errorResponse.put("error", e.getMessage());
@@ -301,6 +273,221 @@ public class WorkerController {
             return ResponseEntity
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Registration failed: " + e.getMessage());
+        }
+    }
+
+    // Document upload endpoint for Step 4
+    @PostMapping("/upload/document")
+    public ResponseEntity<?> uploadDocument(
+            @RequestParam("workerId") Long workerId,
+            @RequestParam("file") MultipartFile file,
+            @RequestParam("fileType") String fileType) {
+        try {
+            // Validate file type
+            String contentType = file.getContentType();
+            if (contentType == null || (!contentType.equals("image/png") && 
+                !contentType.equals("image/jpg") && 
+                !contentType.equals("image/jpeg") && 
+                !contentType.equals("application/pdf"))) {
+                Map<String, String> errorResponse = new HashMap<>();
+                errorResponse.put("error", "Unsupported file type. Only PNG, JPG, and PDF files are allowed.");
+                return ResponseEntity.badRequest().body(errorResponse);
+            }
+            
+            // Upload to Cloudinary
+            String imageUrl = workerService.uploadImage(file);
+            
+            // Update worker with the document URL based on fileType
+            workerService.updateWorkerDocument(workerId, fileType, imageUrl);
+            
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", "Document uploaded successfully");
+            response.put("fileType", fileType);
+            response.put("url", imageUrl);
+            
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            System.err.println("Error uploading document: " + e.getMessage());
+            e.printStackTrace();
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("error", "Failed to upload document: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
+    }
+
+    // Get worker details for review page
+    @GetMapping("/details/{workerId}")
+    public ResponseEntity<?> getWorkerDetails(@PathVariable Long workerId) {
+        try {
+            Optional<Worker> workerOpt = workerService.getWorkerById(workerId);
+            if (!workerOpt.isPresent()) {
+                Map<String, String> errorResponse = new HashMap<>();
+                errorResponse.put("error", "Worker not found");
+                return ResponseEntity.notFound().build();
+            }
+            
+            Worker worker = workerOpt.get();
+            
+            // Create comprehensive response with all worker details
+            Map<String, Object> workerDetails = new HashMap<>();
+            // Step 1: Basic Information
+            workerDetails.put("workerId", worker.getId());
+            workerDetails.put("fullName", worker.getFullName());
+            workerDetails.put("phone", worker.getPhone());
+            workerDetails.put("email", worker.getEmail());
+            workerDetails.put("gender", worker.getGender());
+            workerDetails.put("dob", worker.getDob());
+            workerDetails.put("profileImageUrl", worker.getProfileImageUrl());
+            
+            // Step 2: Contact Information
+            workerDetails.put("permanentAddress", worker.getPermanentAddress());
+            workerDetails.put("currentAddress", worker.getCurrentAddress());
+            workerDetails.put("city", worker.getCity());
+            workerDetails.put("pincode", worker.getPincode());
+            workerDetails.put("serviceAreas", worker.getServiceAreas());
+            workerDetails.put("openToTravel", worker.getOpenToTravel());
+            
+            // Step 3: Professional Details
+            workerDetails.put("services", worker.getServices());
+            workerDetails.put("experience", worker.getExperience());
+            workerDetails.put("workType", worker.getWorkType());
+            workerDetails.put("availability", worker.getAvailability());
+            workerDetails.put("languages", worker.getLanguages());
+            
+            // Step 4: Verification
+            workerDetails.put("aadharNumber", worker.getAadharNumber());
+            workerDetails.put("policeVerificationStatus", worker.getPoliceVerificationStatus());
+            workerDetails.put("idProofUrl", worker.getIdProofUrl());
+            workerDetails.put("selfieWithIdUrl", worker.getSelfieWithIdUrl());
+            workerDetails.put("certificateUrls", worker.getCertificateUrls());
+            
+            // Step 5: Payment Information
+            workerDetails.put("paymentMode", worker.getPaymentMode());
+            workerDetails.put("upiId", worker.getUpiId());
+            workerDetails.put("bankName", worker.getBankName());
+            workerDetails.put("accountNumber", worker.getAccountNumber());
+            workerDetails.put("ifscCode", worker.getIfscCode());
+            workerDetails.put("panCard", worker.getPanCard());
+            workerDetails.put("emergencyContactName", worker.getEmergencyContactName());
+            workerDetails.put("emergencyContactNumber", worker.getEmergencyContactNumber());
+            
+            // Registration metadata
+            workerDetails.put("registrationStatus", worker.getRegistrationStatus());
+            workerDetails.put("registrationDate", worker.getRegistrationDate());
+            
+            return ResponseEntity.ok(workerDetails);
+        } catch (Exception e) {
+            System.err.println("Error fetching worker details: " + e.getMessage());
+            e.printStackTrace();
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("error", "Failed to fetch worker details: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
+    }
+
+    // Test endpoint to verify image URL storage
+    @GetMapping("/worker/{workerId}/images")
+    public ResponseEntity<?> getWorkerImages(@PathVariable Long workerId) {
+        try {
+            Optional<Worker> workerOpt = workerService.getWorkerById(workerId);
+            if (!workerOpt.isPresent()) {
+                Map<String, String> errorResponse = new HashMap<>();
+                errorResponse.put("error", "Worker not found");
+                return ResponseEntity.notFound().build();
+            }
+            
+            Worker worker = workerOpt.get();
+            
+            Map<String, Object> imageUrls = new HashMap<>();
+            imageUrls.put("workerId", worker.getId());
+            imageUrls.put("profileImageUrl", worker.getProfileImageUrl());
+            imageUrls.put("idProofUrl", worker.getIdProofUrl());
+            imageUrls.put("selfieWithIdUrl", worker.getSelfieWithIdUrl());
+            imageUrls.put("certificateUrls", worker.getCertificateUrls());
+            
+            System.out.println("Image URLs verification for worker " + workerId + ": " + imageUrls);
+            
+            return ResponseEntity.ok(imageUrls);
+        } catch (Exception e) {
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("error", "Error retrieving worker images: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
+    }
+
+    // Test fresh Cloudinary upload
+    @GetMapping("/test/cloudinary")
+    public ResponseEntity<?> testCloudinary() {
+        try {
+            Map<String, Object> testResult = workerService.testCloudinaryConnection();
+            return ResponseEntity.ok(testResult);
+        } catch (Exception e) {
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("error", "Cloudinary test failed: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
+    }
+
+    // Test fresh image upload to Cloudinary
+    @PostMapping("/test/upload")
+    public ResponseEntity<?> testImageUpload(@RequestParam("file") MultipartFile file) {
+        try {
+            System.out.println("=== TESTING FRESH IMAGE UPLOAD ===");
+            System.out.println("File name: " + file.getOriginalFilename());
+            System.out.println("File size: " + file.getSize() + " bytes");
+            System.out.println("Content type: " + file.getContentType());
+            
+            String uploadedUrl = workerService.uploadImage(file);
+            
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", uploadedUrl != null);
+            response.put("uploadedUrl", uploadedUrl);
+            response.put("urlLength", uploadedUrl != null ? uploadedUrl.length() : 0);
+            response.put("isCloudinaryUrl", uploadedUrl != null && uploadedUrl.contains("cloudinary.com"));
+            response.put("timestamp", System.currentTimeMillis());
+            
+            System.out.println("=== UPLOAD TEST COMPLETE ===");
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            System.err.println("Upload test failed: " + e.getMessage());
+            e.printStackTrace();
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("error", "Upload test failed: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
+    }
+
+    // Debug endpoint to check database content directly
+    @GetMapping("/debug/workers")
+    public ResponseEntity<?> debugWorkers() {
+        try {
+            java.util.List<Worker> allWorkers = workerService.getAllWorkers();
+            java.util.List<Map<String, Object>> workerDebugInfo = new java.util.ArrayList<>();
+            
+            for (Worker worker : allWorkers) {
+                Map<String, Object> info = new HashMap<>();
+                info.put("id", worker.getId());
+                info.put("phone", worker.getPhone());
+                info.put("profileImageUrl", worker.getProfileImageUrl());
+                info.put("profileImageUrlLength", worker.getProfileImageUrl() != null ? worker.getProfileImageUrl().length() : 0);
+                info.put("idProofUrl", worker.getIdProofUrl());
+                info.put("idProofUrlLength", worker.getIdProofUrl() != null ? worker.getIdProofUrl().length() : 0);
+                info.put("selfieWithIdUrl", worker.getSelfieWithIdUrl());
+                info.put("selfieWithIdUrlLength", worker.getSelfieWithIdUrl() != null ? worker.getSelfieWithIdUrl().length() : 0);
+                info.put("certificateUrls", worker.getCertificateUrls());
+                info.put("registrationStatus", worker.getRegistrationStatus());
+                workerDebugInfo.add(info);
+            }
+            
+            Map<String, Object> response = new HashMap<>();
+            response.put("totalWorkers", allWorkers.size());
+            response.put("workers", workerDebugInfo);
+            
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("error", "Debug query failed: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
     }
 }

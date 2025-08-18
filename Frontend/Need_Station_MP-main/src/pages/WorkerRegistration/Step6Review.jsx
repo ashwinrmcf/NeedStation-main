@@ -198,53 +198,22 @@ export default function WorkerProfileSummary({ workerId, prev }) {
                   <div>
                     <div className="mb-6 flex justify-center">
                       <div className="w-32 h-32 rounded-full bg-gray-700 flex items-center justify-center overflow-hidden border-2 border-teal-400">
-                        {/* Use the local image URL first, then fallback to server data */}
-                        {(() => {
-                          // Attempt to get local image URL from localStorage
-                          const localImageUrl = localStorage.getItem('tempProfileImageUrl');
-                          
-                          if (localImageUrl) {
-                            console.log("Using local profile image URL:", localImageUrl);
-                            return (
-                              <img 
-                                src={localImageUrl} 
-                                alt="Profile" 
-                                className="w-full h-full object-cover"
-                                onError={(e) => {
-                                  console.error("Local image failed to load, trying server image");
-                                  e.target.onerror = null; // Prevent infinite error loop
-                                  
-                                  // Try loading from server URL instead
-                                  if (workerData?.profileImageUrl) {
-                                    e.target.src = workerData.profileImageUrl;
-                                  } else {
-                                    e.target.style.display = 'none';
-                                    e.target.parentNode.classList.add('fallback-icon-visible');
-                                  }
-                                }}
-                              />
-                            );
-                          } else if (workerData?.profileImageUrl || workerData?.profilePicture || workerData?.profileImage || workerData?.imageUrl) {
-                            const imageUrl = workerData.profileImageUrl || workerData.profilePicture || workerData.profileImage || workerData.imageUrl;
-                            console.log("Using server profile image URL:", imageUrl);
-                            return (
-                              <img 
-                                src={imageUrl} 
-                                alt="Profile" 
-                                className="w-full h-full object-cover" 
-                                onError={(e) => {
-                                  console.error("Server image failed to load");
-                                  e.target.onerror = null; // Prevent infinite error loop
-                                  e.target.src = ''; // Clear the src
-                                  e.target.style.display = 'none'; // Hide the img element
-                                  e.target.parentNode.classList.add('fallback-icon-visible'); // Show fallback icon
-                                }}
-                              />
-                            );
-                          } else {
-                            return <User size={48} className="text-gray-400" />;
-                          }
-                        })()} {/* Self-executing function */}
+                        {/* Use server data for profile image */}
+                        {workerData?.profileImageUrl ? (
+                          <img 
+                            src={workerData.profileImageUrl} 
+                            alt="Profile" 
+                            className="w-full h-full object-cover" 
+                            onError={(e) => {
+                              console.error("Profile image failed to load");
+                              e.target.onerror = null;
+                              e.target.style.display = 'none';
+                              e.target.parentNode.classList.add('fallback-icon-visible');
+                            }}
+                          />
+                        ) : (
+                          <User size={48} className="text-gray-400" />
+                        )}
                       </div>
                     </div>
                     
@@ -469,13 +438,17 @@ export default function WorkerProfileSummary({ workerId, prev }) {
                             const availData = typeof workerData.availability === 'string' ? 
                               JSON.parse(workerData.availability) : workerData.availability;
                             
-                            // Days of the week
+                            // Days of the week - only show selected days
                             const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+                            const selectedDays = days.filter(day => availData[day]);
                             
-                            return days.map(day => (
-                              <div key={day} className={`px-3 py-2 rounded-md ${availData[day] ? 'bg-teal-700 text-white' : 'bg-gray-800 text-gray-400'}`}>
+                            if (selectedDays.length === 0) {
+                              return <span className="text-gray-400">No days selected</span>;
+                            }
+                            
+                            return selectedDays.map(day => (
+                              <div key={day} className="px-3 py-2 rounded-md bg-teal-700 text-white">
                                 <span className="capitalize">{day}</span>
-                                <span className="ml-2">{availData[day] ? '✓' : '✗'}</span>
                               </div>
                             ));
                           } catch (e) {

@@ -33,6 +33,55 @@ public class WorkerOtpController {
     }
 
     /**
+     * Login endpoint for existing workers - sends OTP for verification
+     */
+    @PostMapping("/login")
+    public ResponseEntity<?> loginWorker(@RequestBody Map<String, String> request) {
+        try {
+            String phone = request.get("phone");
+            System.out.println("Worker login attempt for phone: " + phone);
+            
+            // Check if worker exists with this phone
+            Optional<Worker> existingWorker = workerService.findWorkerByPhone(phone);
+            if (!existingWorker.isPresent()) {
+                Map<String, Object> response = new HashMap<>();
+                response.put("error", "No worker found with this phone number. Please register first.");
+                response.put("requiresRegistration", true);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+            }
+            
+            Worker worker = existingWorker.get();
+            
+            // Check if worker registration is complete
+            if (!"VERIFIED".equals(worker.getRegistrationStatus())) {
+                Map<String, Object> response = new HashMap<>();
+                response.put("error", "Worker registration is incomplete. Please complete registration first.");
+                response.put("workerId", worker.getId());
+                response.put("registrationStatus", worker.getRegistrationStatus());
+                return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).body(response);
+            }
+            
+            // Generate and send OTP for login
+            boolean otpSent = freeOtpService.generateOtp(worker);
+            
+            Map<String, Object> response = new HashMap<>();
+            response.put("workerId", worker.getId());
+            response.put("message", "OTP sent for login verification");
+            response.put("requiresOtp", true);
+            response.put("otpSent", otpSent);
+            
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            System.err.println("Error in worker login: " + e.getMessage());
+            e.printStackTrace();
+            
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("error", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
+    }
+
+    /**
      * Register a new worker (Step 1) with OTP verification
      */
     @PostMapping("/register/step1")
@@ -44,8 +93,9 @@ public class WorkerOtpController {
             Optional<Worker> existingWorker = workerService.findWorkerByPhone(workerDTO.getPhone());
             if (existingWorker.isPresent()) {
                 Map<String, Object> response = new HashMap<>();
-                response.put("error", "A worker with this phone number already exists");
+                response.put("error", "Phone number already registered. Use login instead.");
                 response.put("workerId", existingWorker.get().getId());
+                response.put("shouldLogin", true);
                 return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
             }
             

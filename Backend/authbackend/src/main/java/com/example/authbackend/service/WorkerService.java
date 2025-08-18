@@ -63,6 +63,66 @@ public class WorkerService {
         this.twoFactorOtpService = twoFactorOtpService;
     }
 
+    // Test Cloudinary connection with fresh upload
+    public Map<String, Object> testCloudinaryConnection() {
+        Map<String, Object> result = new HashMap<>();
+        try {
+            System.out.println("=== TESTING FRESH CLOUDINARY UPLOAD ===");
+            
+            // Check if cloudinary instance is null
+            if (cloudinary == null) {
+                System.err.println("ERROR: Cloudinary instance is null");
+                result.put("success", false);
+                result.put("error", "Cloudinary instance is null");
+                return result;
+            }
+            
+            // Test with timestamped upload to verify fresh uploads
+            String timestamp = String.valueOf(System.currentTimeMillis());
+            String testData = "Fresh test upload at " + timestamp;
+            Map<String, Object> options = ObjectUtils.asMap(
+                "resource_type", "raw",
+                "public_id", "fresh_test_" + timestamp,
+                "folder", "test_uploads"
+            );
+            
+            System.out.println("Attempting fresh test upload with timestamp: " + timestamp);
+            Map uploadResult = cloudinary.uploader().upload(testData.getBytes(), options);
+            
+            System.out.println("Fresh upload result: " + uploadResult);
+            
+            if (uploadResult != null && uploadResult.containsKey("public_id")) {
+                String publicId = uploadResult.get("public_id").toString();
+                String secureUrl = uploadResult.containsKey("secure_url") ? 
+                    uploadResult.get("secure_url").toString() : "No secure_url";
+                
+                System.out.println("Fresh upload SUCCESSFUL - Public ID: " + publicId);
+                System.out.println("Fresh upload URL: " + secureUrl);
+                
+                result.put("success", true);
+                result.put("publicId", publicId);
+                result.put("secureUrl", secureUrl);
+                result.put("timestamp", timestamp);
+                result.put("fullResponse", uploadResult.toString());
+                
+                return result;
+            } else {
+                System.err.println("Fresh upload failed - no public_id in response");
+                result.put("success", false);
+                result.put("error", "No public_id in response");
+                result.put("response", uploadResult.toString());
+                return result;
+            }
+        } catch (Exception e) {
+            System.err.println("Fresh upload test FAILED: " + e.getMessage());
+            e.printStackTrace();
+            result.put("success", false);
+            result.put("error", e.getMessage());
+            result.put("stackTrace", e.getStackTrace());
+            return result;
+        }
+    }
+
     // Method to upload image to Cloudinary and return the image URL
     public String uploadImage(MultipartFile file) throws IOException {
         try {
@@ -71,52 +131,23 @@ public class WorkerService {
                 return null;
             }
 
-            System.out.println("Uploading image to Cloudinary. File size: " + file.getSize() + ", Content Type: " + file.getContentType());
+            System.out.println("File size: " + file.getSize() + " bytes");
+            System.out.println("Content type: " + file.getContentType());
 
-            // Create optimized upload options for profile pictures based on Cloudinary documentation
+            // Pre-upload connection test
+            Map<String, Object> connectionTest = testCloudinaryConnection();
+            Boolean isConnected = (Boolean) connectionTest.get("success");
+            if (isConnected == null || !isConnected) {
+                System.err.println("Cloudinary connection test failed before upload");
+                return null;
+            }
+
+            // Simplified upload options for debugging
             Map<String, Object> options = new HashMap<>();
-
-            // Basic upload settings
             options.put("resource_type", "auto");
             options.put("folder", "worker_profiles");
-            options.put("unique_filename", true);
-            options.put("overwrite", false);
-            options.put("use_filename", true);
-
-            // For displaying in Media Library with better organization
-            String displayName = "Worker Profile - " + (System.currentTimeMillis() / 1000);
-            options.put("display_name", displayName);
-
-            // Add structured metadata to help with organization and search
-            Map<String, Object> context = new HashMap<>();
-            context.put("alt", "Worker Profile Picture");
-            context.put("caption", "Need Station Worker Profile");
-            context.put("category", "profile_images");
-            options.put("context", context);
-
-            // Enable quality analysis to ensure high-quality profile pictures
-            options.put("quality_analysis", true);
-
-            // Create transformation array for advanced options
-            List<Map<String, Object>> transformations = new ArrayList<>();
-
-            // First transformation: Crop to square with face detection
-            Map<String, Object> cropTransformation = new HashMap<>();
-            cropTransformation.put("width", 400);
-            cropTransformation.put("height", 400);
-            cropTransformation.put("crop", "fill");
-            cropTransformation.put("gravity", "face"); // Face detection for better cropping
-            transformations.add(cropTransformation);
-
-            // Second transformation: Quality and format optimization
-            Map<String, Object> qualityTransformation = new HashMap<>();
-            qualityTransformation.put("quality", "auto:good"); // Auto quality with good balance
-            qualityTransformation.put("fetch_format", "auto");  // Auto select best format
-            qualityTransformation.put("flags", "progressive");  // Progressive loading
-            transformations.add(qualityTransformation);
-
-            // Add transformations to options
-            options.put("transformation", transformations);
+            
+            System.out.println("Using simplified Cloudinary options for debugging: " + options);
 
             // Convert file to byte array
             byte[] fileData = file.getBytes();
@@ -135,9 +166,31 @@ public class WorkerService {
             if (uploadResult.containsKey("secure_url")) {
                 String secureUrl = uploadResult.get("secure_url").toString();
                 System.out.println("Image uploaded successfully. Secure URL: " + secureUrl);
+                
+                // Additional validation
+                if (secureUrl == null || secureUrl.trim().isEmpty()) {
+                    System.err.println("WARNING: Cloudinary returned empty or null secure_url");
+                    return null;
+                }
+                
+                // Verify this is actually a Cloudinary URL
+                if (!secureUrl.contains("cloudinary.com")) {
+                    System.err.println("WARNING: URL doesn't contain cloudinary.com: " + secureUrl);
+                }
+                
+                System.out.println("Returning valid Cloudinary URL: " + secureUrl);
                 return secureUrl;  // Returns the secure URL of the uploaded image
             } else {
                 System.err.println("No secure_url found in Cloudinary response");
+                System.err.println("Available keys in response: " + uploadResult.keySet());
+                
+                // Check if there's a regular URL instead
+                if (uploadResult.containsKey("url")) {
+                    String url = uploadResult.get("url").toString();
+                    System.out.println("Found regular URL instead of secure_url: " + url);
+                    return url;
+                }
+                
                 return null;
             }
         } catch (Exception e) {
@@ -508,6 +561,11 @@ public Optional<Worker> getWorkerById(Long id) {
     return repo.findById(id);
 }
 
+// Get all workers for debugging
+public java.util.List<Worker> getAllWorkers() {
+    return repo.findAll();
+}
+
 // Find worker by phone number
 public java.util.Optional<Worker> findWorkerByPhone(String phone) {
     // Format phone number if needed (to handle +91 prefix variations)
@@ -557,8 +615,8 @@ public Worker updateBasicInfo(Long workerId, WorkerRegistrationDTO dto, Multipar
             throw new IllegalArgumentException("Phone number is required");
         }
 
-        // Get or create worker
-        Worker worker = getOrCreateWorker(workerId);
+        // Get or create worker, but check for existing phone number first
+        Worker worker = getOrCreateWorker(workerId, dto.getPhone());
 
         // Update basic info fields with trimmed values to remove whitespace
         worker.setFullName(dto.getFullName().trim());
@@ -577,6 +635,15 @@ public Worker updateBasicInfo(Long workerId, WorkerRegistrationDTO dto, Multipar
                 // Detailed logging for debugging
                 if (imageUrl != null) {
                     System.out.println("Successfully uploaded image to Cloudinary. URL: " + imageUrl);
+                    
+                    // Validate URL format
+                    if (imageUrl.length() > 500) {
+                        System.err.println("WARNING: Profile image URL seems too long, might be image data instead of URL: " + imageUrl.substring(0, 100) + "...");
+                    }
+                    if (!imageUrl.startsWith("http")) {
+                        System.err.println("WARNING: Profile image URL doesn't start with http: " + imageUrl);
+                    }
+                    
                     worker.setProfileImageUrl(imageUrl);
                     System.out.println("Set profileImageUrl on worker entity. About to save.");
                 } else {
@@ -642,29 +709,70 @@ public Worker updateVerificationDetails(Long workerId, WorkerRegistrationDTO dto
 
     // Upload ID proof if provided
     if (idProof != null && !idProof.isEmpty()) {
+        System.out.println("Uploading ID proof document...");
         String idProofUrl = uploadImage(idProof);
+        System.out.println("ID proof upload result: " + idProofUrl);
         worker.setIdProofUrl(idProofUrl);
+        System.out.println("Set ID proof URL on worker entity: " + worker.getIdProofUrl());
     }
 
     // Upload selfie with ID if provided
     if (selfieWithId != null && !selfieWithId.isEmpty()) {
+        System.out.println("Uploading selfie with ID document...");
         String selfieUrl = uploadImage(selfieWithId);
+        System.out.println("Selfie with ID upload result: " + selfieUrl);
         worker.setSelfieWithIdUrl(selfieUrl);
+        System.out.println("Set selfie with ID URL on worker entity: " + worker.getSelfieWithIdUrl());
     }
 
     // Upload certificates if provided
     if (certificates != null && certificates.length > 0) {
+        System.out.println("Uploading " + certificates.length + " certificate(s)...");
         Map<String, String> certificateUrls = new HashMap<>();
         for (int i = 0; i < certificates.length; i++) {
             if (certificates[i] != null && !certificates[i].isEmpty()) {
+                System.out.println("Uploading certificate " + (i+1) + "...");
                 String certUrl = uploadImage(certificates[i]);
+                System.out.println("Certificate " + (i+1) + " upload result: " + certUrl);
                 certificateUrls.put("certificate_" + (i+1), certUrl);
             }
         }
-        worker.setCertificateUrls(objectMapper.writeValueAsString(certificateUrls));
+        String certificateUrlsJson = objectMapper.writeValueAsString(certificateUrls);
+        worker.setCertificateUrls(certificateUrlsJson);
+        System.out.println("Set certificate URLs JSON on worker entity: " + certificateUrlsJson);
     }
 
-    return repo.save(worker);
+    System.out.println("About to save worker to database with verification details...");
+    System.out.println("Worker ID: " + worker.getId());
+    System.out.println("ID Proof URL: " + worker.getIdProofUrl());
+    System.out.println("Selfie with ID URL: " + worker.getSelfieWithIdUrl());
+    System.out.println("Certificate URLs: " + worker.getCertificateUrls());
+    
+    // Validate URLs are not image data
+    if (worker.getIdProofUrl() != null && worker.getIdProofUrl().length() > 500) {
+        System.err.println("WARNING: ID Proof URL seems too long, might be image data instead of URL: " + worker.getIdProofUrl().substring(0, 100) + "...");
+    }
+    if (worker.getSelfieWithIdUrl() != null && worker.getSelfieWithIdUrl().length() > 500) {
+        System.err.println("WARNING: Selfie URL seems too long, might be image data instead of URL: " + worker.getSelfieWithIdUrl().substring(0, 100) + "...");
+    }
+    
+    Worker savedWorker = repo.save(worker);
+    
+    System.out.println("Worker saved successfully after verification details update!");
+    System.out.println("Saved Worker ID: " + savedWorker.getId());
+    System.out.println("Saved ID Proof URL: " + savedWorker.getIdProofUrl());
+    System.out.println("Saved Selfie with ID URL: " + savedWorker.getSelfieWithIdUrl());
+    System.out.println("Saved Certificate URLs: " + savedWorker.getCertificateUrls());
+    
+    // Additional validation after save
+    if (savedWorker.getIdProofUrl() != null && !savedWorker.getIdProofUrl().startsWith("http")) {
+        System.err.println("ERROR: ID Proof URL doesn't start with http - might be corrupted: " + savedWorker.getIdProofUrl());
+    }
+    if (savedWorker.getSelfieWithIdUrl() != null && !savedWorker.getSelfieWithIdUrl().startsWith("http")) {
+        System.err.println("ERROR: Selfie URL doesn't start with http - might be corrupted: " + savedWorker.getSelfieWithIdUrl());
+    }
+    
+    return savedWorker;
 }
 
 // Step 5: Update payment information
@@ -694,16 +802,28 @@ public Worker finalizeRegistration(Long workerId) {
 }
 
 // Helper methods
-private Worker getOrCreateWorker(Long workerId) {
+private Worker getOrCreateWorker(Long workerId, String phoneNumber) {
     Worker worker;
+    
+    // First, try to find by workerId if provided
     if (workerId != null) {
         worker = repo.findById(workerId).orElse(null);
         if (worker != null) {
+            System.out.println("Found existing worker by ID: " + workerId);
             return worker;
         }
     }
+    
+    // If no workerId or worker not found by ID, check by phone number
+    if (phoneNumber != null && !phoneNumber.trim().isEmpty()) {
+        Optional<Worker> existingWorker = findWorkerByPhone(phoneNumber.trim());
+        if (existingWorker.isPresent()) {
+            System.out.println("Found existing worker by phone: " + phoneNumber);
+            return existingWorker.get();
+        }
+    }
 
-    // Create a new worker with default values
+    // Create a new worker with default values only if none exists
     worker = new Worker();
     worker.setRegistrationDate(LocalDate.now());
     worker.setRegistrationStatus("INCOMPLETE");
@@ -716,9 +836,51 @@ private Worker getOrCreateWorker(Long workerId) {
     worker.setDob(LocalDate.now());
 
     // Log that we're creating a new worker
-    System.out.println("Creating new worker record");
+    System.out.println("Creating new worker record for phone: " + phoneNumber);
 
     return worker;
+}
+
+public void updateWorkerDocument(Long workerId, String fileType, String documentUrl) {
+    Worker worker = getWorkerOrThrow(workerId);
+    
+    switch (fileType) {
+        case "ID_PROOF":
+            worker.setIdProofUrl(documentUrl);
+            break;
+        case "SELFIE_WITH_ID":
+            worker.setSelfieWithIdUrl(documentUrl);
+            break;
+        case "CERTIFICATE":
+            // For certificates, we might need to handle multiple files
+            // For now, we'll store the last certificate URL
+            worker.setCertificateUrls(documentUrl);
+            break;
+        default:
+            throw new IllegalArgumentException("Invalid file type: " + fileType);
+    }
+    
+    repo.save(worker);
+    System.out.println("Updated worker document: " + fileType + " -> " + documentUrl);
+}
+
+public Worker updateVerificationDetails(Long workerId, String aadharNumber, String policeVerificationStatus) {
+    try {
+        Worker worker = getWorkerOrThrow(workerId);
+        
+        // Update verification details
+        worker.setAadharNumber(aadharNumber);
+        worker.setPoliceVerificationStatus(policeVerificationStatus);
+        
+        Worker savedWorker = repo.save(worker);
+        System.out.println("Updated verification details for worker ID: " + workerId);
+        
+        return savedWorker;
+    } catch (Exception e) {
+        System.err.println("Error updating verification details: " + e.getMessage());
+        e.printStackTrace();
+        throw new RuntimeException("Failed to update verification details: " + e.getMessage(), e);
+    }
 }
 
 private Worker getWorkerOrThrow(Long workerId) {

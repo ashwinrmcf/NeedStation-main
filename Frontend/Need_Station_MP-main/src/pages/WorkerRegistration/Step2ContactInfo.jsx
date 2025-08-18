@@ -16,7 +16,8 @@ export default function LocationDetailsForm({ data, updateForm, next, prev, work
   // Check for workerId in useEffect to avoid state updates during render
   useEffect(() => {
     if (!workerId) {
-      console.error("Worker ID is required for this step");
+      console.warn("Worker ID is missing for Step 2. This is expected if starting fresh registration.");
+      // Don't call updateForm here during render - just log the warning
     }
   }, [workerId]);
 

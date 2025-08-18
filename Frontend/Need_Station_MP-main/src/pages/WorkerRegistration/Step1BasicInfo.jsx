@@ -6,34 +6,56 @@ import {
 } from 'lucide-react';
 import Translator from '../../components/Translator';
 
-export default function Step1BasicInfo({ data, updateForm, next, workerId, updateWorkerId }) {
+export default function Step1BasicInfo({ data, updateForm, next, workerId, updateWorkerId, imagePreviewUrls, setImagePreviewUrls, localProfileImageUrl, setLocalProfileImageUrl }) {
   const [profilePicture, setProfilePicture] = useState(null);
-  const [profilePictureURL, setProfilePictureURL] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [otpSent, setOtpSent] = useState(false);
-  const [otpVerified, setOtpVerified] = useState(false);
   const [otpCode, setOtpCode] = useState('');
   const [otpLoading, setOtpLoading] = useState(false);
   const [otpError, setOtpError] = useState('');
   const [verifiedWorkerId, setVerifiedWorkerId] = useState(null);
+  
+  // Use props for otpSent and otpVerified to maintain state across steps
+  const { otpSent = false, otpVerified = false } = data;
 
   // Backend API URL - update this to your actual backend URL
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api';
 
+  // Initialize component state when mounting or data changes
+  useEffect(() => {
+    // Restore image preview
+    if (imagePreviewUrls?.profilePicture) {
+      setLocalProfileImageUrl(imagePreviewUrls.profilePicture);
+    } else if (data.profilePicture) {
+      if (typeof data.profilePicture === 'string' && data.profilePicture.includes('cloudinary.com')) {
+        setLocalProfileImageUrl(data.profilePicture);
+        setImagePreviewUrls(prev => ({ ...prev, profilePicture: data.profilePicture }));
+      } else if (data.profilePicture instanceof File) {
+        const localUrl = URL.createObjectURL(data.profilePicture);
+        setLocalProfileImageUrl(localUrl);
+        setImagePreviewUrls(prev => ({ ...prev, profilePicture: localUrl }));
+        setProfilePicture(data.profilePicture);
+      }
+    }
+    
+    if (workerId && !verifiedWorkerId) {
+      setVerifiedWorkerId(workerId);
+    }
+  }, [data.profilePicture, workerId, imagePreviewUrls, setImagePreviewUrls, setLocalProfileImageUrl]);
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    console.log("Updating field:", name, "to value:", value); // Debug log
-    updateForm({
-      [name]: value,
-    });
+    console.log("Updating field:", name, "to value:", value);    // Update parent form data
+    const updates = { [name]: value };
     
     // Reset OTP verification if phone number changes
-    if (name === 'phone' && (otpSent || otpVerified)) {
-      setOtpSent(false);
-      setOtpVerified(false);
+    if (name === 'phone' && (data.otpSent || data.otpVerified)) {
+      updates.otpSent = false;
+      updates.otpVerified = false;
       setOtpCode('');
       setOtpError('');
     }
+    
+    updateForm(updates);
   };
   
   // Function to generate OTP using the Free OTP API
@@ -77,7 +99,8 @@ export default function Step1BasicInfo({ data, updateForm, next, workerId, updat
               updateWorkerId(newWorkerId);
             }
             
-            setOtpSent(true);
+            // Update parent form with OTP sent status
+            updateForm({ otpSent: true });
             console.log('OTP sent successfully during registration');
             alert('OTP sent! Please check your phone for the verification code.');
           } else {
@@ -103,7 +126,7 @@ export default function Step1BasicInfo({ data, updateForm, next, workerId, updat
             );
             
             if (resendResponse.data && resendResponse.data.sent) {
-              setOtpSent(true);
+              updateForm({ otpSent: true });
               console.log('OTP sent to existing worker');
               alert('This phone number is already registered. OTP sent for verification!');
             } else {
@@ -122,16 +145,16 @@ export default function Step1BasicInfo({ data, updateForm, next, workerId, updat
       } else {
         // If we already have a worker ID, resend the OTP
         const existingId = verifiedWorkerId || workerId;
-        const resendResponse = await axios.post(`${API_URL}/workers/resend-otp`, {
-          workerId: existingId
+        const response = await axios.post(`${API_URL}/workers/resend-otp`, {
+          workerId: verifiedWorkerId
         }, {
           headers: {
             'Content-Type': 'application/json'
           }
         });
         
-        if (resendResponse.data && resendResponse.data.sent) {
-          setOtpSent(true);
+        if (response.data && response.data.sent) {
+          updateForm({ otpSent: true });
           console.log('OTP resent successfully');
           alert('OTP sent! Please check your phone for the verification code.');
         } else {
@@ -176,10 +199,12 @@ export default function Step1BasicInfo({ data, updateForm, next, workerId, updat
       );
       
       if (verifyResponse.data && verifyResponse.data.verified) {
-        setOtpVerified(true);
-        setOtpError('');
         // Update form data with verification status
-        updateForm({ otpVerified: true });
+        updateForm({ 
+          otpVerified: true,
+          otpSent: true  // Keep otpSent true when verified
+        });
+        setOtpError('');
         console.log('OTP verified successfully');
       } else {
         setOtpError('Invalid OTP. Please try again.');
@@ -201,10 +226,13 @@ export default function Step1BasicInfo({ data, updateForm, next, workerId, updat
       const file = e.target.files[0];
       setProfilePicture(file);
       const localUrl = URL.createObjectURL(file);
-      setProfilePictureURL(localUrl);
       
-      // Store local image URL in localStorage for temporary access
-      localStorage.setItem('tempProfileImageUrl', localUrl);
+      // Store image preview URL in both local and parent state
+      setLocalProfileImageUrl(localUrl);
+      setImagePreviewUrls(prev => ({
+        ...prev,
+        profilePicture: localUrl
+      }));
       
       // Also update parent form data with the file
       updateForm({
@@ -227,26 +255,26 @@ export default function Step1BasicInfo({ data, updateForm, next, workerId, updat
       return;
     }
     
-    // Profile picture is now optional
-
-    // Update the form with profile picture before sending to server
-    updateForm({ 
-      profilePicture,
-      otpVerified: otpVerified // Add verification status to form data
-    });
-    
     // Check if phone verification is complete
     if (!otpVerified) {
       alert("Please verify your phone number before continuing.");
+      return;
+    }
+
+    // If we already have a workerId and the basic info hasn't changed, skip submission
+    if (workerId || verifiedWorkerId) {
+      console.log("Worker already exists, skipping Step 1 submission");
+      // Just proceed to next step without saving again
+      next();
       return;
     }
     
     // Create FormData object
     const formData = new FormData();
     
-    // Add profile picture
+    // Add profile picture - use "file" as the key to match backend @RequestParam("file")
     if (profilePicture) {
-      formData.append("profilePicture", profilePicture);
+      formData.append("file", profilePicture);
     }
     
     // Create DTO for worker registration with explicit non-null values
@@ -268,7 +296,7 @@ export default function Step1BasicInfo({ data, updateForm, next, workerId, updat
     setLoading(true);
     
     try {
-      // Create endpoint URL
+      // Create endpoint URL - ensure this matches your backend endpoint
       let url = `${API_URL}/worker/register/step1`;
       
       // Add workerId parameter if it exists
@@ -280,8 +308,9 @@ export default function Step1BasicInfo({ data, updateForm, next, workerId, updat
       console.log("Sending request to URL:", url);
       // Don't set Content-Type header manually, axios will set the correct boundary
       const response = await axios.post(url, formData, {
-        // Let axios set the Content-Type with the proper boundary
-        headers: {}
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
       });
       
       // Update workerId if it's a new registration
@@ -404,9 +433,9 @@ export default function Step1BasicInfo({ data, updateForm, next, workerId, updat
           <label className="block text-lg font-medium mb-2">Profile Picture (optional)</label>
           <div className="flex flex-col items-center">
             <div className="relative w-32 h-32 mb-4">
-              {profilePictureURL ? (
+              {(localProfileImageUrl || imagePreviewUrls?.profilePicture || data.profilePicture) ? (
                 <img
-                  src={profilePictureURL}
+                  src={localProfileImageUrl || imagePreviewUrls?.profilePicture || data.profilePicture}
                   alt="Profile Preview"
                   className="w-full h-full rounded-full object-cover border-2 border-teal-500"
                 />
@@ -427,7 +456,7 @@ export default function Step1BasicInfo({ data, updateForm, next, workerId, updat
               />
             </div>
             <label htmlFor="profile-picture" className="text-teal-400 cursor-pointer hover:text-teal-300">
-              {profilePictureURL ? "Change photo" : "Upload photo"}
+              {(localProfileImageUrl || imagePreviewUrls?.profilePicture || data.profilePicture) ? "Change photo" : "Upload photo"}
             </label>
           </div>
         </div>
@@ -497,6 +526,17 @@ export default function Step1BasicInfo({ data, updateForm, next, workerId, updat
                 <CheckCircle size={20} className="mr-2" />
                 Verified
               </div>
+            )}
+            {otpSent && !otpVerified && (
+              <button
+                type="button"
+                onClick={generateOtp}
+                disabled={otpLoading}
+                className="px-4 py-2 rounded-md font-medium bg-yellow-600 hover:bg-yellow-700 text-white flex items-center"
+              >
+                <RefreshCw size={16} className="mr-2" />
+                Resend
+              </button>
             )}
           </div>
           
