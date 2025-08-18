@@ -15,6 +15,11 @@
     "bootstrap": "^5.3.3",
     "cors": "^2.8.5",
     "framer-motion": "^12.5.0",
+<<<<<<< Updated upstream
+=======
+    "frida": "^17.1.5",
+    "i18next": "^25.1.2",
+>>>>>>> Stashed changes
     "lucide-react": "^0.482.0",
     "react": "^18.3.1",
     "react-bootstrap": "^2.10.5",
