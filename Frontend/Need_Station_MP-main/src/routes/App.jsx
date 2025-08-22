@@ -19,11 +19,9 @@ import { auto } from "@cloudinary/url-gen/actions/resize";
 import { autoGravity } from "@cloudinary/url-gen/qualifiers/gravity";
 
 function App() {
-<<<<<<< Updated upstream
+
   const location = useLocation();
-=======
-  const cld = new Cloudinary({ cloud: { cloudName: 'ABC' } });
->>>>>>> Stashed changes
+
 
   // Cloudinary image setup (optional visual, can be removed if unused)
   const cld = new Cloudinary({ cloud: { cloudName: 'dchmvabfy' } });
