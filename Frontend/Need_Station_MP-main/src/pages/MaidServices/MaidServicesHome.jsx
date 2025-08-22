@@ -17,10 +17,17 @@ const MaidServicesHome = () => {
   const relatedCards = cardData.find((page) => page.pageId === 1)?.cards || [];
   const heading = "Services Provided";
 
+  // Service context for passing to components
+  const serviceContext = {
+    serviceName: 'Maid Services',
+    serviceType: 'maid-services',
+    serviceId: 1
+  };
+
   return (
     <>
       <ServiceDetails data={serviceData} />
-      <RelatedServices cards={relatedCards} heading={heading} />
+      <RelatedServices cards={relatedCards} heading={heading} serviceContext={serviceContext} />
       <HowItWorks />
       <GetStarted />
     </>

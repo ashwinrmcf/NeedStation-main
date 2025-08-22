@@ -95,15 +95,6 @@ const BasicNeedsServiceUserDescription = () => {
       </div>
 
       <div className={styles["task-section"]}>
-        {service && (
-          <div className={styles["box"]} style={{ marginBottom: "15px", backgroundColor: "rgba(5, 12, 33, 0.8)" }}>
-            <h1 style={{ color: "#5CE1E6", marginBottom: "10px" }}>{service} Service</h1>
-            <p style={{ fontSize: "18px", color: "#ffffff", marginBottom: "5px" }}>
-              {description || `Professional ${service} services from certified experts.`}
-            </p>
-            {serviceType && <p style={{ fontSize: "16px", color: "#bbbbbb" }}>Category: {serviceType}</p>}
-          </div>
-        )}
         <div className={styles["box"]}>
           <h1>Your Task Location</h1>
           <div style={{ marginTop: "20px", position: "relative" }}>
@@ -212,7 +203,14 @@ const BasicNeedsServiceUserDescription = () => {
       </div>
 
       <div className={styles["button-container"]}>
-        <Link to="/available-helpers">
+        <Link 
+          to="/available-helpers"
+          state={{ 
+            service: service || serviceType || 'General Service',
+            description: description,
+            serviceType: serviceType 
+          }}
+        >
           {" "}
           <button className={styles["button"]}>
             See Taskers and Price
