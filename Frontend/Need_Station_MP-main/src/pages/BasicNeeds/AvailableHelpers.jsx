@@ -1,133 +1,197 @@
 import styles from './AvailableHelpers.module.css';
-import { Link } from 'react-router-dom';
-import image1 from "../../assets/images/Rina.jpg"
-import image2 from "../../assets/images/cardImage2.jpeg"
-import image3 from "../../assets/images/Jane_Austin.jpg"
+import { Link, useLocation } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import availableHelpersData from '../../data/AvailableHelperData.js';
 
 const AvailableHelpers = () => {
+    const location = useLocation();
+    const [helpers, setHelpers] = useState([]);
+    const [serviceType, setServiceType] = useState('default');
+    const [serviceName, setServiceName] = useState('General Service');
+
+    useEffect(() => {
+        // Get service information from location state or URL
+        const serviceInfo = location.state || {};
+        const { service, subService } = serviceInfo;
+        
+        // Determine service type from URL path or state
+        let detectedServiceType = 'default';
+        let detectedServiceName = 'General Service';
+        
+        // Prefer serviceType from navigation state if available
+        if (serviceInfo.serviceType) {
+            detectedServiceType = serviceInfo.serviceType;
+            detectedServiceName = service || 'General Service';
+        } else if (service) {
+            detectedServiceType = service.toLowerCase().replace(/\s+/g, '-');
+            detectedServiceName = service;
+            // Handle specific maid service sub-categories
+            if (service.toLowerCase().includes('cooking')) {
+                detectedServiceType = 'cooking';
+                detectedServiceName = 'Cooking';
+            } else if (service.toLowerCase().includes('cleaning')) {
+                detectedServiceType = 'cleaning';
+                detectedServiceName = 'Cleaning';
+            } else if (service.toLowerCase().includes('laundry')) {
+                detectedServiceType = 'laundry';
+                detectedServiceName = 'Laundry';
+            } else if (service.toLowerCase() === 'cooking assistance') {
+                detectedServiceType = 'cooking';
+                detectedServiceName = 'Cooking';
+            } else if (service.toLowerCase() === 'cleaning services') {
+                detectedServiceType = 'cleaning';
+                detectedServiceName = 'Cleaning';
+            } else if (service.toLowerCase() === 'laundry services') {
+                detectedServiceType = 'laundry';
+                detectedServiceName = 'Laundry';
+            }
+        } else {
+            // Try to detect from URL path
+            const path = location.pathname;
+            if (path.includes('electrician')) {
+                detectedServiceType = 'electrician';
+                detectedServiceName = 'Electrician';
+            } else if (path.includes('plumber')) {
+                detectedServiceType = 'plumber';
+                detectedServiceName = 'Plumber';
+            } else if (path.includes('water-supply')) {
+                detectedServiceType = 'water-supply';
+                detectedServiceName = 'Water Supply';
+            } else if (path.includes('nurse')) {
+                detectedServiceType = 'nurse';
+                detectedServiceName = 'Nurse';
+            } else if (path.includes('caretaker')) {
+                detectedServiceType = 'caretaker';
+                detectedServiceName = 'Caretaker';
+            } else if (path.includes('babysitter')) {
+                detectedServiceType = 'babysitter';
+                detectedServiceName = 'Babysitter';
+            } else if (path.includes('maid')) {
+                detectedServiceType = 'maid-services';
+                detectedServiceName = 'Maid Services';
+            }
+        }
+        
+        console.log('Service from state:', service);
+        console.log('Service type from state:', serviceInfo.serviceType);
+        console.log('Detected service type:', detectedServiceType);
+        console.log('Available helpers for service:', availableHelpersData[detectedServiceType] || availableHelpersData.default);
+        console.log('All available helper data keys:', Object.keys(availableHelpersData));
+
+        setServiceType(detectedServiceType);
+        setServiceName(detectedServiceName);
+        setHelpers(availableHelpersData[detectedServiceType] || availableHelpersData.default);
+    }, [location]);
+
     return (
         <div className={styles['container']}>
-          <div className={styles["header"]}>
-        <Link to="/">
-          <div className={styles["logo"]}>
-            Need<span style={{ color: "#5CE1E6" }}>Station</span>
-          </div>
-        </Link>
-        <div className={styles["progress-bar"]}>
-          <div className={`${styles["step"]} ${styles["active"]}`}>
-            <div className={styles["circle"]}></div>
-            
-          </div>
-          <div className={styles["line"]}></div>
-          <div className={styles["step"]}>
-            <div className={styles["circle"]}></div>
-            
-          </div> <div className={styles["line1"]}></div><span className={styles["helper-list"]}>Browse Taskers and Price</span>
-          <div className={styles["line1"]}></div>
-          <div className={styles["step"]}>
-            <div className={styles["circle"]}></div>
-          </div>
-          <div className={styles["line"]}></div>
-          <div className={styles["step"]}>
-            <div className={styles["circle"]}></div>
-          </div>
-        </div>
-      </div>
-
-      <div className={styles["container2"]}>
-            <div className={styles['rectangle']}>
-                {/* Date Section */}
-                <div className={styles['date-group']}>
-                    <h2>Date</h2>
-                    <div className={styles['date-options']}>
-                        <button>Today</button>
-                        <button>Within 2 Days</button>
-                        <button>Within 2 Weeks</button>
-                        <button>Choose Dates</button>
+            <div className={styles["header"]}>
+                <Link to="/">
+                    <div className={styles["logo"]}>
+                        Need<span style={{ color: "#5CE1E6" }}>Station</span>
                     </div>
-                </div>
-
-                {/* Time of the Day Section */}
-                <div className={styles['time-group']}>
-                    <h2>Time Of The Day</h2>
-                    <div className={styles['time-options']}>
-                        <label>
-                            <input type="checkbox" /> Morning (8am - 12pm)
-                        </label>
-                        <label>
-                            <input type="checkbox" /> Afternoon (12pm - 5pm)
-                        </label>
-                        <label>
-                            <input type="checkbox" /> Evening (5pm - 9:30pm)
-                        </label>
+                </Link>
+                <div className={styles["progress-bar"]}>
+                    <div className={`${styles["step"]} ${styles["active"]}`}>
+                        <div className={styles["circle"]}></div>
                     </div>
-                </div>
-
-                {/* Price Section */}
-                <div className={styles['price-group']}>
-                    <h2>Price</h2>
-                    <p>The Average Hourly Rate For Cleaning Is $$$</p>
+                    <div className={styles["line"]}></div>
+                    <div className={styles["step"]}>
+                        <div className={styles["circle"]}></div>
+                    </div>
+                    <div className={styles["line1"]}></div>
+                    <span className={styles["helper-list"]}>Browse {serviceName} Taskers and Price</span>
+                    <div className={styles["line1"]}></div>
+                    <div className={styles["step"]}>
+                        <div className={styles["circle"]}></div>
+                    </div>
+                    <div className={styles["line"]}></div>
+                    <div className={styles["step"]}>
+                        <div className={styles["circle"]}></div>
+                    </div>
                 </div>
             </div>
 
-            {/* Tasker Profiles */}
-            {[
-                {
-                    name: 'Rina Choudhary',
-                    image: image1,
-                    rate: '54$/hr',
-                    reviews: '5.0 (50 reviews)',
-                    tasks: '32 furniture assembly tasks',
-                },
-                {
-                    name: 'Huzefa Qureshi',
-                    image: image2,
-                    rate: '54$/hr',
-                    reviews: '5.0 (50 reviews)',
-                    tasks: '32 furniture assembly tasks',
-                },
-                {
-                    name: 'Jane Austin',
-                    image: image3,
-                    rate: '54$/hr',
-                    reviews: '5.0 (50 reviews)',
-                    tasks: '32 furniture assembly tasks',
-                },
-            ].map((tasker, index) => ( <Link to = "/payment-gateway">
-                <div key={index} className={styles['tasker-profile']}>
-                    {/* Profile Section */}
-                    <div className={styles['profile-section']}>
-                        <div className={styles['profile-image']}>
-                            <img src={tasker.image} alt="Profile Photo" />
+            <div className={styles["container2"]}>
+                <div className={styles['rectangle']}>
+                    {/* Date Section */}
+                    <div className={styles['date-group']}>
+                        <h2>Date</h2>
+                        <div className={styles['date-options']}>
+                            <button>Today</button>
+                            <button>Within 2 Days</button>
+                            <button>Within 2 Weeks</button>
+                            <button>Choose Dates</button>
                         </div>
-                        <p className={styles['profile-link']}>View Profile & reviews</p>
-                        <button className={styles['select-button']}>Select and continue</button>
-                        <p className={styles['note']}>
-                            You can call your Tasker, adjust task details, or change task time after booking.
-                        </p>
                     </div>
 
-                    {/* Info Section */}
-                    <div className={styles['info-section']}>
-                        <div className={styles['info-header']}>
-                            <h2 className={styles['tasker-name']}>{tasker.name}</h2>
-                            <div className={styles['rate']}>{tasker.rate}</div>
-                        </div>
-                        <p className={styles['reviews']}>{tasker.reviews}</p>
-                        <p className={styles['tasks']}>{tasker.tasks}</p>
-                        <div className={styles['help-section']}>
-                            <h3>How can I help:</h3>
-                            <p className={styles['help-description']}>
-                                Meticulous cleaner with over 5+ years of experience in cleaning private apartments.
-                                Achieved 100% adherence to sanitization policies and received consistently high customer
-                                satisfaction rating. Maintained a highly hygienic environment by sanitizing and
-                                disinfecting surfaces equipment...
-                                <span className={styles['read-more']}>Read more</span>
-                            </p>
+                    {/* Time of the Day Section */}
+                    <div className={styles['time-group']}>
+                        <h2>Time Of The Day</h2>
+                        <div className={styles['time-options']}>
+                            <label>
+                                <input type="checkbox" /> Morning (8am - 12pm)
+                            </label>
+                            <label>
+                                <input type="checkbox" /> Afternoon (12pm - 5pm)
+                            </label>
+                            <label>
+                                <input type="checkbox" /> Evening (5pm - 9:30pm)
+                            </label>
                         </div>
                     </div>
-                </div> </Link>
-            ))}
+
+                    {/* Price Section */}
+                    <div className={styles['price-group']}>
+                        <h2>Price</h2>
+                        <p>The Average Hourly Rate For {serviceName} Is $$$</p>
+                    </div>
+                </div>
+
+                {/* Tasker Profiles */}
+                {helpers.map((tasker, index) => (
+                    <Link to="/payment-gateway" key={tasker.id}>
+                        <div className={styles['tasker-profile']}>
+                            {/* Profile Section */}
+                            <div className={styles['profile-section']}>
+                                <div className={styles['profile-image']}>
+                                    <img src={tasker.image} alt="Profile Photo" />
+                                </div>
+                                <p className={styles['profile-link']}>View Profile & reviews</p>
+                                <button className={styles['select-button']}>Select and continue</button>
+                                <p className={styles['note']}>
+                                    You can call your Tasker, adjust task details, or change task time after booking.
+                                </p>
+                            </div>
+
+                            {/* Info Section */}
+                            <div className={styles['info-section']}>
+                                <div className={styles['info-header']}>
+                                    <h2 className={styles['tasker-name']}>{tasker.name}</h2>
+                                    <div className={styles['rate']}>{tasker.rate}</div>
+                                </div>
+                                <p className={styles['reviews']}>{tasker.reviews}</p>
+                                <p className={styles['tasks']}>{tasker.tasks}</p>
+                                <p className={styles['experience']}>Experience: {tasker.experience}</p>
+                                <div className={styles['help-section']}>
+                                    <h3>How can I help:</h3>
+                                    <p className={styles['help-description']}>
+                                        {tasker.description}
+                                        <span className={styles['read-more']}>Read more</span>
+                                    </p>
+                                    <div className={styles['specialties']}>
+                                        <h4>Specialties:</h4>
+                                        <ul>
+                                            {tasker.specialties.map((specialty, idx) => (
+                                                <li key={idx}>{specialty}</li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </Link>
+                ))}
             </div>
         </div>
     );

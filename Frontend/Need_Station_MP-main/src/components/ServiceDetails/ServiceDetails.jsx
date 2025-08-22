@@ -19,7 +19,7 @@ const ServiceDetails = ({ data }) => {
 
   return (
     <>
-      <div className={styles["container"]}>
+      <div className={`${styles["container"]} page-content-spacing`}>
         <div className={styles["text-content"]}>
           <h1>
             {data.heading.split("").map((letter, index) => (

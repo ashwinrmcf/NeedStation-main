@@ -37,9 +37,9 @@ const Cards = () => {
           <div className={`card ${styles["card"]}`}>
             <img src={image3} className="card-img-top" alt="Household Services"/>
             <div className="card-body">
-              <h5 className={`card-title ${styles["cardTitle"]}`}>Flat and Maid Services</h5>
-              <p className={`card-text ${styles["cardBody"]}`}>Quality assistance for your home with rental flats and dedicated housekeeping</p>
-              <Link to="/flat-rental-home" className={`btn btn-primary ${styles["cardButton"]}`}>Learn More</Link>
+              <h5 className={`card-title ${styles["cardTitle"]}`}>Maid Services</h5>
+              <p className={`card-text ${styles["cardBody"]}`}>Quality assistance for your home and dedicated housekeeping</p>
+              <Link to="/maid-services" className={`btn btn-primary ${styles["cardButton"]}`}>Learn More</Link>
             </div>
           </div>
         </div>

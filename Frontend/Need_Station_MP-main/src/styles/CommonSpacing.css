@@ -1,0 +1,30 @@
+/* Common spacing for all frontend pages except dashboards */
+.page-content-spacing {
+  margin-top: 32vh; /* Increased spacing between header and content */
+  padding-bottom: 4rem; /* Consistent padding at the bottom */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .page-content-spacing {
+    margin-top: 24vh; /* Slightly reduced on mobile but still spacious */
+  }
+}
+
+/* Extra spacing for form containers */
+.form-content-spacing {
+  margin-top: 22vh;
+  margin-bottom: 4rem;
+}
+
+/* Reduced spacing for signup/login forms */
+.signup-form-spacing {
+  margin-top: 15vh; /* Reduced spacing for signup page */
+  margin-bottom: 4rem;
+}
+
+/* Main section spacing */
+.main-section-spacing {
+  margin-bottom: 3rem;
+  padding: 2rem;
+}

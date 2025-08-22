@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import styles from "./Login.module.css";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../store/AuthContext.jsx";
@@ -9,6 +9,11 @@ const Login = () => {
   const [formData, setFormData] = useState({ username: "", password: "" });
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
+  const location = useLocation();
+  
+  // Check if we have redirection info from service pages
+  const redirectPath = location.state?.redirectAfterLogin || "/";
+  const serviceData = location.state?.serviceData;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -26,7 +31,14 @@ const Login = () => {
       if (response.ok) {
         setMessage(data.message);
         login(data.username);
-        navigate("/");
+        localStorage.setItem("username",data.username);
+        
+        // If we came from a service page, redirect to user-details with the service data
+        if (redirectPath === '/user-details' && serviceData) {
+          navigate(redirectPath, { state: serviceData });
+        } else {
+          navigate("/");
+        }
       } else {
         setMessage(data.message || "Login failed.");
       }
@@ -51,7 +63,7 @@ const Login = () => {
         </Link>
       </div>
 
-      <div className={styles["form-container"]}>
+      <div className={`${styles["form-container"]} signup-form-spacing`}>
         <h2>Login</h2>
         <input
           type="text"

@@ -10,4 +10,17 @@ body {
   margin: 0;
   font-family: 'Poppins', sans-serif;
   background: #00071A;
+  padding-top: 0; /* Removed padding to fix layout */
 } 
+
+/* Style adjustments for content area */
+#root > .container, 
+#root > div > .container,
+main {
+  padding-top: 0;
+}
+
+/* Adjust other page elements for fixed header */
+.custom-carousel {
+  margin-top: 40px !important;
+}

@@ -21,7 +21,7 @@ public class UserController {
 
     @PostMapping("/update-location")
     public ResponseEntity<?> updateLocation(@RequestBody LocationDTO locationDTO) {
-        Optional<User> optionalUser = userRepository.findByEmail(locationDTO.getEmail());
+        Optional<User> optionalUser = userRepository.findByUsername(locationDTO.getUsername()); // Changed to findByUsername()
 
         if (optionalUser.isEmpty()) {
             return ResponseEntity.badRequest().body("User not found");

@@ -1,52 +1,58 @@
-const HowItWorks = () => {
-    return (
-      <section className="text-white py-12 px-4 sm:px-8 lg:px-16">
-        <h2 className="text-center text-4xl font-semibold mb-10">How it works</h2>
+
+import React from 'react';
+import { CheckCircle, MessageCircle, Calendar } from 'lucide-react';
+
+export default function HowItWorks() {
+  const steps = [
+    {
+      icon: <MessageCircle size={28} className="text-cyan-400" />,
+      number: 1,
+      title: "Describe Your Task",
+      description: "Tell us what you need done, when and where it works for you."
+    },
+    {
+      icon: <CheckCircle size={28} className="text-cyan-300" />,
+      number: 2,
+      title: "Choose Your Tasker",
+      description: "Browse trusted Taskers by skills, reviews, and price. Chat with them to confirm details."
+    },
+    {
+      icon: <Calendar size={28} className="text-cyan-300" />,
+      number: 3,
+      title: "Get It Done!",
+      description: "Your Tasker arrives and gets the job done. Pay securely and leave a review, all through NeedStation."
+    }
+  ];
+
+  return (
+    <div className=" text-white py-16">
+      <div className="max-w-6xl mx-auto px-4">
+        <h3 className="text-4xl font-bold text-center mb-16 text-white">
+          How it <span className='text-cyan-300'>works</span> 
+        </h3>
         
-        {/* Container for all steps, aligns items horizontally on larger screens */}
-        <div className="flex flex-col lg:flex-row justify-between items-start gap-8 lg:gap-12" style={{ marginLeft: "5vw" }}>
-          
-          {/* Step 1 */}
-          <div className="flex flex-col items-center text-center lg:items-start lg:text-left lg:w-1/3">
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center justify-center bg-cyan-400 text-black rounded-full w-10 h-10 text-lg font-bold">
-                1
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {steps.map((step, index) => (
+            <div key={index} className="flex flex-col items-center text-center">
+              <div className="bg-gray-800 rounded-full p-6 mb-6 relative">
+                {step.icon}
+                <div className="absolute -top-2 -left-2 bg-cyan-400 text-gray-900 rounded-full w-8 h-8 flex items-center justify-center font-bold">
+                  {step.number}
+                </div>
               </div>
-              <h3 className="text-3xl font-semibold text-cyan-400">Describe Your Task</h3>
+              
+              <h3 className="text-xl font-semibold mb-3">{step.title}</h3>
+              <p className="text-gray-300">{step.description}</p>
             </div>
-            <p className="text-gray-300 mt-2 max-w-xs font-medium">
-              Tell us what you need done, when and where it works for you.
-            </p>
-          </div>
-          
-          {/* Step 2 */}
-          <div className="flex flex-col items-center text-center lg:items-start lg:text-left lg:w-1/3">
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center justify-center bg-cyan-400 text-black rounded-full w-10 h-10 text-lg font-bold">
-                2
-              </div>
-              <h3 className="text-3xl font-semibold text-cyan-400">Choose Your Tasker</h3>
-            </div>
-            <p className="text-gray-300 mt-2 max-w-xs font-medium">
-              Browse trusted Taskers by skills, reviews, and price. Chat with them to confirm details.
-            </p>
-          </div>
-  
-          {/* Step 3 */}
-          <div className="flex flex-col items-center text-center lg:items-start lg:text-left lg:w-1/3">
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center justify-center bg-cyan-400 text-black rounded-full w-10 h-10 text-lg font-bold">
-                3
-              </div>
-              <h3 className="text-3xl font-semibold text-cyan-400">Get it Done!</h3>
-            </div>
-            <p className="text-gray-300 mt-2 max-w-xs font-medium">
-              Your Tasker arrives and gets the job done. Pay securely and leave a review.
-            </p>
-          </div>
+          ))}
         </div>
-      </section>
-    );
-  };
-  
-  export default HowItWorks;
+        
+        <div className="mt-12 flex justify-center">
+          <button className="bg-cyan-300 hover:bg-cyan-400 text-gray-900 font-bold py-3 px-8 rounded-md transition-colors">
+            Get Started
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}

@@ -1,0 +1,49 @@
+/* Force dropdown styling for Hindi language */
+html[lang="hi"] .taskerContainer .taskerDropdown {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  z-index: 9999 !important;
+  pointer-events: all !important;
+  transform: none !important;
+  animation: none !important;
+  position: absolute !important;
+  top: calc(100% + 10px) !important;
+  right: 0 !important;
+}
+
+/* Override any animation or transform properties */
+html[lang="hi"] .taskerContainer .taskerDropdown * {
+  animation: none !important;
+  transition: none !important;
+}
+
+/* Fix for Framer Motion animations */
+html[lang="hi"] .taskerContainer:hover div[style*="opacity"],
+html[lang="hi"] .taskerContainer:hover div[style*="transform"] {
+  opacity: 1 !important;
+  transform: none !important;
+  visibility: visible !important;
+}
+
+/* Make sure the dropdown arrow is visible */
+html[lang="hi"] .taskerContainer .dropdownArrow {
+  display: block !important;
+}
+
+/* Custom styling for the dropdown in Hindi */
+html[lang="hi"] .taskerContainer .dropdownContent {
+  background: #121212 !important;
+  border: 2px solid #00ced1 !important;
+  border-radius: 8px !important;
+  overflow: hidden !important;
+}
+
+/* Ensure dropdown items are visible in Hindi mode */
+html[lang="hi"] .taskerContainer .dropdownItem {
+  display: flex !important;
+  opacity: 1 !important;
+  transform: none !important;
+  padding: 14px 15px !important;
+  cursor: pointer !important;
+}
