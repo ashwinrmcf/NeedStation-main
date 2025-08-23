@@ -30,8 +30,9 @@ const Login = () => {
       const data = await response.json();
       if (response.ok) {
         setMessage(data.message);
-        login(data.username);
-        localStorage.setItem("username",data.username);
+        const displayName = data.displayName || data.username;
+        login(displayName);
+        localStorage.setItem("username", displayName);
         
         // If we came from a service page, redirect to user-details with the service data
         if (redirectPath === '/user-details' && serviceData) {
@@ -60,8 +61,9 @@ const Login = () => {
       const data = await response.json();
       if (response.ok && data.success) {
         setMessage("Google login successful!");
-        login(data.user.name);
-        localStorage.setItem("username", data.user.name);
+        const displayName = `${data.user.firstName} ${data.user.lastName}`.trim();
+        login(displayName);
+        localStorage.setItem("username", displayName);
         localStorage.setItem("userEmail", data.user.email);
         localStorage.setItem("authToken", data.token);
         

@@ -132,7 +132,7 @@ const Signup = () => {
     }
   };
 
-  // Step 2: Complete signup
+  // Step 2: Complete signup (works for both regular and Google users)
   const handleStep2 = async () => {
     if (!formData.password || !formData.confirmPassword) {
       setMessage('Please fill in all fields');
@@ -152,7 +152,9 @@ const Signup = () => {
         body: JSON.stringify({
           email: formData.email,
           password: formData.password,
-          confirmPassword: formData.confirmPassword
+          confirmPassword: formData.confirmPassword,
+          firstName: formData.firstName,
+          lastName: formData.lastName
         }),
       });
       const data = await response.json();
@@ -196,7 +198,7 @@ const Signup = () => {
   const handleGoogleSignup = async (credentialResponse) => {
     try {
       setIsLoading(true);
-      const response = await fetch("http://localhost:8080/api/auth/google", {
+      const response = await fetch("http://localhost:8080/api/auth/google/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -206,12 +208,15 @@ const Signup = () => {
       
       const data = await response.json();
       if (response.ok && data.success) {
-        setMessage("Google signup successful!");
-        login(data.user.name);
-        localStorage.setItem("username", data.user.name);
-        localStorage.setItem("userEmail", data.user.email);
-        localStorage.setItem("authToken", data.token);
-        navigate("/");
+        // Store Google user data temporarily and move to password setup
+        setFormData({
+          ...formData,
+          firstName: data.user.firstName || data.user.name.split(' ')[0] || '',
+          lastName: data.user.lastName || data.user.name.split(' ').slice(1).join(' ') || '',
+          email: data.user.email
+        });
+        setMessage("Google account verified! Please set a password to complete signup.");
+        setStep(3); // Go directly to password setup step
       } else {
         setMessage(data.message || "Google signup failed.");
       }

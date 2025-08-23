@@ -14,6 +14,10 @@ public class SignupStep2Request {
     
     @NotBlank(message = "Confirm password is required")
     private String confirmPassword;
+    
+    private String firstName;
+    
+    private String lastName;
 
     // Default constructor
     public SignupStep2Request() {}
@@ -22,6 +26,14 @@ public class SignupStep2Request {
         this.email = email;
         this.password = password;
         this.confirmPassword = confirmPassword;
+    }
+    
+    public SignupStep2Request(String email, String password, String confirmPassword, String firstName, String lastName) {
+        this.email = email;
+        this.password = password;
+        this.confirmPassword = confirmPassword;
+        this.firstName = firstName;
+        this.lastName = lastName;
     }
 
     // Getters and Setters
@@ -47,5 +59,21 @@ public class SignupStep2Request {
 
     public void setConfirmPassword(String confirmPassword) {
         this.confirmPassword = confirmPassword;
+    }
+    
+    public String getFirstName() {
+        return firstName;
+    }
+    
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+    
+    public String getLastName() {
+        return lastName;
+    }
+    
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 }

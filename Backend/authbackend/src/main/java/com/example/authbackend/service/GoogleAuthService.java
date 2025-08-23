@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.Map;
 import java.util.Optional;
 import java.util.logging.Logger;
 
@@ -40,7 +41,9 @@ public class GoogleAuthService {
                     .setAudience(Collections.singletonList(googleClientId))
                     .build();
 
+            logger.info("Verifying Google ID token with client ID: " + googleClientId);
             GoogleIdToken idToken = verifier.verify(request.getIdToken());
+            logger.info("Token verification result: " + (idToken != null ? "SUCCESS" : "FAILED"));
             
             if (idToken != null) {
                 GoogleIdToken.Payload payload = idToken.getPayload();
@@ -96,6 +99,53 @@ public class GoogleAuthService {
             newUser.setProvider("GOOGLE");
             newUser.setVerified(true); // Google users are pre-verified
             return userRepository.save(newUser);
+        }
+    }
+
+    /**
+     * Verify Google token for signup flow - returns user data without creating account
+     */
+    public java.util.Map<String, Object> verifyGoogleTokenForSignup(String idToken) {
+        try {
+            // Verify Google ID Token
+            GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(
+                    new NetHttpTransport(), 
+                    GsonFactory.getDefaultInstance())
+                    .setAudience(Collections.singletonList(googleClientId))
+                    .build();
+
+            GoogleIdToken token = verifier.verify(idToken);
+            
+            if (token != null) {
+                GoogleIdToken.Payload payload = token.getPayload();
+                
+                String email = payload.getEmail();
+                String name = (String) payload.get("name");
+                
+                // Check if user already exists
+                if (userRepository.findByEmail(email).isPresent()) {
+                    return java.util.Map.of("error", "An account with this email already exists. Please use login instead.");
+                }
+                
+                // Split name into first and last name
+                String[] nameParts = name.split(" ", 2);
+                String firstName = nameParts[0];
+                String lastName = nameParts.length > 1 ? nameParts[1] : "";
+                
+                return java.util.Map.of(
+                    "email", email,
+                    "name", name,
+                    "firstName", firstName,
+                    "lastName", lastName
+                );
+                
+            } else {
+                return java.util.Map.of("error", "Invalid Google ID token");
+            }
+            
+        } catch (Exception e) {
+            logger.severe("Google token verification failed: " + e.getMessage());
+            return java.util.Map.of("error", "Google token verification failed: " + e.getMessage());
         }
     }
 

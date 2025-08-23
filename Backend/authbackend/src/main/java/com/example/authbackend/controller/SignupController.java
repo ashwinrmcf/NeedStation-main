@@ -106,12 +106,24 @@ public class SignupController {
                 return ResponseEntity.badRequest().body(response);
             }
 
-            // Verify OTP was completed for this email and get user data
-            Map<String, String> userData = emailOtpService.getPendingUserData(request.getEmail());
-            if (userData == null) {
-                response.put("success", false);
-                response.put("message", "Email verification required. Please complete step 1.");
-                return ResponseEntity.badRequest().body(response);
+            // Check if this is a Google signup (has firstName/lastName in request) or regular signup
+            boolean isGoogleSignup = request.getFirstName() != null && request.getLastName() != null;
+            
+            Map<String, String> userData;
+            if (isGoogleSignup) {
+                // For Google signups, use the data from the request directly
+                userData = Map.of(
+                    "firstName", request.getFirstName(),
+                    "lastName", request.getLastName()
+                );
+            } else {
+                // For regular signups, verify OTP was completed
+                userData = emailOtpService.getPendingUserData(request.getEmail());
+                if (userData == null) {
+                    response.put("success", false);
+                    response.put("message", "Email verification required. Please complete step 1.");
+                    return ResponseEntity.badRequest().body(response);
+                }
             }
 
             // Create user
@@ -120,7 +132,7 @@ public class SignupController {
             user.setPassword(request.getPassword()); // Will be encoded by AuthService
             user.setFirstName(userData.get("firstName"));
             user.setLastName(userData.get("lastName"));
-            user.setProvider("LOCAL");
+            user.setProvider(isGoogleSignup ? "GOOGLE" : "LOCAL");
             user.setVerified(true); // Email was verified via OTP
 
             // Create user using AuthService
@@ -139,8 +151,10 @@ public class SignupController {
                 return ResponseEntity.internalServerError().body(response);
             }
             
-            // Clear OTP data
-            emailOtpService.clearOtpData(request.getEmail());
+            // Clear OTP data (only for regular signups, not Google)
+            if (!isGoogleSignup) {
+                emailOtpService.clearOtpData(request.getEmail());
+            }
 
             response.put("success", true);
             response.put("message", "Account created successfully");
