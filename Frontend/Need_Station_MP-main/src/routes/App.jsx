@@ -11,7 +11,7 @@ import Footer from "../components/Footer/Footer.jsx";
 import ScrollToTop from "../hooks/ScrollToTop.jsx";
 import { ToastContainer } from "react-toastify";
 import translationService from "../services/TranslationService";
-import ChatBot from "../components/ChatBot.jsx";
+import NeedBot from "../components/NeedBot.jsx";
 
 import { Cloudinary } from "@cloudinary/url-gen";
 import { AdvancedImage } from '@cloudinary/react';
@@ -327,7 +327,7 @@ function App() {
       </div>
       <Outlet />
       <Footer />
-      <ChatBot />
+      <NeedBot />
       <ToastContainer />
     </>
   );

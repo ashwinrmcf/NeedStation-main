@@ -23,21 +23,24 @@ public class AuthController {
     // ✅ Fix: Add Login Endpoint
     @PostMapping("/login")
     public ResponseEntity<Map<String, Object>> loginUser(@RequestBody Map<String, String> request) {
-        String username = request.get("username");
+        String emailOrContact = request.get("emailOrContact");
         String password = request.get("password");
 
-        Optional<User> userOptional = userRepository.findByUsername(username);
+        // Try to find user by email first
+        Optional<User> userOptional = userRepository.findByEmail(emailOrContact);
+        
         if (userOptional.isPresent()) {
             User user = userOptional.get();
             if (passwordEncoder.matches(password, user.getPassword())) {
+                String displayName = user.getFirstName() + " " + user.getLastName();
                 return ResponseEntity.ok(Map.of(
                         "message", "Login successful",
-                        "username", user.getUsername(),
+                        "username", displayName.trim(),
                         "email", user.getEmail()
                 ));
             }
         }
-        return ResponseEntity.status(401).body(Map.of("message", "Invalid credentials"));
+        return ResponseEntity.status(401).body(Map.of("message", "Invalid email or password"));
     }
     @PostMapping("/register")  // ✅ Ensure this matches the frontend request
     public ResponseEntity<Map<String, String>> registerUser(@RequestBody Map<String, String> request) {

@@ -58,7 +58,6 @@ const RelatedServices = ({ cards, heading, serviceContext }) => {
                   'water truck': 'water-supply',
                   'underground tank': 'water-supply',
                   'motor': 'water-supply',
-                  'home-visit': 'water-supply',
                 };
                 if (subToParent[t]) return subToParent[t];
                 return t.replace(/\s+/g, '-').replace('assistance', '').replace('services', '').trim();

@@ -18,6 +18,19 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    @Column(name = "first_name")
+    private String firstName;
+
+    @Column(name = "last_name")
+    private String lastName;
+
+
+    @Column(name = "auth_provider")
+    private String provider;
+
+    @Column(name = "is_verified")
+    private Boolean verified = false;
+
     public Long getId() {
         return id;
     }
@@ -68,5 +81,50 @@ public class User {
 
     public void setLocationAddress(String locationAddress) {
         this.locationAddress = locationAddress;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+
+    public String getProvider() {
+        return provider;
+    }
+
+    public void setProvider(String provider) {
+        this.provider = provider;
+    }
+
+    public Boolean getVerified() {
+        return verified;
+    }
+
+    public void setVerified(Boolean verified) {
+        this.verified = verified;
+    }
+
+    public Double getLocationLat() {
+        return locationLat;
+    }
+
+    public Double getLocationLng() {
+        return locationLng;
+    }
+
+    public String getLocationAddress() {
+        return locationAddress;
     }
 }

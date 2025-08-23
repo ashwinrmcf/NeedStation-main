@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/chatbot")
@@ -23,7 +22,7 @@ public class ChatbotController {
 
     @PostMapping
     public ResponseEntity<ChatbotResponse> getChatbotResponse(@RequestBody ChatRequest request) { // Changed back to ChatRequest
-        ChatbotResponse response = chatbotService.generateResponse(request.getMessage()); // Use getMessage()
+        ChatbotResponse response = chatbotService.processQuery(request.getMessage()); // Use getMessage()
         return ResponseEntity.ok(response);
     }
 }

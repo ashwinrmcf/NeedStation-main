@@ -5,44 +5,45 @@ import ajitesh from "../../assets/images/AboutUs/ajitesh.jpg";
 import abhishek from "../../assets/images/AboutUs/abhishek.jpg";
 import zainab from "../../assets/images/AboutUs/zainab.jpg";
 import aman from "../../assets/images/AboutUs/aman.jpg";
-import ashutosh from "../../assets/images/AboutUs/ashutosh2.jpeg";
+import navneet from "../../assets/images/AboutUs/navneet.jpeg";
+import bairagi from "../../assets/images/AboutUs/bairagi.jpeg";
 import logo from "../../assets/images/AboutUs/logo.jpeg";
 
 const AboutUs = () => {
   const teamMembers = [
     {
-      name: "Zainab Ansari",
-      role: "CEO",
-      image: zainab,
-      description: "Leads the strategic vision and overall operations of NeedStation, ensuring we deliver on our promise of quality service.",
-    },
-    {
       name: "Ashwin Soni",
-      role: "Business Lead",
+      role: "Financial Operations Specialist",
       image: ashwin,
       description: "Focuses on enhancing customer experience and resolving service issues to achieve maximum customer satisfaction.",
     },
     {
+      name: "Zainab Ansari",
+      role: "Customer Experience Coordinator",
+      image: zainab,
+      description: "Leads the strategic vision and overall operations of NeedStation, ensuring we deliver on our promise of quality service.",
+    },
+    {
       name: "Abhishek Gupta",
-      role: "CTO",
+      role: "Technology Infra Specialist",
       image: abhishek,
       description: "Oversees the technological infrastructure and development of our platform, making service booking seamless and efficient.",
     },
     {
-      name: "Ashutosh Garg",
-      role: "Operations Manager",
-      image: ashutosh,
+      name: "Navneet Chauhan",
+      role: "Strategic Partnership Coordinator",
+      image: navneet,
       description: "Manages day-to-day operations and service provider relationships to ensure reliable and high-quality service delivery.",
     },
     {
-      name: "Aman Soni",
-      role: "Marketing Director",
-      image: aman,
+      name: "Aman Bairagi",
+      role: "Business Development Facilitator",
+      image: bairagi,
       description: "Develops and implements marketing strategies to expand our reach and communicate the benefits of our services.",
     },
     {
       name: "Ajitesh Tripathi",
-      role: "Human Resources Manager",
+      role: "Operations Manager",
       image: ajitesh,
       description: "Responsible for recruiting, training, and managing our team of service providers to maintain service quality standards.",
     },

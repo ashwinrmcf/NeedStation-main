@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Mail, Phone, MapPin, ChevronDown, ChevronUp, Send } from 'lucide-react';
+import axios from 'axios';
 
 export default function ContactUs() {
   const [activeFaq, setActiveFaq] = useState(null);
@@ -15,11 +16,38 @@ export default function ContactUs() {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = () => {
-    // Handle form submission logic here
-    console.log('Form submitted:', formData);
-    alert('Message sent successfully!');
-    setFormData({ name: '', email: '', subject: '', message: '' });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitMessage, setSubmitMessage] = useState('');
+
+  const handleSubmit = async () => {
+    // Validation
+    if (!formData.name || !formData.email || !formData.subject || !formData.message) {
+      setSubmitMessage('Please fill in all fields');
+      return;
+    }
+
+    setIsSubmitting(true);
+    setSubmitMessage('');
+
+    try {
+      const response = await axios.post('http://localhost:8080/api/contact', formData);
+      
+      if (response.data.success) {
+        setSubmitMessage('Message sent successfully! We\'ll get back to you soon.');
+        setFormData({ name: '', email: '', subject: '', message: '' });
+      } else {
+        setSubmitMessage('Failed to send message. Please try again.');
+      }
+    } catch (error) {
+      console.error('Contact form error:', error);
+      if (error.response?.data?.error) {
+        setSubmitMessage(error.response.data.error);
+      } else {
+        setSubmitMessage('Failed to send message. Please make sure the backend server is running.');
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const toggleFaq = (index) => {
@@ -161,12 +189,27 @@ export default function ContactUs() {
                 ></textarea>
               </div>
               
+              {submitMessage && (
+                <div className={`p-3 rounded-lg text-center ${
+                  submitMessage.includes('successfully') 
+                    ? 'bg-green-800 text-green-200' 
+                    : 'bg-red-800 text-red-200'
+                }`}>
+                  {submitMessage}
+                </div>
+              )}
+              
               <button
                 onClick={handleSubmit}
-                className="bg-teal-400 hover:bg-teal-500 text-gray-900 font-medium py-3 px-6 rounded-lg transition duration-300 flex items-center justify-center w-full md:w-auto"
+                disabled={isSubmitting}
+                className={`font-medium py-3 px-6 rounded-lg transition duration-300 flex items-center justify-center w-full md:w-auto ${
+                  isSubmitting 
+                    ? 'bg-gray-600 text-gray-300 cursor-not-allowed' 
+                    : 'bg-teal-400 hover:bg-teal-500 text-gray-900'
+                }`}
               >
                 <Send size={18} className="mr-2" />
-                Send Message
+                {isSubmitting ? 'Sending...' : 'Send Message'}
               </button>
             </div>
           </div>
