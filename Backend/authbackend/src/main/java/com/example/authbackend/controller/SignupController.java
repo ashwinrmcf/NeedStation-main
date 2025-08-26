@@ -5,7 +5,7 @@ import com.example.authbackend.dto.SignupStep2Request;
 import com.example.authbackend.dto.EmailOtpVerificationRequest;
 import com.example.authbackend.model.User;
 import com.example.authbackend.service.EmailOtpService;
-import com.example.authbackend.service.AuthService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import com.example.authbackend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +23,7 @@ public class SignupController {
     private EmailOtpService emailOtpService;
 
     @Autowired
-    private AuthService authService;
+    private BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
     private UserRepository userRepository;
@@ -132,24 +132,30 @@ public class SignupController {
             user.setPassword(request.getPassword()); // Will be encoded by AuthService
             user.setFirstName(userData.get("firstName"));
             user.setLastName(userData.get("lastName"));
+            // Generate unique username from email (part before @)
+            String baseUsername = request.getEmail().split("@")[0];
+            String username = baseUsername;
+            int counter = 1;
+            
+            // Ensure username is unique
+            while (userRepository.findByUsername(username).isPresent()) {
+                username = baseUsername + counter;
+                counter++;
+            }
+            user.setUsername(username);
             user.setProvider(isGoogleSignup ? "GOOGLE" : "LOCAL");
             user.setVerified(true); // Email was verified via OTP
 
-            // Create user using AuthService
-            String result = authService.registerUser(user.getEmail(), user.getEmail(), user.getPassword());
-            if (!"User registered successfully".equals(result)) {
+            // Check if user already exists
+            if (userRepository.findByEmail(user.getEmail()).isPresent()) {
                 response.put("success", false);
-                response.put("message", result);
+                response.put("message", "User already exists");
                 return ResponseEntity.badRequest().body(response);
             }
             
-            // Get the saved user
-            User savedUser = userRepository.findByEmail(request.getEmail()).orElse(null);
-            if (savedUser == null) {
-                response.put("success", false);
-                response.put("message", "Failed to retrieve created user");
-                return ResponseEntity.internalServerError().body(response);
-            }
+            // Encode password and save user directly
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            User savedUser = userRepository.save(user);
             
             // Clear OTP data (only for regular signups, not Google)
             if (!isGoogleSignup) {

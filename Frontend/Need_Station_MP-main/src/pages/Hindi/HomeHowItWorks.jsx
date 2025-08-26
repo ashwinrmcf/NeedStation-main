@@ -1,9 +1,9 @@
-import styles from '../HomePage/HomeHowItWorks.module.css';
+import styles from './HomeHowItWorks.module.css';
 import image from '../../assets/images/HomeHowItWorksImage.jpeg';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../store/AuthContext';
 
-const HindiHomeHowItWorks = () => {
+const HomeHowItWorks = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
 
@@ -17,7 +17,7 @@ const HindiHomeHowItWorks = () => {
       });
     } else {
       // If not logged in, redirect to signup page
-      navigate('/hi/signup');
+      navigate('/signup');
     }
   };
 
@@ -29,15 +29,15 @@ const HindiHomeHowItWorks = () => {
       <div className={`${styles["steps"]}`}>
           <div className={`${styles["step"]}`}>
               <span className={`${styles["step-number"]}`}>1</span>
-              <p>मूल्य, कौशल और समीक्षाओं के आधार पर टास्कर चुनें</p>
+              <p>मूल्य, कौशल और समीक्षाओं के आधार पर एक टास्कर चुनें</p>
           </div>
           <div className={`${styles["step"]}`}>
               <span className={`${styles["step-number"]}`}>2</span>
-              <p>आज से ही टास्कर शेड्यूल करें।</p>
+              <p>आज ही एक टास्कर को शेड्यूल करें।</p>
           </div>
           <div className={`${styles["step"]}`}>
               <span className={`${styles["step-number"]}`}>3</span>
-              <p>चैट, भुगतान, टिप और समीक्षा सभी एक ही जगह पर।</p>
+              <p>चैट करें, भुगतान करें, टिप दें और एक ही स्थान पर समीक्षा करें।</p>
           </div>
       </div>
       <button 
@@ -55,4 +55,4 @@ const HindiHomeHowItWorks = () => {
   </>
 }
 
-export default HindiHomeHowItWorks;
+export default HomeHowItWorks;

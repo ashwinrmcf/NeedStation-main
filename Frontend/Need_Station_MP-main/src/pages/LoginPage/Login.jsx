@@ -82,6 +82,9 @@ const Login = () => {
   };
 
   useEffect(() => {
+    // Set up global callback function
+    window.handleGoogleResponse = handleGoogleLogin;
+    
     // Load Google Sign-In script
     const script = document.createElement('script');
     script.src = 'https://accounts.google.com/gsi/client';
@@ -90,16 +93,43 @@ const Login = () => {
     document.body.appendChild(script);
 
     script.onload = () => {
-      if (window.google) {
-        window.google.accounts.id.initialize({
-          client_id: "YOUR_GOOGLE_CLIENT_ID", // Replace with your actual client ID
-          callback: handleGoogleLogin,
-        });
+      if (window.google && import.meta.env.VITE_GOOGLE_CLIENT_ID) {
+        try {
+          window.google.accounts.id.initialize({
+            client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
+            callback: handleGoogleLogin,
+            auto_select: false,
+            cancel_on_tap_outside: true,
+            use_fedcm_for_prompt: false
+          });
+          
+          // Render the sign-in button
+          setTimeout(() => {
+            const buttonContainer = document.querySelector('.g_id_signin');
+            if (buttonContainer) {
+              window.google.accounts.id.renderButton(buttonContainer, {
+                type: 'standard',
+                shape: 'rectangular',
+                theme: 'outline',
+                text: 'continue_with',
+                size: 'large',
+                logo_alignment: 'left',
+                width: '100%'
+              });
+            }
+          }, 100);
+        } catch (error) {
+          console.error('Google Sign-In initialization error:', error);
+        }
       }
     };
 
     return () => {
-      document.body.removeChild(script);
+      if (document.body.contains(script)) {
+        document.body.removeChild(script);
+      }
+      // Clean up global callback
+      delete window.handleGoogleResponse;
     };
   }, []);
 
@@ -150,11 +180,40 @@ const Login = () => {
             <hr />
           </span>
         </div>
+        <div 
+          id="g_id_onload"
+          data-client_id={import.meta.env.VITE_GOOGLE_CLIENT_ID}
+          data-context="signin"
+          data-ux_mode="popup"
+          data-callback="handleGoogleResponse"
+          data-auto_prompt="false"
+          data-use_fedcm_for_prompt="false">
+        </div>
+        
+        <div 
+          className="g_id_signin"
+          data-type="standard"
+          data-shape="rectangular"
+          data-theme="outline"
+          data-text="continue_with"
+          data-size="large"
+          data-logo_alignment="left"
+          style={{width: '35vw', height: '8vh', marginBottom: '10px'}}>
+        </div>
+        
         <button 
           className={`${styles["social-btn"]} ${styles["google-btn"]}`}
           onClick={() => {
             if (window.google) {
-              window.google.accounts.id.prompt();
+              try {
+                window.google.accounts.id.prompt((notification) => {
+                  if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+                    console.log('Google Sign-In prompt not displayed or skipped');
+                  }
+                });
+              } catch (error) {
+                console.error('Google Sign-In prompt error:', error);
+              }
             }
           }}
         >

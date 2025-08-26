@@ -58,6 +58,8 @@ public class GoogleAuthResponse {
     public static class UserInfo {
         private String email;
         private String name;
+        private String firstName;
+        private String lastName;
         private String picture;
 
         public UserInfo() {}
@@ -65,6 +67,14 @@ public class GoogleAuthResponse {
         public UserInfo(String email, String name, String picture) {
             this.email = email;
             this.name = name;
+            this.picture = picture;
+        }
+        
+        public UserInfo(String email, String firstName, String lastName, String picture) {
+            this.email = email;
+            this.firstName = firstName;
+            this.lastName = lastName;
+            this.name = (firstName + " " + lastName).trim();
             this.picture = picture;
         }
 
@@ -90,6 +100,22 @@ public class GoogleAuthResponse {
 
         public void setPicture(String picture) {
             this.picture = picture;
+        }
+        
+        public String getFirstName() {
+            return firstName;
+        }
+        
+        public void setFirstName(String firstName) {
+            this.firstName = firstName;
+        }
+        
+        public String getLastName() {
+            return lastName;
+        }
+        
+        public void setLastName(String lastName) {
+            this.lastName = lastName;
         }
     }
 }

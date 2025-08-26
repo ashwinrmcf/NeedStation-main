@@ -15,7 +15,7 @@ public class User {
     @Column(unique = true, nullable = false)
     private String email;
 
-    @Column(nullable = false)
+    @Column(nullable = true)  // Allow null for Google users
     private String password;
 
     @Column(name = "first_name")

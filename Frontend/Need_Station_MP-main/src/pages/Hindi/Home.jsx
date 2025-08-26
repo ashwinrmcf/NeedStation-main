@@ -1,24 +1,23 @@
-import React from "react";
-import HindiSearchbarContainer from './HindiSearchbarContainer.jsx'
-import HindiCards from './HindiCards.jsx'
-import HindiHomeHowItWorks from './HindiHomeHowItWorks.jsx'
-import HindiHomeSatisfactionContainer from './HindiHomeSatisfactionContainer.jsx'
-import HindiHomeReview from './HindiHomeReview.jsx'
-import HindiGetStarted from './HindiGetStarted.jsx'
-import "../../components/Hindi/left-align.css" // Using updated CSS with centered layout
+import SearchbarContainer from './SearchbarContainer.jsx'
+import Cards from './Cards.jsx'
+import HomeHowItWorks from './HomeHowItWorks.jsx'
+import HomeSatisfactionContainer from './HomeSatisfactionContainer.jsx'
+import HomeReview from './HomeReview.jsx'
+import HindiGetStarted from '../../components/Hindi/HindiGetStarted.jsx'
 
-// Hindi version with properly centered layout matching English design
-const HindiHome = () => {
+const Home = () => {
+
   return <>
-    <div className="content-wrapper">
-      <HindiSearchbarContainer/>
-      <HindiCards/>
-      <HindiHomeHowItWorks/>
-      <HindiHomeSatisfactionContainer/>
-      <HindiHomeReview/>
-      <HindiGetStarted/>
-    </div>
+  {/* <Header/> */}
+  <SearchbarContainer/>
+  {/* <MainCarousel/> */}
+  <Cards/>
+  <HomeHowItWorks/>
+  <HomeSatisfactionContainer/>
+  <HomeReview/>
+  <HindiGetStarted/>
+  {/* <Footer/> */}
   </>
 }
 
-export default HindiHome;
+export default Home;

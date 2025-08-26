@@ -40,7 +40,6 @@ import WhyBecomeHelper from "./pages/WhyBecomeHelper/WhyBecomeHelper.jsx";
 
 // Hindi components
 import HindiHome from "./pages/Hindi/Home.jsx";
-import HindiAboutUs from "./pages/Hindi/AboutUs.jsx";
 // We'll create more Hindi components as needed
 
 
@@ -99,7 +98,6 @@ const router = createBrowserRouter([
     element: <HindiApp />,
     children: [
       { path: "", element: <HindiHome /> },
-      { path: "about-us", element: <HindiAboutUs /> },
       // Additional Hindi routes can be added here as needed
     ],
   },

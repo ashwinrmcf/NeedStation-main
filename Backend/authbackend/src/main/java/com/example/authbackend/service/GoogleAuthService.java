@@ -60,10 +60,11 @@ public class GoogleAuthService {
                 // Generate JWT token (you can implement JWT service)
                 String jwtToken = generateJwtToken(user);
                 
-                String fullName = (user.getFirstName() != null ? user.getFirstName() : "") + 
-                             " " + (user.getLastName() != null ? user.getLastName() : "");
                 GoogleAuthResponse.UserInfo userInfo = new GoogleAuthResponse.UserInfo(
-                    user.getEmail(), fullName.trim(), "");
+                    user.getEmail(), 
+                    user.getFirstName() != null ? user.getFirstName() : "", 
+                    user.getLastName() != null ? user.getLastName() : "",
+                    picture);
                 return new GoogleAuthResponse(true, "Authentication successful", jwtToken, userInfo);
                 
             } else {
@@ -73,6 +74,19 @@ public class GoogleAuthService {
             
         } catch (Exception e) {
             logger.severe("Google authentication failed: " + e.getMessage());
+            
+            // Handle specific case where Google user is not registered
+            if (e instanceof RuntimeException && "GOOGLE_USER_NOT_REGISTERED".equals(e.getMessage())) {
+                return new GoogleAuthResponse(false, 
+                    "🔐 Account Not Found\n\n" +
+                    "It looks like you haven't created a NeedStation account with this Google email yet.\n\n" +
+                    "📝 To get started:\n" +
+                    "1. Click 'Sign Up' instead of 'Login'\n" +
+                    "2. Use 'Continue with Google' during signup\n" +
+                    "3. Complete the registration process\n\n" +
+                    "Already have an account? Make sure you're using the same email address you registered with.");
+            }
+            
             return new GoogleAuthResponse(false, "Google authentication failed: " + e.getMessage());
         }
     }
@@ -84,21 +98,15 @@ public class GoogleAuthService {
             // Update user info if needed
             User user = existingUser.get();
             // Split name into first and last name for Google users
-            String[] nameParts = name.split(" ", 2);
-            user.setFirstName(nameParts[0]);
-            user.setLastName(nameParts.length > 1 ? nameParts[1] : "");
+            if (name != null && !name.isEmpty()) {
+                String[] nameParts = name.split(" ", 2);
+                user.setFirstName(nameParts[0]);
+                user.setLastName(nameParts.length > 1 ? nameParts[1] : "");
+            }
             return userRepository.save(user);
         } else {
-            // Create new user
-            User newUser = new User();
-            newUser.setEmail(email);
-            // Split name into first and last name for Google users
-            String[] nameParts = name.split(" ", 2);
-            newUser.setFirstName(nameParts[0]);
-            newUser.setLastName(nameParts.length > 1 ? nameParts[1] : "");
-            newUser.setProvider("GOOGLE");
-            newUser.setVerified(true); // Google users are pre-verified
-            return userRepository.save(newUser);
+            // For Google login, don't auto-create users - they should signup first
+            throw new RuntimeException("GOOGLE_USER_NOT_REGISTERED");
         }
     }
 

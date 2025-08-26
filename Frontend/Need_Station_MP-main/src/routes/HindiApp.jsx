@@ -10,7 +10,7 @@ import HindiHeader from "../components/Hindi/HindiHeader.jsx";
 import HindiFooter from "../components/Hindi/HindiFooter.jsx";
 import ScrollToTop from "../hooks/ScrollToTop.jsx";
 import { ToastContainer } from "react-toastify";
-import ChatBot from "../components/ChatBot.jsx";
+import NeedBot from "../components/NeedBot.jsx";
 
 // HindiApp is a wrapper that uses dedicated Hindi components
 function HindiApp() {
@@ -21,10 +21,10 @@ function HindiApp() {
     // Set language attribute
     document.documentElement.lang = 'hi';
     
-    // Use Poppins font for Hindi as well (same as English)
+    // Use Noto Sans Devanagari font for Hindi
     const fontLink = document.createElement('link');
     fontLink.rel = 'stylesheet';
-    fontLink.href = 'https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap';
+    fontLink.href = 'https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@300;400;500;600;700&display=swap';
     document.head.appendChild(fontLink);
     
     // Store the selected language for persistence
@@ -46,7 +46,7 @@ function HindiApp() {
         <Outlet />
       </main>
       <HindiFooter />
-      <ChatBot />
+      <NeedBot />
       <ToastContainer
         position="bottom-right"
         autoClose={5000}

@@ -3,23 +3,38 @@ import { FiSend, FiUser, FiMessageCircle, FiArrowRight, FiGlobe } from 'react-ic
 import { IoClose } from 'react-icons/io5';
 import { useNavigate } from 'react-router-dom';
 import smartTranslationService from '../services/SmartTranslationService';
-import './ChatBot.css';
+import './NeedBot.css';
 
 const NeedBot = () => {
-  const navigate = useNavigate();
-  const [isOpen, setIsOpen] = useState(false);
-  const [messages, setMessages] = useState([
-    { 
-      text: smartTranslationService.getPhrase('greeting'), 
-      sender: 'bot' 
-    }
-  ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [currentLanguage, setCurrentLanguage] = useState(
     localStorage.getItem('needstation-language') || 'en'
   );
   const messagesEndRef = useRef(null);
+  const navigate = useNavigate();
+  const [isOpen, setIsOpen] = useState(false);
+  const [messages, setMessages] = useState([
+    { 
+      text: currentLanguage === 'hi' 
+        ? "नमस्ते! मैं नीडबॉट हूं, आपका स्मार्ट सहायक।"
+        : "Hello! I'm NeedBot, your smart assistant.", 
+      sender: 'bot' 
+    }
+  ]);
+
+
+  // Initialize messages based on current language
+  useEffect(() => {
+    const lang = localStorage.getItem('needstation-language') || 'en';
+    setCurrentLanguage(lang);
+    setMessages([{
+      text: lang === 'hi' 
+        ? "नमस्ते! मैं नीडबॉट हूं, आपका स्मार्ट सहायक।"
+        : "Hello! I'm NeedBot, your smart assistant.",
+      sender: 'bot'
+    }]);
+  }, []);
 
   // Rule-based navigation patterns
   const navigationPatterns = {
@@ -154,10 +169,12 @@ const NeedBot = () => {
     }
 
     // Check for help requests
-    if (/help|what can you do|commands|options|मदद|உதவி|সাহায্য|സഹായം|సహాయం|ಸಹಾಯ|મદદ/.test(input)) {
+    if (/help|what can you do|commands|options|मदद|উতवी|সাহায্য|സഹായം|సహాయం|ಸಹಾಯ|મદદ/.test(input)) {
       return {
         type: 'response',
-        message: smartTranslationService.getPhrase('help_message')
+        message: currentLanguage === 'hi' 
+          ? "मैं आपको नेविगेट करने, सेवाएं खोजने और भाषा बदलने में मदद कर सकता हूं। आपको क्या चाहिए?"
+          : "I can help you navigate, find services, and change languages. What do you need?"
       };
     }
 
@@ -202,7 +219,9 @@ const NeedBot = () => {
     if (/service|services|what do you offer|available|सेवा|சேவை|সেবা|സേവന|సేవ|ಸೇವೆ|સેવા/.test(input)) {
       return {
         type: 'response',
-        message: smartTranslationService.getPhrase('service_info')
+        message: currentLanguage === 'hi' 
+          ? "नीडस्टेशन इलेक्ट्रीशियन, प्लंबर, सफाई, बेबीसिटिंग, देखभाल और नर्सिंग सेवाएं प्रदान करता है। कौन सी सेवा में आपकी रुचि है?"
+          : "NeedStation offers electrician, plumber, maid, babysitting, caretaking, and nursing services. Which service interests you?"
       };
     }
 
@@ -305,7 +324,9 @@ const NeedBot = () => {
                   {message.sender === 'user' ? <FiUser /> : '🤖'}
                 </div>
                 <div className="message-content">
-                  <div className="message-text">{message.text}</div>
+                  <div className="message-text">
+                    {typeof message.text === 'string' ? message.text : 'Loading...'}
+                  </div>
                   
                   {/* Navigation button */}
                   {message.redirectUrl && message.redirectButtonText && (
@@ -343,7 +364,9 @@ const NeedBot = () => {
               onChange={handleInputChange}
               placeholder={currentLanguage === 'en' 
                 ? "Type your message... (e.g., 'take me to electrician' or 'change language to hindi')"
-                : smartTranslationService.smartTranslate("Type your message...", currentLanguage)
+                : currentLanguage === 'hi' 
+                  ? "अपना संदेश टाइप करें... (जैसे 'मुझे इलेक्ट्रीशियन के पास ले जाएं' या 'भाषा हिंदी में बदलें')"
+                  : "Type your message..."
               }
               disabled={isLoading}
             />

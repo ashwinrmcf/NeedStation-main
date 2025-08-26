@@ -32,11 +32,34 @@ public class AuthController {
         if (userOptional.isPresent()) {
             User user = userOptional.get();
             if (passwordEncoder.matches(password, user.getPassword())) {
-                String displayName = user.getFirstName() + " " + user.getLastName();
+                // Debug logging to check what's stored in database
+                System.out.println("User found - Email: " + user.getEmail());
+                System.out.println("FirstName: " + user.getFirstName());
+                System.out.println("LastName: " + user.getLastName());
+                System.out.println("Username: " + user.getUsername());
+                System.out.println("Provider: " + user.getProvider());
+                
+                String displayName = "";
+                if (user.getFirstName() != null && !user.getFirstName().trim().isEmpty() && 
+                    user.getLastName() != null && !user.getLastName().trim().isEmpty()) {
+                    displayName = (user.getFirstName().trim() + " " + user.getLastName().trim());
+                } else if (user.getFirstName() != null && !user.getFirstName().trim().isEmpty()) {
+                    displayName = user.getFirstName().trim();
+                } else if (user.getLastName() != null && !user.getLastName().trim().isEmpty()) {
+                    displayName = user.getLastName().trim();
+                } else if (user.getUsername() != null && !user.getUsername().trim().isEmpty()) {
+                    displayName = user.getUsername().trim();
+                } else {
+                    displayName = user.getEmail().split("@")[0]; // Use email prefix as fallback
+                }
+                
                 return ResponseEntity.ok(Map.of(
                         "message", "Login successful",
-                        "username", displayName.trim(),
-                        "email", user.getEmail()
+                        "username", displayName,
+                        "displayName", displayName,
+                        "email", user.getEmail(),
+                        "firstName", user.getFirstName() != null ? user.getFirstName() : "",
+                        "lastName", user.getLastName() != null ? user.getLastName() : ""
                 ));
             }
         }
