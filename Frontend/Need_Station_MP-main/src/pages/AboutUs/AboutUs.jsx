@@ -13,40 +13,41 @@ const AboutUs = () => {
   const teamMembers = [
     {
       name: "Ashwin Soni",
-      role: "Financial Operations Specialist",
+      role: "Financial Operations",
       image: ashwin,
-      description: "Focuses on enhancing customer experience and resolving service issues to achieve maximum customer satisfaction.",
+      description: "Oversees financial planning, budgeting, and operational efficiency to ensure sustainable growth and resource optimization.",
     },
     {
       name: "Zainab Ansari",
-      role: "Customer Experience Coordinator",
+      role: "Customer Experience",
       image: zainab,
-      description: "Leads the strategic vision and overall operations of NeedStation, ensuring we deliver on our promise of quality service.",
+      description: "Leads the strategic direction of customer engagement, ensuring every interaction reflects quality, care, and trust.",
     },
     {
       name: "Abhishek Gupta",
-      role: "Technology Infra Specialist",
+      role: "Technology Infra",
       image: abhishek,
-      description: "Oversees the technological infrastructure and development of our platform, making service booking seamless and efficient.",
-    },
-    {
-      name: "Navneet Chauhan",
-      role: "Strategic Partnership Coordinator",
-      image: navneet,
-      description: "Manages day-to-day operations and service provider relationships to ensure reliable and high-quality service delivery.",
-    },
-    {
-      name: "Aman Bairagi",
-      role: "Business Development Facilitator",
-      image: bairagi,
-      description: "Develops and implements marketing strategies to expand our reach and communicate the benefits of our services.",
+      description: "Manages the technological infrastructure and platform development, ensuring security, scalability, and seamless user experience.",
     },
     {
       name: "Ajitesh Tripathi",
       role: "Operations Manager",
       image: ajitesh,
-      description: "Responsible for recruiting, training, and managing our team of service providers to maintain service quality standards.",
+      description: "Oversees recruitment, training, and performance of service providers to maintain consistent service excellence.",
     },
+    {
+      name: "Navneet Chauhan",
+      role: "Strategic Partnership",
+      image: navneet,
+      description: "Builds and maintains strong collaborations with service providers, ensuring reliable and high-quality service delivery.",
+    },
+    {
+      name: "Aman Bairagi",
+      role: "Business Development",
+      image: bairagi,
+      description: "Drives business growth by implementing strategies that expand our reach and highlight the impact of our services.",
+    },
+
   ];
 
   // Service categories

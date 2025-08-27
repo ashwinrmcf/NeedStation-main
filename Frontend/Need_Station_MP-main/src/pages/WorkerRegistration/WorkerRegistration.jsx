@@ -219,7 +219,7 @@ const WorkerRegistration = () => {
   // Display progress indicator with glowing effect
   const renderProgressBar = () => {
     return (
-      <div className="mb-8">
+      <div className="mb-2">
         <div className="flex justify-between items-center">
           {['Basic Info', 'Address', 'Work', 'Verification', 'Payment', 'Review'].map((label, idx) => (
             <div key={idx} className="flex flex-col items-center">
@@ -261,7 +261,7 @@ const WorkerRegistration = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white p-4 form-content-spacing">
+    <div className="min-h-screen text-white p-4 form-content-spacing">
       <div className="max-w-4xl mx-auto">
         {/* Show progress bar for all steps except final success page */}
         {step <= 6 && renderProgressBar()}
