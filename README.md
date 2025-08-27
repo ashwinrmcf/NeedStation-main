@@ -1,9 +1,14 @@
-<span>
-  <img width="300" alt="NeedStation Logo" src="https://github.com/user-attachments/assets/7486f675-9627-47cc-8c49-854f9f0f116d" />
-</span>
-<span>
-  <img width="500" alt="NeedStation Banner" src="https://github.com/user-attachments/assets/3b88f5a8-cc1f-4bc5-bc88-8b81b71007f6" />
-</span>
+<table>
+  <tr>
+    <td>
+      <img width="300" alt="NeedStation Logo" src="https://github.com/user-attachments/assets/7486f675-9627-47cc-8c49-854f9f0f116d">
+    </td>
+    <td>
+      <img width="500" alt="NeedStation Banner" src="https://github.com/user-attachments/assets/3b88f5a8-cc1f-4bc5-bc88-8b81b71007f6">
+    </td>
+  </tr>
+</table>
+
 
 
 <br/>
