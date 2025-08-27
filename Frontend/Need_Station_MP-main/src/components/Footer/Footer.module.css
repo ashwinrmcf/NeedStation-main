@@ -1,5 +1,5 @@
 .footer {
-  width: 100vw;
+  width: 100%;
   min-height: 58.217vh;
   margin: 0;
   padding: 5.571vh 0;
@@ -9,6 +9,7 @@
   flex-direction: column; /* Keeps the bottom section separated */
   align-items: center;
   gap: 1.337vw;
+  box-sizing: border-box;
 }
 
 /* Top Section: Logo, Links, Contact - aligned in a row */
