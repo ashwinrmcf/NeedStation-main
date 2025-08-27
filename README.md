@@ -1,5 +1,6 @@
 <p align="center">
-  <img src="D:\NeedStation-main\Frontend\Need_Station_MP-main\src\assets\images\AboutUs\logo.jpeg" alt="NeedStation Logo" width="200"/>
+
+  <img src=![logo](https://github.com/user-attachments/assets/934bed54-2bb3-4a8a-829f-9a51ffcd162e) alt="NeedStation Logo" width="200"/>
 </p>
 
 # 🌐 NeedStation  
