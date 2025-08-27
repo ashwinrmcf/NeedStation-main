@@ -1,8 +1,6 @@
 <p align="center">
-
-  <img src=![logo](https://github.com/user-attachments/assets/934bed54-2bb3-4a8a-829f-9a51ffcd162e) alt="NeedStation Logo" width="200"/>
+  <img src="https://github.com/user-attachments/assets/7486f675-9627-47cc-8c49-854f9f0f116d" alt="NeedStation Logo" width="200"/>
 </p>
-
 # 🌐 NeedStation  
 
 **Your One-Stop Platform for Everyday Services**  
