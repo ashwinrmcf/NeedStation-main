@@ -1,5 +1,6 @@
-
-![logo](https://github.com/user-attachments/assets/96f3feb8-eba3-45bf-91f6-06ea33f0f6d8)
+<p align="center">
+  <img src="D:\NeedStation-main\Frontend\Need_Station_MP-main\src\assets\images\AboutUs\logo.jpeg" alt="NeedStation Logo" width="200"/>
+</p>
 
 # 🌐 NeedStation  
 
