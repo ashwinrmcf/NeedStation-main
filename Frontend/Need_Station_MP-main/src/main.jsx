@@ -37,6 +37,7 @@ import AboutUs from "./pages/AboutUs/AboutUs.jsx";
 import TranslationCenter from "./pages/TranslationCenter/TranslationCenter.jsx";
 import TermsAndServices from "./pages/TermsAndServices/TermsAndServices.jsx";
 import WhyBecomeHelper from "./pages/WhyBecomeHelper/WhyBecomeHelper.jsx";
+import PrivacyPolicy from "./pages/PrivacyPolicy/PrivacyPolicy.jsx";
 
 // Hindi components
 import HindiHome from "./pages/Hindi/Home.jsx";
@@ -67,6 +68,7 @@ const router = createBrowserRouter([
       {path: "/about-us", element: <AboutUs/>},
       {path: "/language-settings", element: <TranslationCenter/>},
       {path: "/terms-and-services", element: <TermsAndServices/>},
+      {path: "/privacy-policy", element: <PrivacyPolicy/>},
     ],
   },
 

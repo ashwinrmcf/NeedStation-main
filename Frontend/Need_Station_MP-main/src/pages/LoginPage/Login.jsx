@@ -197,28 +197,13 @@ const Login = () => {
           data-theme="outline"
           data-text="continue_with"
           data-size="large"
-          data-logo_alignment="left"
-          style={{width: '35vw', height: '8vh', marginBottom: '10px'}}>
+          data-logo_alignment="left">
         </div>
         
-        <button 
-          className={`${styles["social-btn"]} ${styles["google-btn"]}`}
-          onClick={() => {
-            if (window.google) {
-              try {
-                window.google.accounts.id.prompt((notification) => {
-                  if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
-                    console.log('Google Sign-In prompt not displayed or skipped');
-                  }
-                });
-              } catch (error) {
-                console.error('Google Sign-In prompt error:', error);
-              }
-            }
-          }}
-        >
-          Continue with Google
-        </button>
+        <div className={styles['terms']}>
+          By logging in, you agree to our <Link to="/terms-and-services">Terms of Service</Link> and <Link to="/privacy-policy">Privacy Policy</Link>.
+        </div>
+        
         {/* <button className={`${styles["social-btn"]} ${styles["facebook-btn"]}`}>
           Continue with Facebook
         </button> */}

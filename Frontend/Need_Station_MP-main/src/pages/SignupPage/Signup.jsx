@@ -325,7 +325,7 @@ const Signup = () => {
       </div>
       
       <div className={styles['terms']}>
-        By creating an account, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
+        By creating an account, you agree to our <Link to="/terms-and-services">Terms of Service</Link> and <Link to="/privacy-policy">Privacy Policy</Link>.
       </div>
     </div>
   );
