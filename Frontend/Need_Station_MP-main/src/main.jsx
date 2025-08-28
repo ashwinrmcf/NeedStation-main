@@ -38,6 +38,8 @@ import TranslationCenter from "./pages/TranslationCenter/TranslationCenter.jsx";
 import TermsAndServices from "./pages/TermsAndServices/TermsAndServices.jsx";
 import WhyBecomeHelper from "./pages/WhyBecomeHelper/WhyBecomeHelper.jsx";
 import PrivacyPolicy from "./pages/PrivacyPolicy/PrivacyPolicy.jsx";
+import HowItWorks from "./pages/HowItWorks/HowItWorks.jsx";
+import FAQ from "./pages/FAQ/FAQ.jsx";
 
 // Hindi components
 import HindiHome from "./pages/Hindi/Home.jsx";
@@ -66,6 +68,8 @@ const router = createBrowserRouter([
       {path: "/helper-registration", element: <HelperRegistration/>},
       {path: "/contact-us", element: <ContactUs/>},
       {path: "/about-us", element: <AboutUs/>},
+      {path: "/how-it-works", element: <HowItWorks/>},
+      {path: "/faq", element: <FAQ/>},
       {path: "/language-settings", element: <TranslationCenter/>},
       {path: "/terms-and-services", element: <TermsAndServices/>},
       {path: "/privacy-policy", element: <PrivacyPolicy/>},

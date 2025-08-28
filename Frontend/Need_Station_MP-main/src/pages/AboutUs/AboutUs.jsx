@@ -4,7 +4,7 @@ import ashwin from "../../assets/images/AboutUs/ashwin.jpg";
 import ajitesh from "../../assets/images/AboutUs/ajitesh.jpg";
 import abhishek from "../../assets/images/AboutUs/abhishek.jpg";
 import zainab from "../../assets/images/AboutUs/zainab.jpg";
-import aman from "../../assets/images/AboutUs/aman.jpg";
+import yash from "../../assets/images/AboutUs/yash.png";
 import navneet from "../../assets/images/AboutUs/navneet.jpeg";
 import bairagi from "../../assets/images/AboutUs/bairagi.jpeg";
 import logo from "../../assets/images/AboutUs/logo.jpeg";
@@ -46,6 +46,12 @@ const AboutUs = () => {
       role: "Business Development",
       image: bairagi,
       description: "Drives business growth by implementing strategies that expand our reach and highlight the impact of our services.",
+    },
+    {
+      name: "Yash Sharma",
+      role: "Product Development",
+      image: yash,
+      description: "Drives innovation by designing, refining, and enhancing NeedStation’s services and digital platform, ensuring alignment with user needs and market trends.",
     },
 
   ];
