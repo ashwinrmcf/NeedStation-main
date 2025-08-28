@@ -56,7 +56,7 @@ public class FreeOtpService {
     // OTP cache for storing encrypted OTPs
     private final Map<String, String> otpCache = new ConcurrentHashMap<>();
     private final Map<String, LocalDateTime> expiryCache = new ConcurrentHashMap<>();
-    private static final int OTP_VALIDITY_MINUTES = 10;
+    private static final int OTP_VALIDITY_MINUTES = 5;
 
     @Autowired
     public FreeOtpService(FreeOtpConfig freeOtpConfig, ObjectMapper objectMapper,
