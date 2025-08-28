@@ -17,6 +17,21 @@ export default function Step1BasicInfo({ data, updateForm, next, workerId, updat
   const [otpError, setOtpError] = useState('');
   const [verifiedWorkerId, setVerifiedWorkerId] = useState(null);
 
+  // Check session storage for OTP verification status
+  useEffect(() => {
+    const sessionOtpVerified = sessionStorage.getItem('otpVerified');
+    const sessionWorkerId = sessionStorage.getItem('sessionWorkerId');
+    
+    if (sessionOtpVerified === 'true') {
+      setOtpVerified(true);
+      setOtpSent(true);
+    }
+    
+    if (sessionWorkerId) {
+      setVerifiedWorkerId(Number(sessionWorkerId));
+    }
+  }, []);
+
   // Backend API URL - update this to your actual backend URL
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api';
 
@@ -73,6 +88,7 @@ export default function Step1BasicInfo({ data, updateForm, next, workerId, updat
             // Save the worker ID for OTP verification
             const newWorkerId = registerResponse.data.workerId;
             setVerifiedWorkerId(newWorkerId);
+            sessionStorage.setItem('sessionWorkerId', newWorkerId);
             if (updateWorkerId) {
               updateWorkerId(newWorkerId);
             }
@@ -91,6 +107,7 @@ export default function Step1BasicInfo({ data, updateForm, next, workerId, updat
             // Worker already exists, capture the existing workerId
             const existingWorkerId = registerError.response.data.workerId;
             setVerifiedWorkerId(existingWorkerId);
+            sessionStorage.setItem('sessionWorkerId', existingWorkerId);
             if (updateWorkerId) {
               updateWorkerId(existingWorkerId);
             }
@@ -178,6 +195,8 @@ export default function Step1BasicInfo({ data, updateForm, next, workerId, updat
       if (verifyResponse.data && verifyResponse.data.verified) {
         setOtpVerified(true);
         setOtpError('');
+        // Save verification status to session storage
+        sessionStorage.setItem('otpVerified', 'true');
         // Update form data with verification status
         updateForm({ otpVerified: true });
         console.log('OTP verified successfully');
@@ -196,20 +215,97 @@ export default function Step1BasicInfo({ data, updateForm, next, workerId, updat
     }
   };
 
-  const handleProfilePictureChange = (e) => {
+  const compressImage = (file, maxSizeKB = 500) => {
+    return new Promise((resolve) => {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      const img = new Image();
+      
+      img.onload = () => {
+        // Calculate new dimensions (max 400px width/height for smaller file)
+        let { width, height } = img;
+        const maxDimension = 400;
+        
+        if (width > height && width > maxDimension) {
+          height = (height * maxDimension) / width;
+          width = maxDimension;
+        } else if (height > maxDimension) {
+          width = (width * maxDimension) / height;
+          height = maxDimension;
+        }
+        
+        canvas.width = width;
+        canvas.height = height;
+        
+        // Draw and compress
+        ctx.drawImage(img, 0, 0, width, height);
+        
+        // Try different quality levels until under size limit
+        let quality = 0.8;
+        const tryCompress = () => {
+          canvas.toBlob((blob) => {
+            if (blob.size <= maxSizeKB * 1024 || quality <= 0.1) {
+              resolve(blob);
+            } else {
+              quality -= 0.1;
+              tryCompress();
+            }
+          }, 'image/jpeg', quality);
+        };
+        
+        tryCompress();
+      };
+      
+      img.src = URL.createObjectURL(file);
+    });
+  };
+
+  const handleProfilePictureChange = async (e) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
-      setProfilePicture(file);
-      const localUrl = URL.createObjectURL(file);
-      setProfilePictureURL(localUrl);
       
-      // Store local image URL in localStorage for temporary access
-      localStorage.setItem('tempProfileImageUrl', localUrl);
+      // Check file size (2MB = 2 * 1024 * 1024 bytes)
+      const maxSize = 2 * 1024 * 1024;
+      if (file.size > maxSize) {
+        alert('Image size must be less than 2MB. Please choose a smaller image.');
+        e.target.value = ''; // Clear the input
+        return;
+      }
       
-      // Also update parent form data with the file
-      updateForm({
-        profilePicture: file
-      });
+      // Check file type
+      const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+      if (!allowedTypes.includes(file.type)) {
+        alert('Please select a valid image file (JPEG, PNG, GIF, or WebP).');
+        e.target.value = ''; // Clear the input
+        return;
+      }
+      
+      try {
+        // Compress image to under 100KB
+        const compressedBlob = await compressImage(file, 100);
+        const compressedFile = new File([compressedBlob], file.name, {
+          type: 'image/jpeg',
+          lastModified: Date.now()
+        });
+        
+        setProfilePicture(compressedFile);
+        const localUrl = URL.createObjectURL(compressedFile);
+        setProfilePictureURL(localUrl);
+        
+        // Store local image URL in localStorage for temporary access
+        localStorage.setItem('tempProfileImageUrl', localUrl);
+        
+        // Also update parent form data with the compressed file
+        updateForm({
+          profilePicture: compressedFile
+        });
+        
+        console.log(`Image compressed from ${(file.size/1024).toFixed(1)}KB to ${(compressedFile.size/1024).toFixed(1)}KB`);
+      } catch (error) {
+        console.error('Error compressing image:', error);
+        alert('Error processing image. Please try a different image.');
+        e.target.value = '';
+      }
     }
   };
 
@@ -227,19 +323,25 @@ export default function Step1BasicInfo({ data, updateForm, next, workerId, updat
       return;
     }
     
-    // Profile picture is now optional
-
-    // Update the form with profile picture before sending to server
-    updateForm({ 
-      profilePicture,
-      otpVerified: otpVerified // Add verification status to form data
-    });
-    
     // Check if phone verification is complete
     if (!otpVerified) {
       alert("Please verify your phone number before continuing.");
       return;
     }
+
+    // Check if step1 is already completed to avoid duplicate submissions
+    const step1Completed = sessionStorage.getItem('step1Completed');
+    if (step1Completed === 'true') {
+      console.log("Step 1 already completed, moving to next step");
+      next();
+      return;
+    }
+    
+    // Update the form with profile picture before sending to server
+    updateForm({ 
+      profilePicture,
+      otpVerified: otpVerified // Add verification status to form data
+    });
     
     // Create FormData object
     const formData = new FormData();
@@ -289,15 +391,33 @@ export default function Step1BasicInfo({ data, updateForm, next, workerId, updat
         updateWorkerId(response.data.workerId);
       }
       
+      // Mark step 1 as completed
+      sessionStorage.setItem('step1Completed', 'true');
+      
       // Continue to next step
       next();
     } catch (err) {
       console.error("Error saving basic information:", err);
+      console.error("Full error response:", err.response);
+      console.error("Error status:", err.response?.status);
+      console.error("Error data:", err.response?.data);
+      
       let errorMsg = "Failed to save information. Please try again.";
       
       // Try to extract more specific error message
-      if (err.response && err.response.data && err.response.data.error) {
-        errorMsg = err.response.data.error;
+      if (err.response && err.response.data) {
+        if (err.response.data.error) {
+          errorMsg = err.response.data.error;
+        } else if (err.response.data.message) {
+          errorMsg = err.response.data.message;
+        } else if (typeof err.response.data === 'string') {
+          errorMsg = err.response.data;
+        }
+      }
+      
+      // Add status code to error message for debugging
+      if (err.response?.status) {
+        errorMsg += ` (Status: ${err.response.status})`;
       }
       
       alert(errorMsg);
@@ -429,7 +549,24 @@ export default function Step1BasicInfo({ data, updateForm, next, workerId, updat
             <label htmlFor="profile-picture" className="text-teal-400 cursor-pointer hover:text-teal-300">
               {profilePictureURL ? "Change photo" : "Upload photo"}
             </label>
+            <p className="text-xs text-gray-400 mt-2">Max size: 2MB (Auto-compressed to 100KB)</p>
           </div>
+        </div>
+
+        {/* Date of Birth */}
+        <div>
+          <label htmlFor="dob" className="block text-lg font-medium mb-2">
+            Date of Birth
+          </label>
+          <input
+            type="date"
+            id="dob"
+            name="dob"
+            value={data.dob || ''}
+            onChange={handleInputChange}
+            className="w-full p-3 bg-gray-900 border border-gray-700 rounded-md"
+            required
+          />
         </div>
 
         {/* Email and WhatsApp (Optional) */}

@@ -1,0 +1,192 @@
+{
+	"info": {
+		"_postman_id": "worker-otp-test-collection",
+		"name": "NeedStation Worker OTP API Tests",
+		"description": "API test collection for Worker Registration and OTP verification endpoints",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Worker Registration Step 1",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"fullName\": \"Test Worker\",\n    \"phone\": \"+1234567890\",\n    \"email\": \"testworker@example.com\",\n    \"gender\": \"Male\",\n    \"dob\": \"1990-01-01\",\n    \"whatsappNumber\": \"+1234567890\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/workers/register/step1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"workers",
+						"register",
+						"step1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Resend OTP",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"workerId\": 1\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/workers/resend-otp",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"workers",
+						"resend-otp"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Verify OTP",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"workerId\": 1,\n    \"otp\": \"123456\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/workers/verify-otp",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"workers",
+						"verify-otp"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Register Existing Phone (Conflict Test)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"fullName\": \"Another Worker\",\n    \"phone\": \"+1234567890\",\n    \"email\": \"another@example.com\",\n    \"gender\": \"Female\",\n    \"dob\": \"1985-05-15\",\n    \"whatsappNumber\": \"+1234567890\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/workers/register/step1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"workers",
+						"register",
+						"step1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Resend OTP - Invalid Worker ID",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"workerId\": 99999\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/workers/resend-otp",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"workers",
+						"resend-otp"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Verify OTP - Wrong Code",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"workerId\": 1,\n    \"otp\": \"000000\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/workers/verify-otp",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"workers",
+						"verify-otp"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

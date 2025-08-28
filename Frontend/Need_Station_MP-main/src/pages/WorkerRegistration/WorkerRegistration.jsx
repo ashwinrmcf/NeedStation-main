@@ -15,14 +15,35 @@ const WorkerRegistration = () => {
   const [error, setError] = useState(null);
   const [workerId, setWorkerId] = useState(null);
 
-  // Check for existing workerId in localStorage on component mount
+  // Session-based data management
   useEffect(() => {
-    const savedWorkerId = localStorage.getItem('workerId');
-    if (savedWorkerId) {
-      setWorkerId(Number(savedWorkerId));
-
-      // Fetch worker data if workerId exists
-      fetchWorkerData(savedWorkerId);
+    // Check if this is a fresh session (no session flag)
+    const sessionFlag = sessionStorage.getItem('workerRegistrationSession');
+    
+    if (!sessionFlag) {
+      // Fresh session - clear all stored data
+      localStorage.removeItem('workerId');
+      localStorage.removeItem('workerFormData');
+      sessionStorage.removeItem('otpVerified');
+      sessionStorage.removeItem('stepCompleted');
+      sessionStorage.setItem('workerRegistrationSession', 'active');
+    } else {
+      // Existing session - restore data
+      const savedWorkerId = localStorage.getItem('workerId');
+      const savedFormData = localStorage.getItem('workerFormData');
+      
+      if (savedWorkerId) {
+        setWorkerId(Number(savedWorkerId));
+      }
+      
+      if (savedFormData) {
+        try {
+          const parsedData = JSON.parse(savedFormData);
+          setFormData(prev => ({ ...prev, ...parsedData }));
+        } catch (e) {
+          console.error('Error parsing saved form data:', e);
+        }
+      }
     }
   }, []);
 
@@ -60,7 +81,11 @@ const WorkerRegistration = () => {
   const prev = () => setStep(step - 1);
 
   const updateForm = (data) => {
-    setFormData(prev => ({ ...prev, ...data }));
+    const updatedData = { ...formData, ...data };
+    setFormData(updatedData);
+    
+    // Save to localStorage for session persistence
+    localStorage.setItem('workerFormData', JSON.stringify(updatedData));
   };
 
   // Function to fetch worker data from backend
