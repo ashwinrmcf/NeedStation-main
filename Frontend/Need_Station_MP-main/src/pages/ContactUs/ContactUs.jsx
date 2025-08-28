@@ -143,7 +143,7 @@ export default function ContactUs() {
                   type="text"
                   id="name"
                   name="name"
-                  placeholder="Jonh Doe"
+                  placeholder="Name"
                   value={formData.name}
                   onChange={handleInputChange}
                   className="w-full bg-gray-800 border border-gray-700 rounded-lg py-3 px-4 focus:outline-none focus:ring-2 focus:ring-teal-400 text-white"

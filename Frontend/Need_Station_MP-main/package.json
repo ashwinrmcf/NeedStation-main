@@ -16,6 +16,7 @@
     "axios": "^1.8.4",
     "bootstrap": "^5.3.3",
     "cors": "^2.8.5",
+    "firebase": "^12.1.0",
     "framer-motion": "^12.5.0",
     "frida": "^17.1.5",
     "i18next": "^25.1.2",
