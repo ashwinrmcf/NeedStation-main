@@ -13,7 +13,7 @@
 
 <br/>
 
-# 🌐 NeedStation  
+# 🌐 NeedStation™
 
 **Your One-Stop Platform for Everyday Services**  
 
